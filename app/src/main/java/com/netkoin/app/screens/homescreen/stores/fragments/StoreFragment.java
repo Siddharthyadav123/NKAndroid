@@ -12,9 +12,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.controller.AppController;
@@ -22,6 +25,7 @@ import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.custom_views.parallex.ParallaxListView;
 import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.Store;
+import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreBannerViewPagerAdapter;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreListViewAdapter;
 import com.netkoin.app.servicemodels.StoreServiceModel;
@@ -44,16 +48,18 @@ public class StoreFragment extends AbstractBaseFragment {
 
     private ProgressBar progressBarHeader;
     private ProgressBar progressBarFooter;
+    private TextView currentLocationTextView;
 
 
     private StoreListViewAdapter storeListViewAdapter;
     private StoreBannerViewPagerAdapter storeBannerViewPagerAdapter;
-
     private LinearLayout currentLocationLinLayout;
 
     private StoreServiceModel storeServiceModel;
 
     private ArrayList<Store> stores = null;
+
+    private RelativeLayout footerRilLayout;
 
     public StoreFragment() {
         // Required empty public constructor
@@ -77,7 +83,16 @@ public class StoreFragment extends AbstractBaseFragment {
         initViews();
         registerEvents();
         requestWebAPIs();
+
+
+        String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+        if (currentLocation == null) {
+            currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
+        } else {
+            currentLocationTextView.setText(currentLocation);
+        }
     }
+
 
     private void requestWebAPIs() {
         //loading total koin
@@ -121,6 +136,10 @@ public class StoreFragment extends AbstractBaseFragment {
         storesListView = (ParallaxListView) view.findViewById(R.id.storesListView);
         refreshLayout = (CustomSwipeToRefresh) view.findViewById(R.id.refreshLayout);
         currentLocationLinLayout = (LinearLayout) view.findViewById(R.id.currentLocationLinLayout);
+        footerRilLayout = (RelativeLayout) view.findViewById(R.id.footerRilLayout);
+        currentLocationTextView = (TextView) view.findViewById(R.id.currentLocationTextView);
+
+
         //setting header in list-view
         mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.store_header_view_pager_layout, null);
         storeBannerViewPager = (ViewPager) mHeaderView.findViewById(R.id.storeBannerViewPager);
@@ -196,6 +215,27 @@ public class StoreFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+        if (!previousLocation.equals(currentLocation)) {
+            if (currentLocation == null) {
+                currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
+            } else {
+                currentLocationTextView.setText(currentLocation);
+            }
+            previousLocation = currentLocation;
+            System.out.println(">>request 222");
+            //hit API on location change from user
+            progressBarFooter.setVisibility(View.VISIBLE);
+            storeServiceModel.resetPage();
+            storeServiceModel.loadStores();
+        }
+
+    }
+
+    @Override
     public void onActionBarLeftBtnClick() {
         ActivityController.getInstance().handleEvent(getActivity(), ActivityController.ACTIVITY_KOIN_MANAGEMENT_HOME_SCREEN);
     }
@@ -204,6 +244,10 @@ public class StoreFragment extends AbstractBaseFragment {
     @Override
     public void onActionBarTitleClick() {
 
+    }
+
+    @Override
+    public void onRetryBtnClick() {
     }
 
     @Override
@@ -227,14 +271,13 @@ public class StoreFragment extends AbstractBaseFragment {
             case RequestConstants.REQUEST_ID_GET_TOTAL_KOIN:
                 titleTextView.setText(AppController.getInstance().getModelFacade().getLocalModel().getTotalKoins().getTotal_koins() + "");
                 break;
-
             default:
                 break;
         }
     }
 
     private void onFeaturedBannerResponse(boolean isSuccess) {
-        progressBarHeader.setVisibility(View.GONE);
+        progressBarHeader.setVisibility(View.INVISIBLE);
         if (isSuccess) {
             updateStoreBannerAdatper();
         }
@@ -245,6 +288,11 @@ public class StoreFragment extends AbstractBaseFragment {
         currentLocationLinLayout.setVisibility(View.GONE);
         progressBarFooter.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
+        footerRilLayout.setVisibility(View.GONE);
+
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
             ArrayList<Store> newStores = storeServiceModel.getStores();
@@ -267,26 +315,68 @@ public class StoreFragment extends AbstractBaseFragment {
             } else {
                 canLoadMoreListItems = false;
             }
-//
-//            hideRetryView();
 
-            //showing info window
-//            if (self.stores == nil || self.stores ?.count == 0)
-//            {
-//                shorStoreNotFoundRetry("No stores found nearby. Please change your location or increase distance from Settings", needRetryButton:
-//                true);
-//            }
-
+            if (stores == null || stores.size() == 0) {
+                showStoreNotFoundBtn("No stores found nearby. Please change your location or turn the same also increase distance from Settings",
+                        true);
+            }
 
         } else {
-//            self.tableView.tableFooterView = nil
 
-//            if (self.stores == nil || self.stores ?.count == 0)
-//            {
-//                shorStoreNotFoundRetry("No stores found nearby. Please change your location or turn the same also increase distance from Settings", needRetryButton:
-//                true);
-//            }
+            if (stores == null || stores.size() == 0) {
+                showStoreNotFoundBtn("No stores found nearby. Please change your location or turn the same also increase distance from Settings",
+                        true);
+            }
         }
         progressBarListLoading.setVisibility(View.GONE);
+    }
+
+    protected void showStoreNotFoundBtn(String infoText, boolean needRetryButton) {
+        footerRilLayout.setVisibility(View.VISIBLE);
+        if (retryView == null) {
+            retryView = getActivity().getLayoutInflater().inflate(R.layout.retry_layout, null);
+            TextView infoTextView = (TextView) retryView.findViewById(R.id.infoTextView);
+            TextView retryBtnTextView = (TextView) retryView.findViewById(R.id.retryBtnTextView);
+
+            infoTextView.setText(infoText);
+            retryBtnTextView.setText("Select Location");
+            retryBtnTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityController.getInstance().handleEvent(getActivity(), ActivityController.ACTIVITY_SEARCH_LOCATION);
+                }
+            });
+
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            retryView.setLayoutParams(layoutParams);
+
+            footerRilLayout.addView(retryView);
+            if (needRetryButton) {
+                retryBtnTextView.setVisibility(View.VISIBLE);
+            } else {
+                retryBtnTextView.setVisibility(View.GONE);
+            }
+
+        } else {
+            retryView.setVisibility(View.VISIBLE);
+            TextView retryBtnTextView = (TextView) retryView.findViewById(R.id.retryBtnTextView);
+            TextView infoTextView = (TextView) retryView.findViewById(R.id.infoTextView);
+            infoTextView.setText(infoText);
+
+            retryBtnTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityController.getInstance().handleEvent(getActivity(), ActivityController.ACTIVITY_SEARCH_LOCATION);
+                }
+            });
+
+            if (needRetryButton) {
+                retryBtnTextView.setVisibility(View.VISIBLE);
+            } else {
+                retryBtnTextView.setVisibility(View.GONE);
+            }
+        }
+
     }
 }

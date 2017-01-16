@@ -11,9 +11,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.netkoin.app.R;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.entities.Store;
+import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
 
 import java.util.ArrayList;
@@ -25,10 +27,12 @@ public class StoreListViewAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Store> storeArrayList = new ArrayList<>();
+    private SharedPref sharedPref;
 
     public StoreListViewAdapter(Context context, ArrayList<Store> storeArrayList) {
         this.context = context;
         this.storeArrayList = storeArrayList;
+        sharedPref = new SharedPref(context);
     }
 
     @Override
@@ -103,6 +107,13 @@ public class StoreListViewAdapter extends BaseAdapter {
 
         if (pos == 0) {
             viewHolder.currentLocationTextView.setVisibility(View.VISIBLE);
+
+            String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+            if (currentLocation == null) {
+                viewHolder.currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
+            } else {
+                viewHolder.currentLocationTextView.setText(currentLocation);
+            }
         } else {
             viewHolder.currentLocationTextView.setVisibility(View.GONE);
         }

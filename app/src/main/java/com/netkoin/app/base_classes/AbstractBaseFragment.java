@@ -3,18 +3,22 @@ package com.netkoin.app.base_classes;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.controller.FragmentNavigationViewController;
+import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandlerCallback;
 
@@ -34,10 +38,13 @@ public abstract class AbstractBaseFragment extends Fragment implements View.OnCl
 
     protected Object parcelExtras;
 
-
     protected SwipeRefreshLayout refreshLayout;
+    protected View retryView;
+    protected SharedPref sharedPref;
 
     protected FragmentNavigationViewController navigationController;
+
+    protected String previousLocation = null;
 
 
     public FragmentNavigationViewController getNavigationController() {
@@ -100,6 +107,13 @@ public abstract class AbstractBaseFragment extends Fragment implements View.OnCl
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sharedPref = new SharedPref(getActivity());
+        previousLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+    }
+
+    @Override
     public void onDestroyView() {
         if (view != null && view.getParent() != null) {
             ((ViewGroup) view.getParent()).removeView(view);
@@ -128,4 +142,55 @@ public abstract class AbstractBaseFragment extends Fragment implements View.OnCl
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
+    protected void showRetryView(String infoText, boolean needRetryButton) {
+        if (retryView == null) {
+            retryView = getActivity().getLayoutInflater().inflate(R.layout.retry_layout, null);
+            TextView infoTextView = (TextView) retryView.findViewById(R.id.infoTextView);
+            TextView retryBtnTextView = (TextView) retryView.findViewById(R.id.retryBtnTextView);
+
+            infoTextView.setText(infoText);
+            retryBtnTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onRetryBtnClick();
+                }
+            });
+
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            retryView.setLayoutParams(layoutParams);
+
+            ((RelativeLayout) view).addView(retryView);
+            if (needRetryButton) {
+                retryBtnTextView.setVisibility(View.VISIBLE);
+            } else {
+                retryBtnTextView.setVisibility(View.GONE);
+            }
+
+        } else {
+            retryView.setVisibility(View.VISIBLE);
+            TextView retryBtnTextView = (TextView) retryView.findViewById(R.id.retryBtnTextView);
+            TextView infoTextView = (TextView) retryView.findViewById(R.id.infoTextView);
+            infoTextView.setText(infoText);
+
+            retryBtnTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onRetryBtnClick();
+                }
+            });
+
+            if (needRetryButton) {
+                retryBtnTextView.setVisibility(View.VISIBLE);
+            } else {
+                retryBtnTextView.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+    public abstract void onRetryBtnClick();
+
+
 }

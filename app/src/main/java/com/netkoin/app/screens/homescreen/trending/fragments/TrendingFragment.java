@@ -17,6 +17,7 @@ import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.entities.Ads;
+import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.TrendingServiceModel;
 
@@ -163,6 +164,22 @@ public class TrendingFragment extends AbstractBaseFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+        if (!previousLocation.equals(currentLocation)) {
+            //hit API on location change from user
+            previousLocation = currentLocation;
+            System.out.println(">>request 333");
+            progressBarCenter.setVisibility(View.VISIBLE);
+            trendingServiceModel.resetPage();
+            trendingServiceModel.loadTreandingAds();
+        }
+
+    }
+
     private void onNationWideRadioSegmentClick() {
         progressBarCenter.setVisibility(View.VISIBLE);
         this.currentSegmentFilter = NATION_WIDE_TRENDING;
@@ -202,6 +219,15 @@ public class TrendingFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
+        progressBarCenter.setVisibility(View.VISIBLE);
+        requestTrending();
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
@@ -220,6 +246,10 @@ public class TrendingFragment extends AbstractBaseFragment {
     private void onTreandingAdsResponse(boolean isSuccess, String errorString) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
+
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
             if (trendingServiceModel.getPage() == 1) {
@@ -242,23 +272,15 @@ public class TrendingFragment extends AbstractBaseFragment {
                 canLoadMoreListItems = false;
             }
 
-//            hideRetryView();
-//
-//            //showing info window
-//            if (self.ads == nil || self.ads ?.count == 0)
-//            {
-//                showRetryView("No itmes in trending nearby. Please change your location or increase distance from Settings", needRetryButton:
-//                false);
-//            }
+            //showing info window
+            if (trendingAds == null || trendingAds.size() == 0) {
+                showRetryView("No items in trending nearby. Please change your location or increase distance from Settings", false);
+            }
 
         } else {
-//            self.tableView.tableFooterView = nil
-//
-//            if (self.ads == nil || self.ads ?.count == 0)
-//            {
-//                showRetryView(errorString, needRetryButton:true);
-//            }
-
+            if (trendingAds == null || trendingAds.size() == 0) {
+                showRetryView(errorString, true);
+            }
         }
 
         progressBarCenter.setVisibility(View.GONE);

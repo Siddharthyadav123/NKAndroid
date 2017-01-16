@@ -7,7 +7,9 @@ package com.netkoin.app.constants;
 public interface Constants {
     String MSG_INTERNET_NOT_FOUND = "No internet connection found.";
     String CURRENT_LOCATION_TEXT = "Current location";
-
     int NEAR_BY_STORE_DISTANCE_IN_METER = 5000;
+
+    String GOOGLE_API_KEY = "AIzaSyBMz_h6tRiaTNQ-UiR8zgso_5E4ikMD3ck";
+
 
 }

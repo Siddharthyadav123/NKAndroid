@@ -128,6 +128,15 @@ public class CatalougeFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
+        progressBarCenter.setVisibility(View.VISIBLE);
+        cataloguesServiceModel.loadCatalougesByStore(store.getId());
+    }
+
+    @Override
     public void onClick(View v) {
     }
 
@@ -148,6 +157,10 @@ public class CatalougeFragment extends AbstractBaseFragment {
     private void onCatelogListResponse(boolean isSuccess, Object result, String errorString) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
+
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
             if (cataloguesServiceModel.getPage() == 1) {
@@ -170,20 +183,14 @@ public class CatalougeFragment extends AbstractBaseFragment {
                 canLoadMoreListItems = false;
             }
 
-//            //showing info window
-//            if (self.cataloguesServiceModel == nil || self.catalouges ?.count == 0)
-//            {
-//                showRetryView("No item found to purchase.", needRetryButton:true);
-//            }
-
+            //showing info window
+            if (catalouges == null || catalouges.size() == 0) {
+                showRetryView("No item found to purchase.", true);
+            }
         } else {
-//            self.tableView.tableFooterView = nil
-//
-//            if (self.catalouges == nil || self.catalouges ?.count == 0)
-//            {
-//                showRetryView(errorString !, needRetryButton:true);
-//            }
-
+            if (catalouges == null || catalouges.size() == 0) {
+                showRetryView(errorString, true);
+            }
         }
         progressBarCenter.setVisibility(View.GONE);
     }

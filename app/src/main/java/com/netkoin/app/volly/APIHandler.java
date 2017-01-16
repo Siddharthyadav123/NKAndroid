@@ -40,6 +40,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
 
     private boolean needTokenHeader = true;
     private boolean allowRetryOnFailure = false;
+    private boolean responseFromOurServer = true;
 
     public APIHandler(Context context, APIHandlerCallback apiHandlerCallback, int requestId, int methodType, String url,
                       boolean showLoading, String loadingText, String requestBody) {
@@ -134,32 +135,37 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     public void onResponse(Object response) {
         hideLoading();
         System.out.println("[API] response body volly = " + response.toString());
-        if (response != null) {
-            JSONObject jsonObject = null;
-            boolean isSuccess = false;
-            try {
-                jsonObject = new JSONObject(response.toString());
-                isSuccess = jsonObject.getBoolean("success");
-                if (isSuccess) {
-                    onAPISuccess(jsonObject);
-                } else {
-                    //if not success from server
-                    JSONObject data = jsonObject.getJSONObject("data");
-                    String error_message = data.getString("error_message");
-                    if (data != null && data.length() > 0 && error_message != null) {
-                        onAPIFailure(jsonObject, error_message);
+        if (responseFromOurServer) {
+            if (response != null) {
+                JSONObject jsonObject = null;
+                boolean isSuccess = false;
+                try {
+                    jsonObject = new JSONObject(response.toString());
+                    isSuccess = jsonObject.getBoolean("success");
+                    if (isSuccess) {
+                        onAPISuccess(jsonObject);
                     } else {
-                        onAPIFailure(jsonObject, "Failed with no message data");
+                        //if not success from server
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        String error_message = data.getString("error_message");
+                        if (data != null && data.length() > 0 && error_message != null) {
+                            onAPIFailure(jsonObject, error_message);
+                        } else {
+                            onAPIFailure(jsonObject, "Failed with no message data");
+                        }
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
+            } else {
+                onAPIFailure(null, "Unable to fetch data");
+                System.out.println("[API] response fail volly = " + "Error in response");
+            }
         } else {
-            onAPIFailure(null, "Unable to fetch data");
-            System.out.println("[API] response fail volly = " + "Error in response");
+            onAPISuccess(response);
         }
+
 
     }
 
@@ -170,7 +176,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
         hideLoading();
     }
 
-    private void onAPISuccess(final JSONObject result) {
+    private void onAPISuccess(final Object result) {
         ((Activity) context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -182,7 +188,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
         });
     }
 
-    private void onAPIFailure(final JSONObject result, final String errorString) {
+    private void onAPIFailure(final Object result, final String errorString) {
         ((Activity) context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -208,6 +214,10 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
 
     public void setNeedTokenHeader(boolean needTokenHeader) {
         this.needTokenHeader = needTokenHeader;
+    }
+
+    public void setResponseFromOurServer(boolean responseFromOurServer) {
+        this.responseFromOurServer = responseFromOurServer;
     }
 
     protected void showRetryErrorAlert(String title, String bodyText) {

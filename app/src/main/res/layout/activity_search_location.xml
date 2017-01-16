@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_search_location"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.netkoin.app.screens.search_location.activity.SearchLocationActivity">
 
     <include
@@ -21,7 +23,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/currenLocLabelTextView"
@@ -29,6 +31,28 @@
                 android:layout_height="wrap_content"
                 android:text="Current Location:"
                 android:textSize="18dp" />
+
+            <LinearLayout
+                android:id="@+id/fetchingGeopointsLinLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fetching Geopoints..."
+                    android:textSize="12dp" />
+
+                <ProgressBar
+                    android:id="@+id/fetchingLocationProgressBar"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/previouslySelectedLocaionLinLayout"
@@ -52,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="Current location"
+                    android:text="Current Location"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
             </LinearLayout>
@@ -66,7 +90,7 @@
                 android:alpha="0.4"
                 android:background="@color/gray" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/locationSearchLinLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,24 +103,62 @@
                     android:id="@+id/searchImageView"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:background="?android:selectableItemBackground"
                     android:padding="3dp"
                     android:src="@drawable/search_icon" />
 
-                <EditText
-                    android:id="@+id/locationSearchEditText"
+                <com.netkoin.app.custom_views.autocompleteview.AutoCompleteView
+                    android:id="@+id/locationSearchAutocomplete"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="5dp"
-                    android:background="@drawable/search_edittext_drawable"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@+id/searchImageView"
+                    android:background="@android:color/white"
                     android:hint="Type location"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="32dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
+                    app:autocompleteUrl="https://maps.googleapis.com/maps/api/place/autocomplete/json?sensor=false&amp;key=AIzaSyBMz_h6tRiaTNQ-UiR8zgso_5E4ikMD3ck&amp;input="
+                    app:modelClass="com.netkoin.app.custom_views.autocompleteview.Place"
+                    app:rowLayout="@layout/row_place" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/searchImageView"
+                    android:background="@drawable/search_edittext_drawable"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
-            </LinearLayout>
 
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/locationListView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/locationSearchLinLayout"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/noSearchResultTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/locationSearchLinLayout"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="10dp"
+                android:text="No relevant location found."
+                android:textColor="@color/gray"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -112,7 +174,8 @@
         android:gravity="center"
         android:text="Save"
         android:textColor="@color/white"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

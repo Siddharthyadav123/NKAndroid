@@ -16,6 +16,7 @@
         android:drawablePadding="10dp"
         android:gravity="center|left"
         android:padding="5dp"
+        android:singleLine="true"
         android:text="Current location"
         android:textSize="14dp"
         android:visibility="gone" />

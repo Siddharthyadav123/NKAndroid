@@ -25,6 +25,7 @@
         android:drawablePadding="10dp"
         android:gravity="center|left"
         android:padding="5dp"
+        android:singleLine="true"
         android:text="Current location"
         android:textColor="@color/black"
         android:textSize="14dp"

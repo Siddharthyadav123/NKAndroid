@@ -54,7 +54,9 @@ public class SharedPref {
     }
 
     public void put(String key, Object value) {
-        if (value instanceof Integer) {
+        if (value == null) {
+            editor.putString(key, (String) value);
+        } else if (value instanceof Integer) {
             editor.putInt(key, ((Integer) value).intValue());
         } else if (value instanceof Float) {
             editor.putFloat(key, ((Float) value).floatValue());
@@ -87,6 +89,7 @@ public class SharedPref {
     public float getFloat(String key) {
         return pref.getFloat(key, 0.0f);
     }
+
 
     // method to clear all the values from shared pref. called on logout
     public void clearSharedPref() {

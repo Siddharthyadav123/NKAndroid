@@ -15,12 +15,8 @@ import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.ActivityLog;
-import com.netkoin.app.entities.ProductBarcode;
-import com.netkoin.app.entities.Store;
-import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonListAdapter;
 import com.netkoin.app.screens.koin_managment.adapters.KoinActivitiesListAdapter;
 import com.netkoin.app.servicemodels.KoinManagementServiceModel;
-import com.netkoin.app.servicemodels.ProductBarcodesModel;
 
 import java.util.ArrayList;
 
@@ -132,6 +128,15 @@ public class KoinActivitesFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
+        progressBarCenter.setVisibility(View.VISIBLE);
+        koinManagementServiceModel.loadActivityLogs();
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
@@ -150,6 +155,10 @@ public class KoinActivitesFragment extends AbstractBaseFragment {
     private void onActivityLogResponse(boolean isSuccess, String errorString) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
+
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
             if (koinManagementServiceModel.getPage() == 1) {
@@ -172,19 +181,15 @@ public class KoinActivitesFragment extends AbstractBaseFragment {
                 canLoadMoreListItems = false;
             }
 
-//            //showing info window
-//            if(self.activityLogs ==  nil || self.activityLogs?.count == 0)
-//            {
-//                showRetryView("No activity logs found.", needRetryButton: true);
-//            }
-//
-//        }else{
-//            self.tableView.tableFooterView = nil
-//
-//            if(self.activityLogs ==  nil || self.activityLogs?.count == 0)
-//            {
-//                showRetryView(errorString, needRetryButton: true);
-//            }
+            //showing info window
+            if (activityLogs == null || activityLogs.size() == 0) {
+                showRetryView("No activity logs found.", true);
+            }
+
+        } else {
+            if (activityLogs == null || activityLogs.size() == 0) {
+                showRetryView(errorString, true);
+            }
 
         }
         progressBarCenter.setVisibility(View.GONE);

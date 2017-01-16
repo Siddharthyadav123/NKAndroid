@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.controller.FragmentNavigationViewController;
+import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.categories.adapters.CategoriesGridViewAdapter;
 import com.netkoin.app.servicemodels.CateogoriesServiceModel;
 
@@ -22,10 +24,8 @@ public class CategoriesFragment extends AbstractBaseFragment {
 
     private GridView categoriesGridView;
     private CategoriesGridViewAdapter categoriesGridViewAdapter;
-
     private TextView currentLocationTextView;
     private CateogoriesServiceModel cateogoriesServiceModel;
-
     private ProgressBar progressBarCenter;
 
 
@@ -53,6 +53,14 @@ public class CategoriesFragment extends AbstractBaseFragment {
         registerEvents();
         cateogoriesServiceModel = new CateogoriesServiceModel(getActivity(), this);
         cateogoriesServiceModel.loadCateogries();
+
+        String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+        if (currentLocation == null) {
+            currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
+        } else {
+            currentLocationTextView.setText(currentLocation);
+        }
+
     }
 
     private void setSettingsAdapter() {
@@ -81,10 +89,30 @@ public class CategoriesFragment extends AbstractBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
         return view;
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+        if (!previousLocation.equals(currentLocation)) {
+            if (currentLocation == null) {
+                currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
+            } else {
+                currentLocationTextView.setText(currentLocation);
+            }
+            previousLocation = currentLocation;
+            System.out.println(">>request 111");
+            //hit API on location change from user
+            cateogoriesServiceModel.loadCateogries();
+        }
+
+
+    }
 
     @Override
     public void onActionBarLeftBtnClick() {
@@ -95,6 +123,15 @@ public class CategoriesFragment extends AbstractBaseFragment {
     @Override
     public void onActionBarTitleClick() {
 
+    }
+
+    @Override
+    public void onRetryBtnClick() {
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
+        progressBarCenter.setVisibility(View.VISIBLE);
+        cateogoriesServiceModel.loadCateogries();
     }
 
     @Override
@@ -119,21 +156,19 @@ public class CategoriesFragment extends AbstractBaseFragment {
 
     public void onCategoriesResponse(boolean isSuccess, String errorString) {
         progressBarCenter.setVisibility(View.GONE);
-//        self.refreshControl.endRefreshing();
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
-
             setSettingsAdapter();
-//            if (cateogoriesServiceModel.categories == nil || self.categories ?.count == 0)
-//            {
-//                showRetryView("No category found.", needRetryButton:true);
-//            }
+            if (cateogoriesServiceModel.getCategories() == null || cateogoriesServiceModel.getCategories().size() == 0) {
+                showRetryView("No category found.", true);
+            }
         } else {
-
-//            if (self.categories == nil || self.categories ?.count == 0)
-//            {
-//                showRetryView(errorString, needRetryButton:true);
-//            }
+            if (cateogoriesServiceModel.getCategories() == null || cateogoriesServiceModel.getCategories().size() == 0) {
+                showRetryView(errorString, true);
+            }
         }
 
 

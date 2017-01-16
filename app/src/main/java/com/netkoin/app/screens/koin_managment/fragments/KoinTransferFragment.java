@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
@@ -105,6 +104,11 @@ public class KoinTransferFragment extends AbstractBaseFragment {
 
     @Override
     public void onActionBarTitleClick() {
+
+    }
+
+    @Override
+    public void onRetryBtnClick() {
 
     }
 

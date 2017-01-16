@@ -67,7 +67,6 @@ public class StoreServiceModel extends BaseServiceModel {
                 latitude = 21.1458;
                 longitude = 79.0882;
             }
-
         }
 
 

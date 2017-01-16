@@ -161,6 +161,11 @@ public class StoreProfileFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.walkInImageLinLayout:

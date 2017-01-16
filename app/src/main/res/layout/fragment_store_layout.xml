@@ -22,15 +22,6 @@
         android:layout_marginTop="115dp"
         android:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/progressBarFooter"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/progressBarHeader"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="180dp"
-        android:visibility="visible" />
-
 
     <com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh
         android:id="@+id/refreshLayout"
@@ -47,6 +38,15 @@
             android:dividerHeight="1dp"
             app:alpha_factor="0.1" />
     </com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh>
+
+    <ProgressBar
+        android:id="@+id/progressBarFooter"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/progressBarHeader"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="180dp"
+        android:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/progressBarListLoading"
@@ -74,11 +74,22 @@
             android:drawablePadding="10dp"
             android:gravity="center|left"
             android:padding="5dp"
+            android:singleLine="true"
             android:text="Current location"
             android:textSize="14dp"
             android:visibility="visible" />
 
     </LinearLayout>
+
+    <!--To add the change location button-->
+    <RelativeLayout
+        android:id="@+id/footerRilLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/store_header_height"
+        android:visibility="gone">
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -135,6 +135,15 @@ public class FeaturedFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
+        progressBarCenter.setVisibility(View.VISIBLE);
+        adsServiceModel.loadAdsByStore(store.getId());
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
@@ -153,6 +162,10 @@ public class FeaturedFragment extends AbstractBaseFragment {
     private void onIndividualCatResponse(boolean isSuccess, String errorString) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
+
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
             if (adsServiceModel.getPage() == 1) {
@@ -175,21 +188,15 @@ public class FeaturedFragment extends AbstractBaseFragment {
                 canLoadMoreListItems = false;
             }
 
-//
-//            //showing info window
-//            if (self.ads == nil || self.ads ?.count == 0)
-//            {
-//                showRetryView("No item found for this cateogry.", needRetryButton:true);
-//            }
+            //showing info window
+            if (adsList == null || adsList.size() == 0) {
+                showRetryView("No item found for this category.", true);
+            }
 
         } else {
-//            self.tableView.tableFooterView = nil
-//
-//            if (self.ads == nil || self.ads ?.count == 0)
-//            {
-//                showRetryView(errorString, needRetryButton:true);
-//            }
-
+            if (adsList == null || adsList.size() == 0) {
+                showRetryView(errorString, true);
+            }
         }
 
         progressBarCenter.setVisibility(View.GONE);

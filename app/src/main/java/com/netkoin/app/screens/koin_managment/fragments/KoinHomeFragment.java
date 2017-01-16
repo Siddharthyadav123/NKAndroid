@@ -138,6 +138,11 @@ public class KoinHomeFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+
+    }
+
+    @Override
     public void onClick(View v) {
 
     }

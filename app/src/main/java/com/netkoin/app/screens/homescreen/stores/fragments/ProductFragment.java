@@ -129,6 +129,15 @@ public class ProductFragment extends AbstractBaseFragment {
     }
 
     @Override
+    public void onRetryBtnClick() {
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
+        progressBarCenter.setVisibility(View.VISIBLE);
+        productBarcodesModel.loadProductBarcodes(store.getId());
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
@@ -147,6 +156,10 @@ public class ProductFragment extends AbstractBaseFragment {
     private void onProductListResponse(boolean isSuccess, Object result, String errorString) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
+
+        if (retryView != null) {
+            retryView.setVisibility(View.GONE);
+        }
 
         if (isSuccess) {
             if (productBarcodesModel.getPage() == 1) {
@@ -169,19 +182,14 @@ public class ProductFragment extends AbstractBaseFragment {
                 canLoadMoreListItems = false;
             }
 
-//            //showing info window
-//            if (self.cataloguesServiceModel == nil || self.catalouges ?.count == 0)
-//            {
-//                showRetryView("No item found to purchase.", needRetryButton:true);
-//            }
-
+            //showing info window
+            if (productBarcodes == null || productBarcodes.size() == 0) {
+                showRetryView("No products found.", true);
+            }
         } else {
-//            self.tableView.tableFooterView = nil
-//
-//            if (self.catalouges == nil || self.catalouges ?.count == 0)
-//            {
-//                showRetryView(errorString !, needRetryButton:true);
-//            }
+            if (productBarcodes == null || productBarcodes.size() == 0) {
+                showRetryView(errorString, true);
+            }
 
         }
         progressBarCenter.setVisibility(View.GONE);
