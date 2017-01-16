@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/storeProfileHeaderRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/LightGray"
+    android:visibility="gone">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/store_header_height">
+
+        <ProgressBar
+            android:id="@+id/progressBarCenter"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:visibility="visible" />
+
+
+        <ImageView
+            android:id="@+id/storeBannerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/storeLocationRelativeLayout"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop" />
+
+
+        <RelativeLayout
+            android:id="@+id/storeLocationRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <com.netkoin.app.custom_views.circularimageview.CircleImageView
+                android:id="@+id/storeLogoImageView"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/place_holder" />
+
+            <TextView
+                android:id="@+id/storeNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@+id/storeLogoImageView"
+                android:text="#Name"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/locImageView"
+                android:layout_width="10dp"
+                android:layout_height="13dp"
+                android:layout_below="@+id/storeNameTextView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@+id/storeLogoImageView"
+                android:src="@drawable/map_pin_black" />
+
+            <TextView
+                android:id="@+id/storeDesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/storeNameTextView"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/locImageView"
+                android:text="description"
+                android:textColor="@color/gray"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:id="@+id/verifiedImageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/verified" />
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</RelativeLayout>
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theamPurpleDark"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/splashRelLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:paddingLeft="5dp">
+
+        <TextView
+            android:id="@+id/tmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/splashTextView"
+            android:paddingTop="4dp"
+            android:text="TM"
+            android:textColor="@color/white"
+            android:textSize="9dp" />
+
+        <TextView
+            android:id="@+id/splashTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NetKoin"
+            android:textColor="@color/white"
+            android:textSize="31dp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

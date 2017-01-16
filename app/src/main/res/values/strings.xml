@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Netkoins</string>
+
+    <string name="enableGPSText">Enable GPS</string>
+    <string name="enableGPSBody">The app needs GPS to be enabled do you want to enable it in the settings?</string>
+    <string name="settingsGPSText">Settings</string>
+
+</resources>

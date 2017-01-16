@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabsParentLL"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/LightGray"
+    android:paddingTop="1dp">
+
+    <View
+        android:id="@+id/sprator"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentTop="true"
+        android:alpha="0.5"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/sprator">
+
+        <RelativeLayout
+            android:id="@+id/storesTabRL"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground">
+
+
+            <ImageView
+                android:id="@+id/storeImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/stores_fill" />
+
+            <TextView
+                android:id="@+id/storeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/storeImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="1dp"
+                android:text="Stores"
+                android:textColor="@color/theamPurpleDark"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/trendingTabRL"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.8"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/trendingImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:padding="1dp"
+                android:src="@drawable/trending_line" />
+
+            <TextView
+                android:id="@+id/trendingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/trendingImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="1dp"
+                android:text="Trendings"
+                android:textSize="12dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/categoriesTabRL"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.8"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/categoriesImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:padding="1.5dp"
+                android:src="@drawable/categpries_line" />
+
+            <TextView
+                android:id="@+id/categoryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/categoriesImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="1dp"
+                android:text="Categories"
+                android:textSize="12dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settingsTabRL"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.8"
+            android:background="?android:selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/settingsImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/settings_line" />
+
+            <TextView
+                android:id="@+id/settingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/settingsImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="1dp"
+                android:text="Settings"
+                android:textSize="12dp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

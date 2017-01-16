@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/logo" />
+
+    <RelativeLayout
+        android:id="@+id/splashRelLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logoImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:paddingLeft="5dp">
+
+        <TextView
+            android:id="@+id/tmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/splashTextView"
+            android:paddingTop="4dp"
+            android:text="TM"
+            android:textColor="@color/theamPurpleDark"
+            android:textSize="9dp" />
+
+        <TextView
+            android:id="@+id/splashTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NetKoin"
+            android:textColor="@color/theamPurpleDark"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/loginTextView"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/signUpTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/btn_effect_drawable"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="LOG IN"
+        android:textColor="@color/white"
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/signUpTextView"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/btn_effect_drawable"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="SIGN UP"
+        android:textColor="@color/white"
+        android:textSize="17dp" />
+
+
+</RelativeLayout>

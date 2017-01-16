@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/custom_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loginButtonLinLayout"
+        android:layout_below="@+id/actionBar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/logo" />
+
+            <com.netkoin.app.custom_views.material_edittext.MaterialEditText
+                android:id="@+id/emailMaterialEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/logoImageView"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@null"
+                    android:hint="Email"
+                    android:singleLine="true" />
+            </com.netkoin.app.custom_views.material_edittext.MaterialEditText>
+
+            <View
+                android:id="@+id/emailSeprator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/emailMaterialEditText"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:alpha="0.7"
+                android:background="@color/gray" />
+
+            <com.netkoin.app.custom_views.material_edittext.MaterialEditText
+                android:id="@+id/pwdMaterialEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emailMaterialEditText"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="15dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@null"
+                    android:hint="Password"
+                    android:singleLine="true" />
+            </com.netkoin.app.custom_views.material_edittext.MaterialEditText>
+
+            <View
+                android:id="@+id/emailSeprator2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/pwdMaterialEditText"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:alpha="0.7"
+                android:background="@color/gray" />
+
+
+            <TextView
+                android:id="@+id/gPlusTextView"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@id/emailSeprator2"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/btn_gplus_drawable"
+                android:gravity="center"
+                android:text="Sign in via Google"
+                android:textAllCaps="true"
+                android:textColor="@color/gPlusRed" />
+
+            <TextView
+                android:id="@+id/fbTextView"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@id/gPlusTextView"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_fb_drawable"
+                android:gravity="center"
+                android:text="Sign in via Facebook"
+                android:textAllCaps="true"
+                android:textColor="@color/fbBlue" />
+
+            <TextView
+                android:id="@+id/infoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fbTextView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:text="By clicking Sign In you are agreeing to the"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/infoTextView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:id="@+id/termToUseTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:gravity="center"
+                    android:text="Terms of use"
+                    android:textColor="#1352E2"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:text="and"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/privacyPolicyTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:gravity="center"
+                    android:text="Privacy Policy"
+                    android:textColor="#1352E2"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/loginButtonLinLayout"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_alignParentBottom="true"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/theamPurpleDark"
+            android:padding="5dp"
+            android:src="@drawable/arrowright" />
+
+    </LinearLayout>
+
+</RelativeLayout>

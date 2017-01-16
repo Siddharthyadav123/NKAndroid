@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!--Action bar-->
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/custom_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <TextView
+        android:id="@+id/currentLocationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/actionBar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="?android:selectableItemBackground"
+        android:drawableLeft="@drawable/search_icon"
+        android:drawablePadding="10dp"
+        android:gravity="center|left"
+        android:padding="5dp"
+        android:text="Current location"
+        android:textColor="@color/black"
+        android:textSize="14dp"
+        android:visibility="visible" />
+
+    <View
+        android:id="@+id/seprator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/currentLocationTextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/LightGray" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/seprator">
+
+        <GridView
+            android:id="@+id/categoriesGridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:columnWidth="110dp"
+            android:divider="@color/LightGray"
+            android:dividerHeight="1dp"
+            android:gravity="center"
+            android:numColumns="3"
+            android:stretchMode="spacingWidthUniform" />
+
+        <ProgressBar
+            android:id="@+id/progressBarCenter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

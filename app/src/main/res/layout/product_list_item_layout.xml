@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+
+        <ImageView
+            android:id="@+id/productImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:background="@color/LightGray"
+            android:scaleType="fitXY"
+            android:src="@drawable/barcode" />
+
+        <TextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/clockImageView"
+            android:layout_toRightOf="@+id/productImageView"
+            android:maxLines="2"
+            android:text="Product Name"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:id="@+id/addresImageView"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_below="@+id/productNameTextView"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/productImageView"
+            android:src="@drawable/map_pin_black" />
+
+        <TextView
+            android:id="@+id/productAddrsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/productNameTextView"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/addresImageView"
+            android:text="Product Name"
+            android:textColor="@color/gray"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/dateTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="01/01/17"
+            android:textColor="@color/gray"
+            android:textSize="13dp" />
+
+        <ImageView
+            android:id="@+id/clockImageView"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="12dp"
+            android:layout_toLeftOf="@+id/dateTimeTextView"
+            android:src="@drawable/clock_gray" />
+
+        <TextView
+            android:id="@+id/priceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/productImageView"
+            android:background="@color/theamPurpleDark"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

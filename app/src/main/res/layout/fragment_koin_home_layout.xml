@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <!--Action bar-->
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/custom_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <ImageView
+        android:id="@+id/bannerImageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/store_header_height"
+        android:layout_below="@+id/actionBar"
+        android:scaleType="centerCrop"
+        android:src="@drawable/banner2" />
+
+    <ImageView
+        android:id="@+id/bannerShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/store_header_height"
+        android:layout_below="@+id/actionBar"
+        android:alpha="0.32"
+        android:background="@color/black"
+        android:scaleType="centerCrop" />
+
+    <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/segmentGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actionBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        segmentedgroup:sc_border_width="2dp"
+        segmentedgroup:sc_checked_text_color="@color/black"
+        segmentedgroup:sc_corner_radius="5dp"
+        segmentedgroup:sc_tint_color="@color/white">
+
+        <RadioButton
+            android:id="@+id/dayRadioBtn"
+            style="@style/RadioButton"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:text="Day" />
+
+        <RadioButton
+            android:id="@+id/currentRadioBtn"
+            style="@style/RadioButton"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Current" />
+
+        <RadioButton
+            android:id="@+id/monthRadioBtn"
+            style="@style/RadioButton"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:text="Month" />
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <TextView
+        android:id="@+id/koinCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/segmentGroup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="45dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/koinsLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/koinCountTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:text="KOINs"
+        android:textAllCaps="true"
+        android:textColor="@color/theamPurpleLight"
+        android:textSize="20dp" />
+
+
+    <ListView
+        android:id="@+id/koinOptionListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bannerImageView"></ListView>
+
+</RelativeLayout>

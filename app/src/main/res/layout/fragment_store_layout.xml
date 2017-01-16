@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!--Action bar-->
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/custom_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarHeader"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/actionBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="115dp"
+        android:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/progressBarFooter"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/progressBarHeader"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="180dp"
+        android:visibility="visible" />
+
+
+    <com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/progressBarListLoading"
+        android:layout_below="@+id/actionBar">
+
+        <com.netkoin.app.custom_views.parallex.ParallaxListView
+            android:id="@+id/storesListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/LightGray"
+            android:dividerHeight="1dp"
+            app:alpha_factor="0.1" />
+    </com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh>
+
+    <ProgressBar
+        android:id="@+id/progressBarListLoading"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/currentLocationLinLayout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/actionBar"
+        android:background="@color/theamPurpleDark"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/currentLocationTextView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/current_loc_drawable"
+            android:drawableLeft="@drawable/search_icon"
+            android:drawablePadding="10dp"
+            android:gravity="center|left"
+            android:padding="5dp"
+            android:text="Current location"
+            android:textSize="14dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
