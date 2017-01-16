@@ -33,7 +33,6 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".screens.splash.SplashActivity"
             android:screenOrientation="portrait">
@@ -43,11 +42,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".screens.homescreen.home.activites.HomeScreenActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".screens.signinoption.SignInOptionActivity"
             android:screenOrientation="portrait" />
@@ -62,7 +59,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.search_location.activity.SearchLocationActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".location.GpsLocationReceiver">
             <intent-filter>
@@ -72,7 +69,9 @@
             </intent-filter>
         </receiver>
 
-
+        <activity
+            android:name=".screens.barcodescan.BarCodeScanActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

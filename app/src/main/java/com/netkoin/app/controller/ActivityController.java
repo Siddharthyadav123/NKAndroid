@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.netkoin.app.screens.barcodescan.BarCodeScanActivity;
 import com.netkoin.app.screens.homescreen.home.activites.HomeScreenActivity;
 import com.netkoin.app.screens.koin_managment.activites.KoinManagementHomeActivity;
 import com.netkoin.app.screens.search_location.activity.SearchLocationActivity;
@@ -29,6 +30,7 @@ public class ActivityController {
     public static final int ACTIVITY_HOME_SCREEN = 3;
     public static final int ACTIVITY_KOIN_MANAGEMENT_HOME_SCREEN = 4;
     public static final int ACTIVITY_SEARCH_LOCATION = 5;
+    public static final int ACTIVITY_BAR_CODE_SCAN = 6;
 
     public static ActivityController instance;
 
@@ -62,6 +64,9 @@ public class ActivityController {
                 break;
             case ACTIVITY_SEARCH_LOCATION:
                 intent = new Intent(context, SearchLocationActivity.class);
+                break;
+            case ACTIVITY_BAR_CODE_SCAN:
+                intent = new Intent(context, BarCodeScanActivity.class);
                 break;
 
         }

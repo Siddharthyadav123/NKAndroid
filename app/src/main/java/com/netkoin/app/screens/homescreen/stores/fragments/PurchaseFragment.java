@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.RequestConstants;
+import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.PurchaseBarcode;
 import com.netkoin.app.entities.Store;
@@ -95,6 +97,13 @@ public class PurchaseFragment extends AbstractBaseFragment {
                 //setting page to 1
                 purchaseBarcodesModel.resetPage();
                 purchaseBarcodesModel.loadPurchaseBarcodes(store.getId());
+            }
+        });
+
+        purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ActivityController.getInstance().handleEvent(PurchaseFragment.this.getActivity(), ActivityController.ACTIVITY_BAR_CODE_SCAN);
             }
         });
     }
