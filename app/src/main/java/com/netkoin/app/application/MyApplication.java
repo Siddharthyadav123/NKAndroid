@@ -21,6 +21,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.netkoin.app.controller.AppController;
 import com.netkoin.app.location.LocationCallback;
 import com.netkoin.app.location.LocationModel;
@@ -47,8 +49,10 @@ public class MyApplication extends Application implements LocationCallback {
         super.onCreate();
         myApplication = this;
         MultiDex.install(this);
-        initLocation();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
+        initLocation();
     }
 
     private void initLocation() {

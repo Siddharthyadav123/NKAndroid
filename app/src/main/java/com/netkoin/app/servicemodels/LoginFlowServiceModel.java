@@ -8,6 +8,7 @@ import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.AppController;
 import com.netkoin.app.pref.SharedPref;
+import com.netkoin.app.social.FbUserDo;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
 
@@ -37,6 +38,41 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         requestBody = formLoginJsonBody(email, pwd).toString();
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_POST_SIGNIN, Request.Method.POST, URLConstants.URL_SIGNIN, true, "Signing in..", requestBody);
         apiHandler.setNeedTokenHeader(false);
+        apiHandler.requestAPI();
+
+    }
+
+    public void performFacebookSignIn(FbUserDo fbUserDo) {
+        requestBody = formFBLoginJsonBody(fbUserDo).toString();
+        APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN, Request.Method.POST, URLConstants.URL_FACEBOOK_SIGNIN, true, "Signing in...", requestBody);
+        apiHandler.setNeedTokenHeader(false);
+        apiHandler.requestAPI();
+    }
+
+    public JSONObject formFBLoginJsonBody(FbUserDo fbUserDo) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("first_name", fbUserDo.getName());
+            jsonObject.put("last_name", fbUserDo.getName());
+            jsonObject.put("facebook_id", fbUserDo.getFbid());
+            jsonObject.put("token", fbUserDo.getToken());
+            jsonObject.put("email", fbUserDo.getEmail());
+            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("device_name", getDeviceName());
+            jsonObject.put("device_model", getDeviceModel());
+            jsonObject.put("os_name", "android");
+            jsonObject.put("os_version", getDeviceAPIVersion());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public void performLogout() {
+        requestBody = formLogoutJsonBody().toString();
+        APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_POST_LOGOUT,
+                Request.Method.POST, URLConstants.URL_POST_LOGOUT, true, "Logging out..", requestBody);
+        apiHandler.setNeedTokenHeader(true);
         apiHandler.requestAPI();
 
     }
@@ -96,87 +132,103 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     }
 
-    private void onLogoutResponse(boolean isSuccess, Object result, String errorString) {
-//        if(isSuccess)
-//        {
-//            let data:NSDictionary=result["data"] as! NSDictionary
-//
-//            var message_code:Int=data["message_code"] as!Int
-//
-//            if(message_code == 1011)
-//            {
-//                self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_LOGOUT, isSuccess: true, responseObject: result, errorString: "Logout Successfully !!")
-//            }else{
-//                self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_LOGOUT, isSuccess: false, responseObject: result, errorString: "Logout failed.")
-//            }
-//
-//
-//        }else{
-//            self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_LOGOUT, isSuccess: false, responseObject: result, errorString: errorString)
-//        }
+    private void onLogoutResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+        if (isSuccess) {
+            JSONObject jsonObject = (JSONObject) result;
+            JSONObject data = jsonObject.getJSONObject("data");
+
+            int message_code = data.getInt("message_code");
+
+            if (message_code == 1011) {
+                if (apiCallback != null) {
+                    this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_LOGOUT,
+                            true, result, "Logout Successfully !!");
+                }
+            } else {
+                if (apiCallback != null) {
+                    this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_LOGOUT,
+                            false, result, "Logout failed.");
+                }
+            }
+        } else {
+            if (apiCallback != null) {
+                this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_LOGOUT,
+                        false, result, errorString);
+            }
+        }
     }
 
-    private void onGPlusSignInResponse(boolean isSuccess, Object result, String errorString) {
-//        if(isSuccess)
-//        {
-//            let data:NSDictionary=result["data"] as! NSDictionary
-//            let id:Int=data["id"] as!Int
-//            let token:String=data["token"] as! String
-//
-//            //adding settings
-//            let user_setting = data["user_setting"]
-//            if(user_setting != nil)
-//            {
-//                self.addSettings(user_setting as! NSDictionary)
-//            }
-//
-//            AppController.sharedInstance.modelFacade.localModel.token = token;
-//
-//
-//            //storing details for silent login
-//            SharedPref.put(SharedPref.KEY_SILENT_LOGIN_REQUEST_PARAM, value: self.params);
-//            SharedPref.put(SharedPref.KEY_SILENT_LOGIN_TYPE, value: RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN);
-//
-//            //storing user details
-//            SharedPref.put(SharedPref.KEY_AUTH_TOKEN, value: token);
-//            SharedPref.put(SharedPref.KEY_USER_ID, value: id);
-//
-//            self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN, isSuccess: true, responseObject: result, errorString: "Login Successful !")
-//        }else{
-//            self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN, isSuccess: false, responseObject: result, errorString: errorString)
-//        }
+    private void onGPlusSignInResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+        if (isSuccess) {
+            JSONObject jsonObject = (JSONObject) result;
+            JSONObject data = jsonObject.getJSONObject("data");
 
+            Integer id = data.getInt("id");
+            String token = data.getString("token");
+
+            if (data.has("user_setting")) {
+                JSONObject userSettingsJson = data.getJSONObject("user_setting");
+                addSettings(userSettingsJson);
+            }
+
+            AppController.getInstance().getModelFacade().getLocalModel().setToken(token);
+
+            //storing details for silent login
+            sharedPref.put(SharedPref.KEY_SILENT_LOGIN_REQUEST_PARAM, requestBody);
+            sharedPref.put(SharedPref.KEY_SILENT_LOGIN_TYPE, new Integer(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN));
+
+            //saving user id and token
+            sharedPref.put(SharedPref.KEY_AUTH_TOKEN, token);
+            sharedPref.put(SharedPref.KEY_USER_ID, id);
+
+            if (apiCallback != null) {
+                this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN,
+                        true, result, "Login Successful !");
+            }
+
+        } else {
+            if (apiCallback != null) {
+                this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN,
+                        false, result, errorString);
+            }
+        }
     }
 
 
-    private void onFacebookSignInResponse(boolean isSuccess, Object result, String errorString) {
-//        if(isSuccess)
-//        {
-//            let data:NSDictionary=result["data"] as! NSDictionary
-//            let id:Int=data["id"] as!Int
-//            let token:String=data["token"] as! String
-//
-//            //adding settings
-//            let user_setting = data["user_setting"]
-//            if(user_setting != nil)
-//            {
-//                self.addSettings(user_setting as! NSDictionary)
-//            }
-//
-//            AppController.sharedInstance.modelFacade.localModel.token = token;
-//
-//            //storing details for silent login
-//            SharedPref.put(SharedPref.KEY_SILENT_LOGIN_REQUEST_PARAM, value: self.params);
-//            SharedPref.put(SharedPref.KEY_SILENT_LOGIN_TYPE, value: RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN);
-//
-//            //saving user id and token
-//            SharedPref.put(SharedPref.KEY_AUTH_TOKEN, value: token);
-//            SharedPref.put(SharedPref.KEY_USER_ID, value: id);
-//
-//            self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN, isSuccess: true, responseObject: result, errorString: "Login Successful !")
-//        }else{
-//            self.apiCallback!.onAPIResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN, isSuccess: false, responseObject: result, errorString: errorString)
-//        }
+    private void onFacebookSignInResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+        if (isSuccess) {
+            JSONObject jsonObject = (JSONObject) result;
+            JSONObject data = jsonObject.getJSONObject("data");
+
+            Integer id = data.getInt("id");
+            String token = data.getString("token");
+
+            if (data.has("user_setting")) {
+                JSONObject userSettingsJson = data.getJSONObject("user_setting");
+                addSettings(userSettingsJson);
+            }
+
+            AppController.getInstance().getModelFacade().getLocalModel().setToken(token);
+
+            //storing details for silent login
+            sharedPref.put(SharedPref.KEY_SILENT_LOGIN_REQUEST_PARAM, requestBody);
+            sharedPref.put(SharedPref.KEY_SILENT_LOGIN_TYPE, new Integer(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN));
+
+            //saving user id and token
+            sharedPref.put(SharedPref.KEY_AUTH_TOKEN, token);
+            sharedPref.put(SharedPref.KEY_USER_ID, id);
+
+            if (apiCallback != null) {
+                this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN,
+                        true, result, "Login Successful !");
+            }
+
+        } else {
+            if (apiCallback != null) {
+                this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN,
+                        false, result, errorString);
+            }
+        }
     }
 
     private void onSignInResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
@@ -317,6 +369,20 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         try {
             jsonObject.put("username", email);
             jsonObject.put("password", pwd);
+            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("device_name", getDeviceName());
+            jsonObject.put("device_model", getDeviceModel());
+            jsonObject.put("os_name", "android");
+            jsonObject.put("os_version", getDeviceAPIVersion());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public JSONObject formLogoutJsonBody() {
+        JSONObject jsonObject = new JSONObject();
+        try {
             jsonObject.put("push_token", "HARDCODED12345678");
             jsonObject.put("device_name", getDeviceName());
             jsonObject.put("device_model", getDeviceModel());

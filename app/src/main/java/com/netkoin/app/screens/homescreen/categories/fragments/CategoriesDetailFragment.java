@@ -7,17 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.Ads;
 import com.netkoin.app.entities.MainCategory;
+import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.AdsServiceModel;
+import com.netkoin.app.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -35,6 +39,8 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
     private AdsServiceModel adsServiceModel;
     private ArrayList<Ads> adsList = null;
 
+    private int previousCatDistance;
+
     public CategoriesDetailFragment() {
         // Required empty public constructor
     }
@@ -50,6 +56,8 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
         category = (MainCategory) getParcelExtras();
         makeView();
         registereEvents();
+
+        previousCatDistance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_CAT_ADS);
 
         adsServiceModel = new AdsServiceModel(getActivity(), this);
         adsServiceModel.loadAdsByCateogry(category.getId());
@@ -88,6 +96,16 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
                 adsServiceModel.loadAdsByCateogry(category.getId());
             }
         });
+
+        featuredListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                double destinationLat = adsList.get(position).getStore().getLatitude();
+                double destinationLong = adsList.get(position).getStore().getLongitude();
+                Utils.getInstance().openMap(getActivity(), destinationLat, destinationLong, adsList.get(position).getName());
+
+            }
+        });
     }
 
 
@@ -118,6 +136,21 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
         showRefreshingIfRequestPending();
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_CAT_ADS);
+
+        if (previousCatDistance != distance) {
+            previousCatDistance = distance;
+            progressBarCenter.setVisibility(View.VISIBLE);
+            adsServiceModel.setAdsList(null);
+            adsServiceModel.resetPage();
+            adsServiceModel.loadAdsByCateogry(category.getId());
+        }
     }
 
     @Override

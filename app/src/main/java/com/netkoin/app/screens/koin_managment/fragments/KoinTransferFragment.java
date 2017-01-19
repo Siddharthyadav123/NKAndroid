@@ -2,7 +2,6 @@ package com.netkoin.app.screens.koin_managment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.servicemodels.KoinManagementServiceModel;
+import com.netkoin.app.utils.Utils;
 
 /**
  * Created by siddharthyadav on 08/01/17.
@@ -129,11 +129,9 @@ public class KoinTransferFragment extends AbstractBaseFragment {
 
     private void onTransferKoinResponse(boolean isSuccess, Object result, String errorString) {
         if (isSuccess) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), (String) result, Snackbar.LENGTH_LONG)
-                    .show();
+            Utils.getInstance().showSnackBar(getActivity(), (String) result);
         } else {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG)
-                    .show();
+            Utils.getInstance().showSnackBar(getActivity(), errorString);
         }
     }
 }

@@ -61,6 +61,8 @@ public class StoreFragment extends AbstractBaseFragment {
 
     private RelativeLayout footerRilLayout;
 
+    private int previousStoreDistance;
+
     public StoreFragment() {
         // Required empty public constructor
     }
@@ -74,6 +76,7 @@ public class StoreFragment extends AbstractBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storeServiceModel = new StoreServiceModel(getActivity(), this);
+        previousStoreDistance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_STORES);
         makeView();
     }
 
@@ -100,6 +103,9 @@ public class StoreFragment extends AbstractBaseFragment {
 
         //requestBanner
         storeServiceModel.loadStoreFeaturedBanner();
+
+        stores = null;
+        storeServiceModel.setStores(null);
 
         //setting page to 1
         storeServiceModel.setPage(1);
@@ -219,17 +225,23 @@ public class StoreFragment extends AbstractBaseFragment {
         super.onResume();
 
         String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
-        if (!previousLocation.equals(currentLocation)) {
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_STORES);
+
+
+        if (!previousLocation.equals(currentLocation) || previousStoreDistance != distance) {
             if (currentLocation == null) {
                 currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
             } else {
                 currentLocationTextView.setText(currentLocation);
             }
             previousLocation = currentLocation;
+            previousStoreDistance = distance;
             System.out.println(">>request 222");
             //hit API on location change from user
             progressBarFooter.setVisibility(View.VISIBLE);
             storeServiceModel.resetPage();
+            stores = null;
+            storeServiceModel.setStores(null);
             storeServiceModel.loadStores();
         }
 

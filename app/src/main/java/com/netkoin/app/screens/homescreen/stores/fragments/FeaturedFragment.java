@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -18,6 +19,7 @@ import com.netkoin.app.entities.Ads;
 import com.netkoin.app.entities.Store;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.AdsServiceModel;
+import com.netkoin.app.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -90,6 +92,16 @@ public class FeaturedFragment extends AbstractBaseFragment {
                 //setting page to 1
                 adsServiceModel.resetPage();
                 adsServiceModel.loadAdsByStore(store.getId());
+            }
+        });
+
+        featuredListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                double destinationLat = adsList.get(position).getStore().getLatitude();
+                double destinationLong = adsList.get(position).getStore().getLongitude();
+                Utils.getInstance().openMap(getActivity(), destinationLat, destinationLong, adsList.get(position).getName());
+
             }
         });
     }

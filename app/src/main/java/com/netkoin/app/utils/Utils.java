@@ -2,16 +2,23 @@ package com.netkoin.app.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
+
+import java.util.Locale;
 
 /**
  * Created by siddharth on 1/5/2017.
@@ -55,6 +62,28 @@ public class Utils {
         context.startActivity(i);
     }
 
+    public void openMap(Context context, double destinationLatitude, double destinationLongitude, String title) {
+        double sourceLatitude = MyApplication.getInstance().getLocationModel().getLatitude();
+        double sourceLongitude = MyApplication.getInstance().getLocationModel().getLatitude();
+
+
+        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?&daddr=%f,%f (%s)", destinationLatitude, destinationLongitude, title);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            try {
+                uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f", sourceLatitude, sourceLongitude, destinationLatitude, destinationLongitude);
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                context.startActivity(intent);
+
+            } catch (ActivityNotFoundException innerEx) {
+                Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     public void hideKeyboard(Activity activity) {
         // Check if no view has focus:
         View view = activity.getCurrentFocus();
@@ -91,5 +120,15 @@ public class Utils {
             }
         }
 
+    }
+
+
+    public void showSnackBar(Activity activity, String textToShow) {
+        Snackbar snack = Snackbar.make(activity.findViewById(android.R.id.content), textToShow, Snackbar.LENGTH_LONG);
+        View view = snack.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        view.setLayoutParams(params);
+        snack.show();
     }
 }

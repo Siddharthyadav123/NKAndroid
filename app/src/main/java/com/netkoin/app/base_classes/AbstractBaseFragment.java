@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
@@ -111,6 +112,12 @@ public abstract class AbstractBaseFragment extends Fragment implements View.OnCl
         super.onCreate(savedInstanceState);
         sharedPref = new SharedPref(getActivity());
         previousLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
+
+
+        if (previousLocation == null) {
+            previousLocation = Constants.CURRENT_LOCATION_TEXT;
+            sharedPref.put(SharedPref.KEY_SELECTED_LOC, Constants.CURRENT_LOCATION_TEXT);
+        }
     }
 
     @Override
@@ -142,6 +149,34 @@ public abstract class AbstractBaseFragment extends Fragment implements View.OnCl
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
+    protected void showLogoutDialog(final MyApplication.DailogCallback dailogCallback) {
+        Utils.getInstance().hideKeyboard(getActivity());
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        builder1.setMessage("Do you want to logout ?");
+        builder1.setTitle("Logout");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Logout",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        if (dailogCallback != null)
+                            dailogCallback.onDailogYesClick();
+                    }
+                });
+
+        builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
 
     protected void showRetryView(String infoText, boolean needRetryButton) {
         if (retryView == null) {

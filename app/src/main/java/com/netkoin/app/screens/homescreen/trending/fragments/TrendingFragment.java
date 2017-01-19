@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -20,6 +21,7 @@ import com.netkoin.app.entities.Ads;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.TrendingServiceModel;
+import com.netkoin.app.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,8 @@ public class TrendingFragment extends AbstractBaseFragment {
 
     private TrendingServiceModel trendingServiceModel;
 
+    private int previousTrendingDistance;
+
     public TrendingFragment() {
         // Required empty public constructor
     }
@@ -57,6 +61,7 @@ public class TrendingFragment extends AbstractBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeView();
+        previousTrendingDistance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_TRENDING_ADS);
     }
 
     private void makeView() {
@@ -162,6 +167,15 @@ public class TrendingFragment extends AbstractBaseFragment {
 
             }
         });
+
+        trendingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                double destinationLat = trendingAds.get(position).getStore().getLatitude();
+                double destinationLong = trendingAds.get(position).getStore().getLongitude();
+                Utils.getInstance().openMap(getActivity(), destinationLat, destinationLong, trendingAds.get(position).getName());
+            }
+        });
     }
 
     @Override
@@ -169,11 +183,17 @@ public class TrendingFragment extends AbstractBaseFragment {
         super.onResume();
 
         String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
-        if (!previousLocation.equals(currentLocation)) {
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_TRENDING_ADS);
+
+
+        if (!previousLocation.equals(currentLocation) || previousTrendingDistance != distance) {
             //hit API on location change from user
             previousLocation = currentLocation;
+            previousTrendingDistance = distance;
             System.out.println(">>request 333");
             progressBarCenter.setVisibility(View.VISIBLE);
+            trendingAds = null;
+            trendingServiceModel.setTrendingAds(null);
             trendingServiceModel.resetPage();
             trendingServiceModel.loadTreandingAds();
         }

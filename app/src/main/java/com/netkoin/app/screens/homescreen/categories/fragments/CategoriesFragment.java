@@ -28,6 +28,8 @@ public class CategoriesFragment extends AbstractBaseFragment {
     private CateogoriesServiceModel cateogoriesServiceModel;
     private ProgressBar progressBarCenter;
 
+    private int previousCatDistance;
+
 
     public CategoriesFragment() {
     }
@@ -41,6 +43,7 @@ public class CategoriesFragment extends AbstractBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeView();
+        previousCatDistance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_CAT_ADS);
     }
 
     private void makeView() {
@@ -99,13 +102,16 @@ public class CategoriesFragment extends AbstractBaseFragment {
         super.onResume();
 
         String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
-        if (!previousLocation.equals(currentLocation)) {
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_CAT_ADS);
+
+        if (!previousLocation.equals(currentLocation) || previousCatDistance != distance) {
             if (currentLocation == null) {
                 currentLocationTextView.setText(Constants.CURRENT_LOCATION_TEXT);
             } else {
                 currentLocationTextView.setText(currentLocation);
             }
             previousLocation = currentLocation;
+            previousCatDistance = distance;
             System.out.println(">>request 111");
             //hit API on location change from user
             cateogoriesServiceModel.loadCateogries();
@@ -131,6 +137,7 @@ public class CategoriesFragment extends AbstractBaseFragment {
             retryView.setVisibility(View.GONE);
         }
         progressBarCenter.setVisibility(View.VISIBLE);
+        cateogoriesServiceModel.setCategories(null);
         cateogoriesServiceModel.loadCateogries();
     }
 

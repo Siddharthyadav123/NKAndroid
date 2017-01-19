@@ -33,7 +33,7 @@ public class TrendingServiceModel extends BaseServiceModel {
         //take selected user location if any selected
         double latitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LAT);
         double longitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LONG);
-        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_STORES);
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_TRENDING_ADS);
 
         if (latitude == 0.0f) {
             //take from local class
@@ -68,7 +68,7 @@ public class TrendingServiceModel extends BaseServiceModel {
         //take selected user location if any selected
         double latitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LAT);
         double longitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LONG);
-        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_STORES);
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_TRENDING_ADS);
 
         if (latitude == 0.0f) {
             //take from local class
@@ -146,5 +146,9 @@ public class TrendingServiceModel extends BaseServiceModel {
 
     public ArrayList<Ads> getTrendingAds() {
         return trendingAds;
+    }
+
+    public void setTrendingAds(ArrayList<Ads> trendingAds) {
+        this.trendingAds = trendingAds;
     }
 }

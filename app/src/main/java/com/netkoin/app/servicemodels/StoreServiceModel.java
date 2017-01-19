@@ -323,6 +323,10 @@ public class StoreServiceModel extends BaseServiceModel {
         return storesProfileFeaturedBanner;
     }
 
+    public void setStores(ArrayList<Store> stores) {
+        this.stores = stores;
+    }
+
     public boolean isNearByRequestInProgress() {
         return nearByRequestInProgress;
     }

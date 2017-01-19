@@ -11,5 +11,7 @@ public interface Constants {
 
     String GOOGLE_API_KEY = "AIzaSyBMz_h6tRiaTNQ-UiR8zgso_5E4ikMD3ck";
 
+    public static final String LOGIN_TYPE_FB = "fb_login";
+
 
 }

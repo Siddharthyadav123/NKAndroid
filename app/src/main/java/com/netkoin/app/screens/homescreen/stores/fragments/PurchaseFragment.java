@@ -18,6 +18,8 @@ import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.PurchaseBarcode;
 import com.netkoin.app.entities.Store;
+import com.netkoin.app.screens.barcodescan.BarCodeScanActivity;
+import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonListAdapter;
 import com.netkoin.app.servicemodels.PurchaseBarcodesModel;
 
@@ -103,7 +105,12 @@ public class PurchaseFragment extends AbstractBaseFragment {
         purchaseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ActivityController.getInstance().handleEvent(PurchaseFragment.this.getActivity(), ActivityController.ACTIVITY_BAR_CODE_SCAN);
+                BarCodeScanParcelDo barCodeScanParcelDo = new BarCodeScanParcelDo();
+                barCodeScanParcelDo.setStoreId(store.getId());
+                barCodeScanParcelDo.setProductBarId(purchaseBarcodes.get(i).getId());
+                barCodeScanParcelDo.setScanMode(BarCodeScanActivity.SCAN_MODE_PURCHASE);
+
+                ActivityController.getInstance().handleEvent(PurchaseFragment.this.getActivity(), ActivityController.ACTIVITY_BAR_CODE_SCAN, barCodeScanParcelDo);
             }
         });
     }

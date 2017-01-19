@@ -2,7 +2,6 @@ package com.netkoin.app.screens.homescreen.stores.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,7 @@ import com.netkoin.app.entities.Store;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreBannerViewPagerAdapter;
 import com.netkoin.app.servicemodels.StoreServiceModel;
 import com.netkoin.app.servicemodels.UserServiceModel;
+import com.netkoin.app.utils.Utils;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -267,8 +267,6 @@ public class StoreProfileFragment extends AbstractBaseFragment {
     }
 
     public void onCheckInWalkinResponse(boolean isSuccess, String errorString) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content), errorString, Snackbar.LENGTH_LONG)
-                .show();
-
+        Utils.getInstance().showSnackBar(getActivity(), errorString);
     }
 }

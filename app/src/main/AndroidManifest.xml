@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.netkoin.app">
 
     <permission
@@ -72,6 +73,24 @@
         <activity
             android:name=".screens.barcodescan.BarCodeScanActivity"
             android:screenOrientation="portrait"></activity>
+
+
+        <!--Facebook-->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/fb_app_id"
+            tools:ignore="ManifestResource" />
+
     </application>
 
 </manifest>

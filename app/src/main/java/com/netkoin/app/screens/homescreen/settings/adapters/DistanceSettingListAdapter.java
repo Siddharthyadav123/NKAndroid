@@ -70,9 +70,9 @@ public class DistanceSettingListAdapter extends BaseAdapter {
         distanceSeekbar.getProgressDrawable().setColorFilter(context.getResources().getColor(R.color.theamPurpleDark), PorterDuff.Mode.MULTIPLY);
 
         //setting data
-        currentKMTextView.setText(sharedPref.getInt(itemsKeys[pos]) + " KM");
-        distanceSeekbar.setProgress(sharedPref.getInt(itemsKeys[pos]));
-        selectedDistanceTextView.setText(sharedPref.getInt(itemsKeys[pos]) + " KM");
+        currentKMTextView.setText(sharedPref.getSettingDistanceByKey(itemsKeys[pos]) + " KM");
+        distanceSeekbar.setProgress(sharedPref.getSettingDistanceByKey(itemsKeys[pos]));
+        selectedDistanceTextView.setText(sharedPref.getSettingDistanceByKey(itemsKeys[pos]) + " KM");
 
         //setting header text
         settingTextView.setText(items[pos]);

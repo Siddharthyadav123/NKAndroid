@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
+import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
 
@@ -48,22 +49,22 @@ public class UserServiceModel extends BaseServiceModel {
         apiHandler.requestAPI();
     }
 
-    public void checkInProducts(int storeId, int barCodeValue, int productBarId) {
-        String url = URLConstants.URL_CHECK_IN_PRODUCTS + "?store_id=" + storeId +
-                "&product_barcode_id=" + productBarId + "&barcode_value=" + barCodeValue;
+    public void checkInProducts(BarCodeScanParcelDo barCodeScanParcelDo) {
+        String url = URLConstants.URL_CHECK_IN_PRODUCTS + "?store_id=" + barCodeScanParcelDo.getStoreId() +
+                "&product_barcode_id=" + barCodeScanParcelDo.getProductBarId() + "&barcode_value=" + barCodeScanParcelDo.getBarCodeValue();
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQIEST_ID_CHECKIN_PRODUCTS,
-                Request.Method.GET, url, false, "Please wait...", null);
+                Request.Method.GET, url, true, "Verifying barcode...", null);
         apiHandler.requestAPI();
 
     }
 
-    public void checkInPurchases(int storeId, int barCodeValue, int purchaseBarId) {
-        String url = URLConstants.URL_CHECK_IN_PURCHASES + "?store_id=" + storeId +
-                "&purchase_barcode_id=" + purchaseBarId + "&barcode_value=" + barCodeValue;
+    public void checkInPurchases(BarCodeScanParcelDo barCodeScanParcelDo) {
+        String url = URLConstants.URL_CHECK_IN_PURCHASES + "?store_id=" + barCodeScanParcelDo.getStoreId() +
+                "&product_barcode_id=" + barCodeScanParcelDo.getProductBarId() + "&barcode_value=" + barCodeScanParcelDo.getBarCodeValue();
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQIEST_ID_CHECKIN_PURCHASES,
-                Request.Method.GET, url, false, "Please wait...", null);
+                Request.Method.GET, url, true, "Verifying barcode...", null);
         apiHandler.requestAPI();
 
     }

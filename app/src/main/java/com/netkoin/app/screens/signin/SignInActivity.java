@@ -1,17 +1,26 @@
 package com.netkoin.app.screens.signin;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.custom_views.material_edittext.MaterialEditText;
 import com.netkoin.app.servicemodels.LoginFlowServiceModel;
+import com.netkoin.app.social.FacebookModel;
+import com.netkoin.app.social.FbUserDo;
+import com.netkoin.app.social.SocialLoginInterface;
 import com.netkoin.app.utils.Utils;
 
-public class SignInActivity extends AbstractBaseActivity {
+import java.util.Arrays;
+
+public class SignInActivity extends AbstractBaseActivity implements SocialLoginInterface {
     private MaterialEditText emailMaterialEditText;
     private MaterialEditText pwdMaterialEditText;
     private TextView gPlusTextView;
@@ -69,12 +78,13 @@ public class SignInActivity extends AbstractBaseActivity {
     }
 
     private void onFBBtnClick() {
-
+        requestFBLogin();
     }
 
     private void onGPlusClick() {
 
     }
+
 
     private void onLoginBtnClick() {
         if (isValiedField()) {
@@ -123,5 +133,44 @@ public class SignInActivity extends AbstractBaseActivity {
         }
     }
 
+    /**
+     * --------------------FB code------------
+     */
+    private CallbackManager fbCallbackManager = null;
+    private FacebookModel faceBookModel = null;
 
+    public void requestFBLogin() {
+        fbCallbackManager = CallbackManager.Factory.create();
+        faceBookModel = new FacebookModel(this, this);
+        LoginManager.getInstance().logOut();
+        LoginManager.getInstance().registerCallback(fbCallbackManager, faceBookModel);
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email", "user_status", "user_birthday"));
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (fbCallbackManager != null) {
+            fbCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onSocialLoginSuccess(FbUserDo fbUserDo, String socialType) {
+        if (socialType.equals(Constants.LOGIN_TYPE_FB)) {
+            LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
+            loginFlowModel.performFacebookSignIn(fbUserDo);
+        }
+    }
+
+    @Override
+    public void onSocialLoginFailure(String error, String socialType) {
+
+    }
+
+    @Override
+    public void onSocialLoginCancel(String socialType) {
+
+    }
 }

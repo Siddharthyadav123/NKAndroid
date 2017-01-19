@@ -93,17 +93,14 @@ public class SharedPref {
 
     // method to clear all the values from shared pref. called on logout
     public void clearSharedPref() {
-        pref.edit().remove(PREF_NAME).commit();
+        pref.edit().clear().commit();
     }
 
     ////////////----- getter setters for distance setting
 
     public int getSettingDistanceByKey(String key) {
-        int distance = pref.getInt(key, 0);
+        int distance = pref.getInt(key, 100);
         //returning default distance
-        if (distance == 0) {
-            return 100;
-        }
         return distance;
     }
 

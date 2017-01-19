@@ -37,10 +37,11 @@ public class SplashActivity extends AbstractBaseActivity {
         String previousRequestParamJsonbody = sharedPref.getString(SharedPref.KEY_SILENT_LOGIN_REQUEST_PARAM);
 
         if (authToken != null && previousRequestParamJsonbody != null) {
-            //  int previousSilentLoginRequestId = sharedPref.getInt(SharedPref.KEY_SILENT_LOGIN_TYPE);
-            //  LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
-            //  loginFlowModel.performSilentLogin(previousSilentLoginRequestId, previousRequestParamJsonbody);
+            // int previousSilentLoginRequestId = sharedPref.getInt(SharedPref.KEY_SILENT_LOGIN_TYPE);
+            // LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
+            // loginFlowModel.performSilentLogin(previousSilentLoginRequestId, previousRequestParamJsonbody);
 
+            finish();
             AppController.getInstance().getModelFacade().getLocalModel().setToken(authToken);
             ActivityController.getInstance().handleEvent(this, ActivityController.ACTIVITY_HOME_SCREEN);
 
@@ -106,6 +107,7 @@ public class SplashActivity extends AbstractBaseActivity {
     @Override
     public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
         if (isSuccess) {
+            finish();
             ActivityController.getInstance().handleEvent(this, ActivityController.ACTIVITY_HOME_SCREEN);
         } else {
             showAleartPosBtnOnly(null, "Message", errorString);

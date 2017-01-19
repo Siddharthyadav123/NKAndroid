@@ -9,10 +9,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.netkoin.app.R;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
+import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.controller.ActivityController;
+import com.netkoin.app.controller.AppController;
 import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.screens.homescreen.settings.adapters.SettingListViewAdapter;
+import com.netkoin.app.servicemodels.LoginFlowServiceModel;
 import com.netkoin.app.utils.Utils;
 
 /**
@@ -87,10 +91,24 @@ public class SettingsFragment extends AbstractBaseFragment {
                 break;
             case 5:
                 //logout
+                showLogoutDialog(dailogCallback);
 
                 break;
         }
     }
+
+    private MyApplication.DailogCallback dailogCallback = new MyApplication.DailogCallback() {
+        @Override
+        public void onDailogYesClick() {
+            LoginFlowServiceModel loginFlowServiceModel = new LoginFlowServiceModel(getActivity(), SettingsFragment.this);
+            loginFlowServiceModel.performLogout();
+        }
+
+        @Override
+        public void onDailogNoClick() {
+
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,6 +141,14 @@ public class SettingsFragment extends AbstractBaseFragment {
 
     @Override
     public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-
+        switch (requestId) {
+            case RequestConstants.REQUEST_ID_POST_LOGOUT:
+                if (isSuccess) {
+                    AppController.getInstance().logoutApp(getActivity());
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

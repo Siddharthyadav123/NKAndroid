@@ -42,7 +42,7 @@ public class AdsServiceModel extends BaseServiceModel {
         //take selected user location if any selected
         double latitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LAT);
         double longitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LONG);
-        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_STORES);
+        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_CAT_ADS);
 
         if (latitude == 0.0f) {
             //take from local class
@@ -158,5 +158,9 @@ public class AdsServiceModel extends BaseServiceModel {
 
     public ArrayList<Ads> getAdsList() {
         return adsList;
+    }
+
+    public void setAdsList(ArrayList<Ads> adsList) {
+        this.adsList = adsList;
     }
 }

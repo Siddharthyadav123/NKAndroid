@@ -91,4 +91,8 @@ public class CateogoriesServiceModel extends BaseServiceModel {
     public ArrayList<MainCategory> getCategories() {
         return categories;
     }
+
+    public void setCategories(ArrayList<MainCategory> categories) {
+        this.categories = categories;
+    }
 }

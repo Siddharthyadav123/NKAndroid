@@ -1,102 +1,210 @@
 package com.netkoin.app.screens.barcodescan;
 
-import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Result;
+import com.netkoin.app.R;
+import com.netkoin.app.controller.ActivityController;
+import com.netkoin.app.servicemodels.UserServiceModel;
+import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.APIHandlerCallback;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
-public class BarCodeScanActivity extends Activity implements ZXingScannerView.ResultHandler {
-    private static final String FLASH_STATE = "FLASH_STATE";
-    private static final String AUTO_FOCUS_STATE = "AUTO_FOCUS_STATE";
-    private static final String SELECTED_FORMATS = "SELECTED_FORMATS";
-    private static final String CAMERA_ID = "CAMERA_ID";
-    private ZXingScannerView mScannerView;
-    private boolean mFlash;
-    private boolean mAutoFocus;
-    private ArrayList<Integer> mSelectedIndices;
-    private int mCameraId = -1;
-
-    @Override
-    public void onCreate(Bundle state) {
-        super.onCreate(state);
-
-        if (state != null) {
-//            mFlash = state.getBoolean(FLASH_STATE, false);
-//            mAutoFocus = state.getBoolean(AUTO_FOCUS_STATE, true);
-            mSelectedIndices = state.getIntegerArrayList(SELECTED_FORMATS);
-//            mCameraId = state.getInt(CAMERA_ID, -1);
-        } else {
-//            mFlash = false;
-//            mAutoFocus = true;
-            mSelectedIndices = null;
-//            mCameraId = -1;
-        }
+import net.sourceforge.zbar.Config;
+import net.sourceforge.zbar.Image;
+import net.sourceforge.zbar.ImageScanner;
+import net.sourceforge.zbar.Symbol;
+import net.sourceforge.zbar.SymbolSet;
 
 
-        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-        setupFormats();
-        setContentView(mScannerView);                // Set the scanner view as the content view
+public class BarCodeScanActivity extends AppCompatActivity implements APIHandlerCallback {
 
+    public static final int SCAN_MODE_PURCHASE = 0;
+    public static final int SCAN_MODE_PRODUCT = 1;
+
+
+    private BarCodeScanParcelDo barCodeScanParcelDo;
+
+    private Camera mCamera;
+    private CameraPreview mPreview;
+    private Handler autoFocusHandler;
+
+    private TextView rescanBtnTextView;
+    private TextView cancelBtnTextView;
+
+    private ImageScanner scanner;
+    private boolean barcodeScanned = false;
+    private boolean previewing = true;
+
+    static {
+        System.loadLibrary("iconv");
     }
 
-    public void setupFormats() {
-        List<BarcodeFormat> formats = new ArrayList<BarcodeFormat>();
-        if (mSelectedIndices == null || mSelectedIndices.isEmpty()) {
-            mSelectedIndices = new ArrayList<Integer>();
-            for (int i = 0; i < ZXingScannerView.ALL_FORMATS.size(); i++) {
-                mSelectedIndices.add(i);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getSupportActionBar().hide();
+        barCodeScanParcelDo = getIntent().getParcelableExtra(ActivityController.KEY_PARCEL_EXTRAS);
+        setContentView(R.layout.activity_bar_code_scan);
+        initControls();
+    }
+
+    private void initControls() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        autoFocusHandler = new Handler();
+        mCamera = getCameraInstance();
+
+        // Instance barcode scanner
+        scanner = new ImageScanner();
+        scanner.setConfig(0, Config.X_DENSITY, 3);
+        scanner.setConfig(0, Config.Y_DENSITY, 3);
+
+        mPreview = new CameraPreview(BarCodeScanActivity.this, mCamera, previewCb,
+                autoFocusCB);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
+        preview.addView(mPreview);
+
+        rescanBtnTextView = (TextView) findViewById(R.id.rescanBtnTextView);
+        cancelBtnTextView = (TextView) findViewById(R.id.cancelBtnTextView);
+
+        rescanBtnTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (barcodeScanned) {
+                    barcodeScanned = false;
+                    mCamera.setPreviewCallback(previewCb);
+                    mCamera.startPreview();
+                    previewing = true;
+                    mCamera.autoFocus(autoFocusCB);
+                }
+            }
+        });
+
+        cancelBtnTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            releaseCamera();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    /**
+     * A safe way to get an instance of the Camera object.
+     */
+    public static Camera getCameraInstance() {
+        Camera c = null;
+        try {
+            c = Camera.open();
+        } catch (Exception e) {
+        }
+        return c;
+    }
+
+    private void releaseCamera() {
+        if (mCamera != null) {
+            previewing = false;
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+
+    private Runnable doAutoFocus = new Runnable() {
+        public void run() {
+            if (previewing)
+                mCamera.autoFocus(autoFocusCB);
+        }
+    };
+
+    Camera.PreviewCallback previewCb = new Camera.PreviewCallback() {
+        public void onPreviewFrame(byte[] data, Camera camera) {
+            Camera.Parameters parameters = camera.getParameters();
+            Camera.Size size = parameters.getPreviewSize();
+
+            Image barcode = new Image(size.width, size.height, "Y800");
+            barcode.setData(data);
+
+            int result = scanner.scanImage(barcode);
+
+            if (result != 0) {
+                previewing = false;
+                mCamera.setPreviewCallback(null);
+                mCamera.stopPreview();
+
+                SymbolSet syms = scanner.getResults();
+                for (Symbol sym : syms) {
+
+                    Log.i("<<<<<<Asset Code>>>>> ",
+                            "<<<<Bar Code>>> " + sym.getData());
+                    String scanResult = sym.getData().trim();
+
+                    Toast.makeText(BarCodeScanActivity.this, scanResult, Toast.LENGTH_SHORT).show();
+                    onBarcodeScanResultFound(scanResult);
+                    barcodeScanned = true;
+
+
+                    break;
+                }
             }
         }
+    };
 
-        for (int index : mSelectedIndices) {
-            formats.add(ZXingScannerView.ALL_FORMATS.get(index));
+    // Mimic continuous auto-focusing
+    Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+            autoFocusHandler.postDelayed(doAutoFocus, 1000);
         }
-        if (mScannerView != null) {
-            mScannerView.setFormats(formats);
+    };
+
+    private void onBarcodeScanResultFound(String scanResult) {
+        try {
+            barCodeScanParcelDo.setBarCodeValue(Long.parseLong(scanResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(BarCodeScanActivity.this, "Barcode id not found.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        UserServiceModel userServiceModel = new UserServiceModel(this, this);
+        switch (barCodeScanParcelDo.getScanMode()) {
+            case SCAN_MODE_PURCHASE:
+                userServiceModel.checkInPurchases(barCodeScanParcelDo);
+                break;
+            case SCAN_MODE_PRODUCT:
+                userServiceModel.checkInProducts(barCodeScanParcelDo);
+                break;
         }
     }
 
 
     @Override
-    public void handleResult(Result rawResult) {
-        // Do something with the result here
-        Toast.makeText(BarCodeScanActivity.this, "Format >>" + rawResult.getBarcodeFormat().toString() + "\n Result: " + rawResult.getText(), Toast.LENGTH_LONG).show();
-
-        finish();
-        // If you would like to resume scanning, call this method below:
-//        mScannerView.resumeCameraPreview(this);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+        Utils.getInstance().showSnackBar(this, errorString);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mScannerView.setResultHandler(this);
-        mScannerView.startCamera(mCameraId);
-//        mScannerView.setFlash(mFlash);
-//        mScannerView.setAutoFocus(mAutoFocus);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.putBoolean(FLASH_STATE, mFlash);
-//        outState.putBoolean(AUTO_FOCUS_STATE, mAutoFocus);
-        outState.putIntegerArrayList(SELECTED_FORMATS, mSelectedIndices);
-//        outState.putInt(CAMERA_ID, mCameraId);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mScannerView.stopCamera();
-//        closeMessageDialog();
-//        closeFormatsDialog();
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseCamera();
     }
 }

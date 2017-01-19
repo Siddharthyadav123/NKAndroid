@@ -7,15 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.RequestConstants;
+import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.ProductBarcode;
 import com.netkoin.app.entities.Store;
+import com.netkoin.app.screens.barcodescan.BarCodeScanActivity;
+import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonListAdapter;
 import com.netkoin.app.servicemodels.ProductBarcodesModel;
 
@@ -94,6 +98,18 @@ public class ProductFragment extends AbstractBaseFragment {
                 //setting page to 1
                 productBarcodesModel.resetPage();
                 productBarcodesModel.loadProductBarcodes(store.getId());
+            }
+        });
+
+        productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                BarCodeScanParcelDo barCodeScanParcelDo = new BarCodeScanParcelDo();
+                barCodeScanParcelDo.setStoreId(store.getId());
+                barCodeScanParcelDo.setProductBarId(productBarcodes.get(i).getId());
+                barCodeScanParcelDo.setScanMode(BarCodeScanActivity.SCAN_MODE_PRODUCT);
+
+                ActivityController.getInstance().handleEvent(ProductFragment.this.getActivity(), ActivityController.ACTIVITY_BAR_CODE_SCAN, barCodeScanParcelDo);
             }
         });
     }
