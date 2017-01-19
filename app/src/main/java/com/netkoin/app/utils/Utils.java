@@ -2,13 +2,19 @@ package com.netkoin.app.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,6 +23,7 @@ import android.widget.Toast;
 
 import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
+import com.netkoin.app.screens.splash.SplashActivity;
 
 import java.util.Locale;
 
@@ -130,5 +137,34 @@ public class Utils {
         params.gravity = Gravity.TOP;
         view.setLayoutParams(params);
         snack.show();
+    }
+
+    public void showLocalNotification(String title, String description) {
+        Intent intent = new Intent(MyApplication.getInstance(), SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(MyApplication.getInstance(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(MyApplication.getInstance());
+        Bitmap largeIcon = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.app_logo);
+
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBigContentTitle(title);
+        bigTextStyle.bigText(description);
+
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.app_logo)
+                .setLargeIcon(largeIcon)
+                .setTicker(title + ": " + description)
+                .setContentTitle(title)
+                .setStyle(bigTextStyle)
+                .setContentText(description)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+                .setContentIntent(contentIntent);
+
+
+        NotificationManager notificationManager = (NotificationManager) MyApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, b.build());
     }
 }

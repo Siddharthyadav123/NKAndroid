@@ -1,7 +1,9 @@
 package com.netkoin.app.models;
 
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.entities.TotalKoin;
 import com.netkoin.app.location.LocationModel;
+import com.netkoin.app.pref.SharedPref;
 
 /**
  * Created by siddharthyadav on 02/01/17.
@@ -29,6 +31,9 @@ public class LocalModel {
 
 
     public String getToken() {
+        if (token == null) {
+            token = new SharedPref(MyApplication.getInstance()).getString(SharedPref.KEY_AUTH_TOKEN);
+        }
         return token;
     }
 

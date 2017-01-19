@@ -82,7 +82,7 @@ public class StoreFragment extends AbstractBaseFragment {
 
     private void makeView() {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_store_layout, null, false);
-        initActionBarView(R.drawable.koin_mgmnt, "200");
+        initActionBarView(R.drawable.koin_mgmnt, "0");
         initViews();
         registerEvents();
         requestWebAPIs();

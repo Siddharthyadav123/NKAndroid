@@ -9,9 +9,11 @@ import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.constants.Constants;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
+import com.netkoin.app.controller.AppController;
 import com.netkoin.app.entities.Store;
 import com.netkoin.app.entities.StoreFeaturedBanner;
 import com.netkoin.app.pref.SharedPref;
+import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
 
@@ -81,12 +83,20 @@ public class StoreServiceModel extends BaseServiceModel {
 
 
     public void checkNearByStore(double latitude, double longitude) {
+        if (AppController.getInstance().getModelFacade().getLocalModel().getToken() == null) {
+            return;
+        }
+        //looking for nearby store
+        if (!sharedPref.getBoolean(SharedPref.KEY_SETTING_NOTI_NEAR_BY_STORES)) {
+            return;
+        }
         if (nearByRequestInProgress) {
             return;
         }
+
         nearByRequestInProgress = true;
         //setting distance to find out for 1KM stores
-        int distance = 2;
+        int distance = 3;
 
         if (latitude == 0.0f) {
             //take from local class
@@ -257,58 +267,82 @@ public class StoreServiceModel extends BaseServiceModel {
         }
     }
 
-    private void onNearByStoreResponse(boolean isSuccess, Object result, String
-            errorString) throws JSONException {
+    private void onNearByStoreResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
 
             if (result != null && jsonObject.length() > 0) {
                 JSONArray response = jsonObject.getJSONArray("data");
                 Gson gson = new Gson();
-                stores = gson.fromJson(response.toString(), new TypeToken<ArrayList<Store>>() {
+                ArrayList<Store> stores = gson.fromJson(response.toString(), new TypeToken<ArrayList<Store>>() {
                 }.getType());
 
+                if (stores == null || stores.size() == 0) {
+                    return;
+                }
 
                 Store nearByStore = stores.get(0);
                 float distanceKM = Float.parseFloat(nearByStore.getDistance());
                 int distanceInMeter = (int) (distanceKM * 1000);
 
-
                 //check distance and check the same entry for the same shop id exist
                 if (distanceInMeter <= Constants.NEAR_BY_STORE_DISTANCE_IN_METER) {
-//                    if (!checkIfNotificationAlreadyGeneratedForNearbyStore(nearByStore)) {
-//                        let notificationSettings = UIUserNotificationSettings(forTypes:[.Alert,.
-//                        Badge,.Sound],categories:
-//                        nil)
-//                        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
-//
-//                        let notification = UILocalNotification()
-////                        notification.fireDate = NSDate(timeIntervalSinceNow: 1)
-//                        notification.alertBody = "Hey you are near to " + nearByStore.name
-//                        !+" store. Lets visit and earn !!";
-//                        notification.alertAction = "NetKoin"
-//                        notification.soundName = UILocalNotificationDefaultSoundName
-//                        notification.userInfo =["CustomField1":"w00t"]
-//                        UIApplication.sharedApplication().scheduleLocalNotification(notification)
-//
-//                        //showing heads up notification
-//                        let view = MessageView.viewFromNib(layout:.CardView)
-//                        view.configureDropShadow()
-//                        view.button ?.hidden = true;
-//                        // Theme message elements with the warning style.
-//                        view.configureTheme(.Success)
-//                        view.configureContent(title:"Notification", body:
-//                        "Hey you are near to " + nearByStore.name !+" store. Lets visit and earn !!"
-//                        as String, iconText:"")
-//                        SwiftMessages.show(view:view)
-//
-//                    }
+                    if (!checkIfNotificationAlreadyGeneratedForNearbyStore(nearByStore)) {
+                        if (MyApplication.getInstance().getHomeActivity() != null) {
+                            Utils.getInstance().showSnackBar(MyApplication.getInstance().getHomeActivity(), "Hey you are near to " + nearByStore.getName() + " store. Lets visit and earn !!");
+                        } else {
+                            Utils.getInstance().showLocalNotification("NetKoin", "Hey you are near to " + nearByStore.getName() + " store. Lets visit and earn !!");
+                        }
+                    }
                 }
 
 
             }
         }
         nearByRequestInProgress = false;
+    }
+
+    private boolean checkIfNotificationAlreadyGeneratedForNearbyStore(Store nearByStore) {
+//        //finding today's date
+//        let date = NSDate()
+//        let calendar = NSCalendar.currentCalendar()
+//        let components = calendar.components([.Day, .Month,.Year], fromDate: date)
+//        let day = components.day
+//        let month = components.month
+//        let year = components.year
+//
+//        let todaysDate = "\(day)-\(month)-\(year)";
+//
+//        var storeIdDictionary = SharedPref.get(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE);
+//
+//
+//        if(storeIdDictionary != nil)
+//        {
+//            storeIdDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(storeIdDictionary as! NSData) as! NSMutableDictionary
+//
+//
+//            let dateTime = storeIdDictionary.objectForKey(String(nearByStore.id));
+//
+//            if(dateTime != nil)
+//            {
+//                if(dateTime as! String == todaysDate)
+//                {
+//                    //do nothing if store id found with the same date
+//                    print("This store already notfied today")
+//                    return true;
+//                }
+//            }
+//        }else{
+//
+//            //making dictionary and adding date if dictionary is nil
+//            storeIdDictionary = NSMutableDictionary();
+//        }
+//
+//        storeIdDictionary.setValue(todaysDate, forKey: String(nearByStore.id));
+//        SharedPref.put(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE, value:  NSKeyedArchiver.archivedDataWithRootObject(storeIdDictionary));
+//
+        return true;
+
     }
 
     public ArrayList<Store> getStores() {

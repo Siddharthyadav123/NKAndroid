@@ -34,11 +34,11 @@ public class MyApplication extends Application implements LocationCallback {
 
     public static final String TAG = MyApplication.class
             .getSimpleName();
-
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-
     private LocationModel locationModel;
+
+    private Activity homeActivity;
 
     public static MyApplication getInstance() {
         return myApplication;
@@ -230,6 +230,14 @@ public class MyApplication extends Application implements LocationCallback {
 
     public LocationModel getLocationModel() {
         return locationModel;
+    }
+
+    public Activity getHomeActivity() {
+        return homeActivity;
+    }
+
+    public void setHomeActivity(Activity homeActivity) {
+        this.homeActivity = homeActivity;
     }
 }
 

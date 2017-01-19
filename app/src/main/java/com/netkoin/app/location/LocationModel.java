@@ -9,9 +9,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.netkoin.app.pref.SharedPref;
+import com.netkoin.app.servicemodels.StoreServiceModel;
 
 
 /**
@@ -45,10 +45,13 @@ public class LocationModel implements LocationListener {
 
     private SharedPref sharedPref;
 
+    private StoreServiceModel storeServiceModel;
+
     public LocationModel(Context context, LocationCallback locationCallback) {
         this.mContext = context;
         this.locationCallback = locationCallback;
         sharedPref = new SharedPref(context);
+        storeServiceModel = new StoreServiceModel(mContext, null);
     }
 
     public void initialize() {
@@ -136,8 +139,10 @@ public class LocationModel implements LocationListener {
         if (locationCallback != null && latitude != 0.0f) {
             locationCallback.onLocationFound(latitude, longitude);
             saveLatLong();
+            storeServiceModel.checkNearByStore(latitude, longitude);
         }
-        Toast.makeText(mContext, "Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "Location found Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
+//        Utils.getInstance().showLocalNotification("Netkoin Location Found", "Lat:" + latitude + "\n Long:" + longitude);
         return location;
     }
 
@@ -177,12 +182,13 @@ public class LocationModel implements LocationListener {
             latitude = (float) location.getLatitude();
             longitude = (float) location.getLongitude();
 
-            Toast.makeText(mContext, "Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "Location change Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
 
             //callback for lat long
             if (locationCallback != null && latitude != 0.0f) {
                 locationCallback.onLocationChanged(latitude, longitude);
                 saveLatLong();
+                storeServiceModel.checkNearByStore(latitude, longitude);
             }
         }
     }
@@ -198,81 +204,5 @@ public class LocationModel implements LocationListener {
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
-
-//    public void findMyAddress(Context context, AddressCallback addressCallback) {
-//        this.addressCallback = addressCallback;
-//        String strAdd = "";
-//        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-//        try {
-//            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-//            if (addresses != null) {
-//                Address returnedAddress = addresses.get(0);
-//                StringBuilder strReturnedAddress = new StringBuilder("");
-//                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-//                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append(" ");
-//                }
-//                strAdd = strReturnedAddress.toString();
-//            }
-//
-//            if (addressCallback != null) {
-//                addressCallback.onAddressResult(true, strAdd);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            addressFromAPI(context);
-//        }
-//
-//    }
-
-//    public void addressFromAPI(Context context) {
-//        try {
-//            String address = String.format(Locale.ENGLISH, "http://maps.googleapis.com/maps/api/geocode/json?latlng=%1$f,%2$f&sensor=true&language="
-//                    + Locale.getDefault().getCountry(), latitude, longitude);
-//
-//            //requesting
-//            APIHandler apiHandler = new APIHandler(context, this, RequestConstant.REQUEST_GET_ADDRESS,
-//                    Request.Method.GET, address, true, context.getResources().getString(R.string.fetchingAddressText), null, null,
-//                    null);
-//
-//            apiHandler.requestAPI();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void onAPISuccessResponse(int requestId, String responseString) {
-//        try {
-//            String address = "";
-//            JSONObject jsonObject = new JSONObject(responseString.toString());
-//
-//            if ("OK".equalsIgnoreCase(jsonObject.getString("status"))) {
-//                JSONArray results = jsonObject.getJSONArray("results");
-//                for (int i = 0; i < results.length(); i++) {
-//                    JSONObject result = results.getJSONObject(i);
-//                    address = result.getString("formatted_address");
-//                    break;
-//                }
-//            }
-//            if (addressCallback != null) {
-//                addressCallback.onAddressResult(true, address);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        if (addressCallback != null) {
-//            addressCallback.onAddressResult(false, mContext.getResources().getString(R.string.addressNotFoundText));
-//        }
-//    }
-//
-//    @Override
-//    public void onAPIFailureResponse(int requestId, String errorString) {
-//
-//    }
-//
-//    public interface AddressCallback {
-//        public void onAddressResult(boolean isFound, String addressOrError);
-//    }
-
 
 }

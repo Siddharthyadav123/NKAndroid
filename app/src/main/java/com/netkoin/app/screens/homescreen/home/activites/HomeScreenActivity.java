@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.netkoin.app.R;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.screens.homescreen.home.fragments.CategoriesHomeScreenFragment;
@@ -128,5 +129,17 @@ public class HomeScreenActivity extends AbstractBaseActivity implements TabCallb
     @Override
     public void onClick(View view) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.getInstance().setHomeActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.getInstance().setHomeActivity(null);
     }
 }

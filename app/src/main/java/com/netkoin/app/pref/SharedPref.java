@@ -5,6 +5,12 @@ import android.content.SharedPreferences;
 
 import com.netkoin.app.constants.Constants;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * Created by siddharth on 1/5/2017.
  */
@@ -116,5 +122,29 @@ public class SharedPref {
             return Constants.CURRENT_LOCATION_TEXT;
         }
         return location;
+    }
+
+    public void putMap(Map<String, Integer> inputMap, String key) {
+        JSONObject jsonObject = new JSONObject(inputMap);
+        String jsonString = jsonObject.toString();
+        editor.remove(key).commit();
+        editor.putString(key, jsonString).commit();
+    }
+
+    private Map<String, Integer> getMap(String mapKey) {
+        Map<String, Integer> outputMap = new HashMap<String, Integer>();
+        try {
+            String jsonString = pref.getString(mapKey, (new JSONObject()).toString());
+            JSONObject jsonObject = new JSONObject(jsonString);
+            Iterator<String> keysItr = jsonObject.keys();
+            while (keysItr.hasNext()) {
+                String key = keysItr.next();
+                Integer value = (Integer) jsonObject.get(key);
+                outputMap.put(key, value);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return outputMap;
     }
 }

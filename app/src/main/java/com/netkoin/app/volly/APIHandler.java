@@ -86,7 +86,10 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     }
 
     public void requestAPI() {
-        Utils.getInstance().hideKeyboard((Activity) context);
+        if (context instanceof Activity) {
+            Utils.getInstance().hideKeyboard((Activity) context);
+
+        }
         //check if internet connect found or not
         if (!MyApplication.getInstance().checkConnection(context)) {
             if (showToastOnRespone) {
@@ -177,26 +180,38 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     }
 
     private void onAPISuccess(final Object result) {
-        ((Activity) context).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (apiHandlerCallback != null) {
-                    apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, null);
+        if (context instanceof Activity) {
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (apiHandlerCallback != null) {
+                        apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, null);
+                    }
                 }
-
+            });
+        } else {
+            if (apiHandlerCallback != null) {
+                apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, null);
             }
-        });
+        }
+
     }
 
     private void onAPIFailure(final Object result, final String errorString) {
-        ((Activity) context).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (apiHandlerCallback != null) {
-                    apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorString);
+        if (context instanceof Activity) {
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (apiHandlerCallback != null) {
+                        apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorString);
+                    }
                 }
+            });
+        } else {
+            if (apiHandlerCallback != null) {
+                apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorString);
             }
-        });
+        }
     }
 
 
