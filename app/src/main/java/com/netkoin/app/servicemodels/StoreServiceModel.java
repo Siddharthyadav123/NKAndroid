@@ -22,6 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 /**
  * Created by siddharth on 1/9/2017.
@@ -296,52 +299,35 @@ public class StoreServiceModel extends BaseServiceModel {
                     }
                 }
 
-
             }
         }
         nearByRequestInProgress = false;
     }
 
     private boolean checkIfNotificationAlreadyGeneratedForNearbyStore(Store nearByStore) {
-//        //finding today's date
-//        let date = NSDate()
-//        let calendar = NSCalendar.currentCalendar()
-//        let components = calendar.components([.Day, .Month,.Year], fromDate: date)
-//        let day = components.day
-//        let month = components.month
-//        let year = components.year
-//
-//        let todaysDate = "\(day)-\(month)-\(year)";
-//
-//        var storeIdDictionary = SharedPref.get(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE);
-//
-//
-//        if(storeIdDictionary != nil)
-//        {
-//            storeIdDictionary = NSKeyedUnarchiver.unarchiveObjectWithData(storeIdDictionary as! NSData) as! NSMutableDictionary
-//
-//
-//            let dateTime = storeIdDictionary.objectForKey(String(nearByStore.id));
-//
-//            if(dateTime != nil)
-//            {
-//                if(dateTime as! String == todaysDate)
-//                {
-//                    //do nothing if store id found with the same date
-//                    print("This store already notfied today")
-//                    return true;
-//                }
-//            }
-//        }else{
-//
-//            //making dictionary and adding date if dictionary is nil
-//            storeIdDictionary = NSMutableDictionary();
-//        }
-//
-//        storeIdDictionary.setValue(todaysDate, forKey: String(nearByStore.id));
-//        SharedPref.put(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE, value:  NSKeyedArchiver.archivedDataWithRootObject(storeIdDictionary));
-//
-        return true;
+        //finding today's date
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        String todaysDate = day + "-" + month + "-" + year;
+
+        HashMap<String, String> storeIdDictionary = (HashMap<String, String>) sharedPref.getMap(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE);
+        if (storeIdDictionary != null) {
+            String dateTime = storeIdDictionary.get(nearByStore.getId() + "");
+
+            if (dateTime != null) {
+                if (dateTime.equals(todaysDate)) {
+                    //do nothing if store id found with the same date
+                    System.out.println("This store already notfied today");
+                    return true;
+                }
+            }
+        }
+        storeIdDictionary.put(nearByStore.getId() + "", todaysDate);
+        sharedPref.put(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE, storeIdDictionary);
+        return false;
 
     }
 

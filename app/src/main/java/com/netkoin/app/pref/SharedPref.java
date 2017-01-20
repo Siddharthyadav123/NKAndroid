@@ -50,7 +50,7 @@ public class SharedPref {
     public static String KEY_SELF_LOC_LAT = "KEY_SELF_LOC_LAT";
     public static String KEY_SELF_LOC_LONG = "KEY_SELF_LOC_LONG";
 
-    static String KEY_DICTIONARY_NEAR_BY_STORE = "KEY_DICTIONARY_NEAR_BY_STORE";
+    public static String KEY_DICTIONARY_NEAR_BY_STORE = "KEY_DICTIONARY_NEAR_BY_STORE";
 
 
     public SharedPref(Context context) {
@@ -124,22 +124,22 @@ public class SharedPref {
         return location;
     }
 
-    public void putMap(Map<String, Integer> inputMap, String key) {
+    public void putMap(Map<String, String> inputMap, String key) {
         JSONObject jsonObject = new JSONObject(inputMap);
         String jsonString = jsonObject.toString();
         editor.remove(key).commit();
         editor.putString(key, jsonString).commit();
     }
 
-    private Map<String, Integer> getMap(String mapKey) {
-        Map<String, Integer> outputMap = new HashMap<String, Integer>();
+    public Map<String, String> getMap(String mapKey) {
+        Map<String, String> outputMap = new HashMap<String, String>();
         try {
             String jsonString = pref.getString(mapKey, (new JSONObject()).toString());
             JSONObject jsonObject = new JSONObject(jsonString);
             Iterator<String> keysItr = jsonObject.keys();
             while (keysItr.hasNext()) {
                 String key = keysItr.next();
-                Integer value = (Integer) jsonObject.get(key);
+                String value = (String) jsonObject.get(key);
                 outputMap.put(key, value);
             }
         } catch (Exception e) {

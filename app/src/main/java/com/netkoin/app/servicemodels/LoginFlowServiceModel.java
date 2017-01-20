@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.android.volley.Request;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.AppController;
@@ -49,24 +50,13 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         apiHandler.requestAPI();
     }
 
-    public JSONObject formFBLoginJsonBody(FbUserDo fbUserDo) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("first_name", fbUserDo.getName());
-            jsonObject.put("last_name", fbUserDo.getName());
-            jsonObject.put("facebook_id", fbUserDo.getFbid());
-            jsonObject.put("token", fbUserDo.getToken());
-            jsonObject.put("email", fbUserDo.getEmail());
-            jsonObject.put("push_token", "HARDCODED12345678");
-            jsonObject.put("device_name", getDeviceName());
-            jsonObject.put("device_model", getDeviceModel());
-            jsonObject.put("os_name", "android");
-            jsonObject.put("os_version", getDeviceAPIVersion());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
+    public void performGPlusSignIn(GoogleSignInAccount acct) {
+        requestBody = formGPlusLoginJsonBody(acct).toString();
+        APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN, Request.Method.POST, URLConstants.URL_GPLUS_SIGNIN, true, "Signing in...", requestBody);
+        apiHandler.setNeedTokenHeader(false);
+        apiHandler.requestAPI();
     }
+
 
     public void performLogout() {
         requestBody = formLogoutJsonBody().toString();
@@ -383,6 +373,44 @@ public class LoginFlowServiceModel extends BaseServiceModel {
     public JSONObject formLogoutJsonBody() {
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("device_name", getDeviceName());
+            jsonObject.put("device_model", getDeviceModel());
+            jsonObject.put("os_name", "android");
+            jsonObject.put("os_version", getDeviceAPIVersion());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public JSONObject formGPlusLoginJsonBody(GoogleSignInAccount acct) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("google_id", acct.getId());
+            jsonObject.put("token", acct.getIdToken());
+            jsonObject.put("first_name", acct.getDisplayName());
+            jsonObject.put("last_name", acct.getFamilyName());
+            jsonObject.put("email", acct.getEmail());
+            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("device_name", getDeviceName());
+            jsonObject.put("device_model", getDeviceModel());
+            jsonObject.put("os_name", "android");
+            jsonObject.put("os_version", getDeviceAPIVersion());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public JSONObject formFBLoginJsonBody(FbUserDo fbUserDo) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("first_name", fbUserDo.getName());
+            jsonObject.put("last_name", fbUserDo.getName());
+            jsonObject.put("facebook_id", fbUserDo.getFbid());
+            jsonObject.put("token", fbUserDo.getToken());
+            jsonObject.put("email", fbUserDo.getEmail());
             jsonObject.put("push_token", "HARDCODED12345678");
             jsonObject.put("device_name", getDeviceName());
             jsonObject.put("device_model", getDeviceModel());

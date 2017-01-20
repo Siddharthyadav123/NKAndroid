@@ -1,12 +1,19 @@
 package com.netkoin.app.screens.signin;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.constants.Constants;
@@ -20,7 +27,7 @@ import com.netkoin.app.utils.Utils;
 
 import java.util.Arrays;
 
-public class SignInActivity extends AbstractBaseActivity implements SocialLoginInterface {
+public class SignInActivity extends AbstractBaseActivity implements SocialLoginInterface, GoogleApiClient.OnConnectionFailedListener {
     private MaterialEditText emailMaterialEditText;
     private MaterialEditText pwdMaterialEditText;
     private TextView gPlusTextView;
@@ -34,6 +41,8 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
         View view = getLayoutInflater().inflate(R.layout.activity_sign_in, null);
         initActionBarView(view);
 
+        initGoogle();
+
         emailMaterialEditText = (MaterialEditText) view.findViewById(R.id.emailMaterialEditText);
         pwdMaterialEditText = (MaterialEditText) view.findViewById(R.id.pwdMaterialEditText);
 
@@ -43,7 +52,26 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
         termToUseTextView = (TextView) view.findViewById(R.id.termToUseTextView);
         privacyPolicyTextView = (TextView) view.findViewById(R.id.privacyPolicyTextView);
         loginButtonLinLayout = (LinearLayout) view.findViewById(R.id.loginButtonLinLayout);
+
+        checkKeyHash();
+
         return view;
+    }
+
+
+    private void checkKeyHash() {
+//        try {
+//            PackageInfo info = getPackageManager().getPackageInfo(getApplication().getPackageName(), PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String myHashCode = HttpRequest.Base64.encodeBytes(md.digest());
+//                Toast.makeText(SignInActivity.this, ">> hash>> " + myHashCode, Toast.LENGTH_LONG).show();
+//                System.out.println(">>Key hash >> " + myHashCode);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -82,7 +110,7 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
     }
 
     private void onGPlusClick() {
-
+        requestGPlusLogin();
     }
 
 
@@ -134,6 +162,28 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
     }
 
     /**
+     * ----------- Google Login
+     */
+    public final int RC_SIGN_IN = 1001;
+    private GoogleApiClient mGoogleApiClient;
+
+    private void initGoogle() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    public void requestGPlusLogin() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+
+    /**
      * --------------------FB code------------
      */
     private CallbackManager fbCallbackManager = null;
@@ -151,8 +201,26 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (fbCallbackManager != null) {
-            fbCallbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        } else {
+            if (fbCallbackManager != null) {
+                fbCallbackManager.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+//            Toast.makeText(this, acct.getDisplayName(), Toast.LENGTH_SHORT).show();
+            LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
+            loginFlowModel.performGPlusSignIn(acct);
+        } else {
+            // Signed out, show unauthenticated UI.
+//            updateUI(false);
         }
     }
 
@@ -166,11 +234,16 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
 
     @Override
     public void onSocialLoginFailure(String error, String socialType) {
-
+        System.out.println(">>" + error);
     }
 
     @Override
     public void onSocialLoginCancel(String socialType) {
+        System.out.println(">>" + socialType);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

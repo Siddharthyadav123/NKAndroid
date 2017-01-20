@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "17167670889",
+    "firebase_url": "https://netkoin-6418c.firebaseio.com",
+    "project_id": "netkoin-6418c",
+    "storage_bucket": "netkoin-6418c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17167670889:android:2239d68733f25afd",
+        "android_client_info": {
+          "package_name": "com.netkoin.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17167670889-vgjiapthaj2agjthrm6m0p3dthn2p2j3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrK9PPykYsa9xdEfezFdLdvBKAyY-aqt4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
