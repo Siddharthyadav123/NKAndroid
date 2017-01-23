@@ -52,4 +52,6 @@ public interface RequestConstants {
     int REQUEST_ID_GET_NEARBY_STORE = 27;
     int REQUEST_ID_GET_LOCATION_GEOPOINTS_BY_PLACE_ID = 28;
 
+    int REQUEST_ID_GET_MESSAGES = 29;
+
 }

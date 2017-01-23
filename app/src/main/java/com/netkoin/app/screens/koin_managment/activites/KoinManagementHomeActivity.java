@@ -5,8 +5,6 @@ import android.view.View;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
-import com.netkoin.app.screens.homescreen.home.fragments.SettingsHomeScreenFragments;
-import com.netkoin.app.screens.homescreen.home.fragments.StoresHomeScreenFragment;
 import com.netkoin.app.screens.koin_managment.fragments.KoinHomeParentFragment;
 
 public class KoinManagementHomeActivity extends AbstractBaseActivity {
@@ -40,6 +38,11 @@ public class KoinManagementHomeActivity extends AbstractBaseActivity {
 
     @Override
     public void onActionBarTitleClick() {
+
+    }
+
+    @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
 
     }
 

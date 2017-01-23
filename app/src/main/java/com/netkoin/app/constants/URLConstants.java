@@ -49,6 +49,8 @@ public interface URLConstants {
     String URL_GET_ACTIVITY_LOGS = BASE_URL + "/api/activity_logs.json";
     String URL_GET_ACTIVITY_LOGS_UNREAD_COUNT = BASE_URL + "/api/activity_logs/unreadCount.json";
     String URL_GET_ACTIVITY_LOGS_SET_READ_ALL = BASE_URL + "/api/activity_logs/readAllActivityLog.json";
+    String URL_GET_SENT_MESSAGES = BASE_URL + "/api/users/sent_messages.json";
+    String URL_GET_RECIEVED_MESSAGES = BASE_URL + "/api/users/received_messages.json";
 
     //save settings
     String URL_POST_SETTINGS = BASE_URL + "/api/user_settings";

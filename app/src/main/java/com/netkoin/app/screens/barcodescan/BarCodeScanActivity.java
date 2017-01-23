@@ -2,18 +2,16 @@ package com.netkoin.app.screens.barcodescan;
 
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netkoin.app.R;
+import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.servicemodels.UserServiceModel;
 import com.netkoin.app.utils.Utils;
@@ -26,11 +24,12 @@ import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
 
-public class BarCodeScanActivity extends AppCompatActivity implements APIHandlerCallback {
+public class BarCodeScanActivity extends AbstractBaseActivity implements APIHandlerCallback {
 
     public static final int SCAN_MODE_PURCHASE = 0;
     public static final int SCAN_MODE_PRODUCT = 1;
 
+    private View mainView;
 
     private BarCodeScanParcelDo barCodeScanParcelDo;
 
@@ -49,13 +48,41 @@ public class BarCodeScanActivity extends AppCompatActivity implements APIHandler
         System.loadLibrary("iconv");
     }
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getSupportActionBar().hide();
+    public View initView() {
         barCodeScanParcelDo = getIntent().getParcelableExtra(ActivityController.KEY_PARCEL_EXTRAS);
-        setContentView(R.layout.activity_bar_code_scan);
+        mainView = getLayoutInflater().inflate(R.layout.activity_bar_code_scan, null);
+
+        boolean hasCameraPermission = checkPermission(REQUEST_MARSHMELLO_PERMISSIONS, mustPermissions[1], null);
+        if (hasCameraPermission) {
+            initControls();
+        }
+        return mainView;
+    }
+
+    @Override
+    public void registerEvents() {
+
+    }
+
+    @Override
+    public void updateUI() {
+
+    }
+
+    @Override
+    public void onActionBarLeftBtnClick() {
+
+    }
+
+    @Override
+    public void onActionBarTitleClick() {
+
+    }
+
+    @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
         initControls();
     }
 
@@ -72,11 +99,11 @@ public class BarCodeScanActivity extends AppCompatActivity implements APIHandler
 
         mPreview = new CameraPreview(BarCodeScanActivity.this, mCamera, previewCb,
                 autoFocusCB);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
+        FrameLayout preview = (FrameLayout) mainView.findViewById(R.id.cameraPreview);
         preview.addView(mPreview);
 
-        rescanBtnTextView = (TextView) findViewById(R.id.rescanBtnTextView);
-        cancelBtnTextView = (TextView) findViewById(R.id.cancelBtnTextView);
+        rescanBtnTextView = (TextView) mainView.findViewById(R.id.rescanBtnTextView);
+        cancelBtnTextView = (TextView) mainView.findViewById(R.id.cancelBtnTextView);
 
         rescanBtnTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -206,5 +233,10 @@ public class BarCodeScanActivity extends AppCompatActivity implements APIHandler
     protected void onDestroy() {
         super.onDestroy();
         releaseCamera();
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

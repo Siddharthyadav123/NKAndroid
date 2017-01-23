@@ -34,7 +34,7 @@ public class KoinHomeFragment extends AbstractBaseFragment {
     private SegmentedGroup segmentGroup;
     private TextView koinCountTextView;
 
-    private String[] items = {"ACTIVITY", "TRANSFER KOINS", "APP TUTORIAL"};
+    private String[] items = {"ACTIVITY", "MESSAGES", "TRANSFER KOINS", "APP TUTORIAL"};
 
     private KoinManagementServiceModel koinManagementServiceModel;
 
@@ -100,9 +100,12 @@ public class KoinHomeFragment extends AbstractBaseFragment {
                         navigationController.push(FragmentNavigationViewController.FRAGMENT_KOIN_ACTIVITY, null);
                         break;
                     case 1:
-                        navigationController.push(FragmentNavigationViewController.FRAGMENT_KOIN_TRANSFER, null);
+                        navigationController.push(FragmentNavigationViewController.FRAGMENT_KOIN_MESSAGES, null);
                         break;
                     case 2:
+                        navigationController.push(FragmentNavigationViewController.FRAGMENT_KOIN_TRANSFER, null);
+                        break;
+                    case 3:
                         navigationController.push(FragmentNavigationViewController.FRAGMENT_KOIN_APP_TUTORIAL, null);
                         break;
                 }

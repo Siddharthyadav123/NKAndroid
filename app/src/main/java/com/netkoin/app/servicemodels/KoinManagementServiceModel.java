@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.entities.ActivityLog;
+import com.netkoin.app.entities.Message;
+import com.netkoin.app.screens.koin_managment.fragments.KoinMessagesFragment;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
 
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 public class KoinManagementServiceModel extends BaseServiceModel {
 
     private ArrayList<ActivityLog> activityLogs = new ArrayList<>();
+    private ArrayList<Message> messages = new ArrayList<>();
     int unreadActivityLogscount;
 
     public KoinManagementServiceModel(Context context, APIHandlerCallback apiCallback) {
@@ -38,17 +41,27 @@ public class KoinManagementServiceModel extends BaseServiceModel {
         apiHandler.requestAPI();
     }
 
+    public void loadMessages(int currentSegmentFilter) {
+        String url = null;
+        if (currentSegmentFilter == KoinMessagesFragment.TYPE_SENT) {
+            url = URLConstants.URL_GET_SENT_MESSAGES + "?limit=" + limit + "&page=" + page;
+        } else {
+            url = URLConstants.URL_GET_RECIEVED_MESSAGES + "?limit=" + limit + "&page=" + page;
+        }
+
+        APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_GET_MESSAGES,
+                Request.Method.GET, url, false, null, null);
+        apiHandler.requestAPI();
+    }
+
     //{"koins":1 , "receiver_email":"rrr@netkoin.com","message":"ABCDE"}
     public void transeferKoin(int koins, String receiver_email, String message) {
-
-
         String requestBody = formTransferKoinJson(koins, receiver_email, message).toString();
         String url = URLConstants.URL_POST_TRANSER_KOINS;
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_POST_TRANSFER_KOINS,
                 Request.Method.POST, url, true, "Transferring Koins..", requestBody);
         apiHandler.requestAPI();
-
     }
 
     public JSONObject formTransferKoinJson(int koins, String receiver_email, String message) {
@@ -65,7 +78,6 @@ public class KoinManagementServiceModel extends BaseServiceModel {
 
 
     public void loadActivityLogsUnreadCount() {
-
         String url = URLConstants.URL_GET_ACTIVITY_LOGS_UNREAD_COUNT;
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_UREAD_COUNT,
@@ -75,7 +87,6 @@ public class KoinManagementServiceModel extends BaseServiceModel {
     }
 
     public void updateReadActivityStatus() {
-
         String url = URLConstants.URL_GET_ACTIVITY_LOGS_SET_READ_ALL;
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_SET_READ_ALL,
@@ -101,12 +112,44 @@ public class KoinManagementServiceModel extends BaseServiceModel {
                 case RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_SET_READ_ALL:
                     onActivitLogsSetReadAllResponse(isSuccess, result, errorString);
                     break;
+                case RequestConstants.REQUEST_ID_GET_MESSAGES:
+                    onMessagesResponse(isSuccess, result, errorString);
+                    break;
                 default:
                     break;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void onMessagesResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+        if (isSuccess) {
+            JSONObject jsonObject = (JSONObject) result;
+            JSONArray response = jsonObject.getJSONArray("data");
+
+            messages = gson.fromJson(response.toString(), new TypeToken<ArrayList<Message>>() {
+            }.getType());
+
+            if (messages.size() == 0) {
+                if (apiCallback != null) {
+                    this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_MESSAGES,
+                            false, result, "No Messages found");
+                }
+            } else {
+                if (apiCallback != null) {
+                    this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_MESSAGES,
+                            true, result, "");
+                }
+            }
+
+        } else {
+            if (apiCallback != null) {
+                this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_MESSAGES,
+                        false, result, errorString);
+            }
+
         }
     }
 
@@ -183,8 +226,6 @@ public class KoinManagementServiceModel extends BaseServiceModel {
     private void onActivityLogResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
-
-
             JSONArray response = jsonObject.getJSONArray("data");
 
             activityLogs = gson.fromJson(response.toString(), new TypeToken<ArrayList<ActivityLog>>() {
@@ -192,18 +233,15 @@ public class KoinManagementServiceModel extends BaseServiceModel {
 
 
             if (activityLogs.size() == 0) {
-
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS,
                             false, result, "No Activity logs found");
                 }
-
             } else {
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS,
                             true, result, "");
                 }
-
             }
 
         } else {
@@ -217,6 +255,10 @@ public class KoinManagementServiceModel extends BaseServiceModel {
 
     public ArrayList<ActivityLog> getActivityLogs() {
         return activityLogs;
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
     }
 
     public int getUnreadActivityLogscount() {

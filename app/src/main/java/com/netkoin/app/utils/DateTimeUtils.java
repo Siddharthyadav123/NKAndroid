@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by siddharth on 1/11/2017.
@@ -22,6 +23,7 @@ public class DateTimeUtils {
             }
 
             DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            iso8601.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = iso8601.parse(utcTime);
 
             return getDifference(date, new Date(), false);
@@ -45,6 +47,7 @@ public class DateTimeUtils {
             }
 
             DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            iso8601.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = iso8601.parse(utcTime);
             return getDifference(new Date(), date, true);
 

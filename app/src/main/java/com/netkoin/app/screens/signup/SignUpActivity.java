@@ -116,6 +116,11 @@ public class SignUpActivity extends AbstractBaseActivity {
     }
 
     @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
+
+    }
+
+    @Override
     public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
         showAleartPosBtnOnly(null, "Message", errorString);
     }

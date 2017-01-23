@@ -24,6 +24,7 @@ import com.netkoin.app.screens.homescreen.trending.fragments.TrendingFragment;
 import com.netkoin.app.screens.koin_managment.fragments.KoinActivitesFragment;
 import com.netkoin.app.screens.koin_managment.fragments.KoinAppTutorialFragment;
 import com.netkoin.app.screens.koin_managment.fragments.KoinHomeFragment;
+import com.netkoin.app.screens.koin_managment.fragments.KoinMessagesFragment;
 import com.netkoin.app.screens.koin_managment.fragments.KoinTransferFragment;
 
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class FragmentNavigationViewController {
     public static final byte FRAGMENT_KOIN_ACTIVITY = 14;
     public static final byte FRAGMENT_KOIN_TRANSFER = 15;
     public static final byte FRAGMENT_KOIN_APP_TUTORIAL = 16;
+    public static final byte FRAGMENT_KOIN_MESSAGES = 17;
 
 
     private ArrayList<Fragment> fragmentsStack = new ArrayList<>();
@@ -159,6 +161,10 @@ public class FragmentNavigationViewController {
 
             case FRAGMENT_KOIN_APP_TUTORIAL:
                 abstractBaseFragment = new KoinAppTutorialFragment();
+                needPushAnimation = true;
+                break;
+            case FRAGMENT_KOIN_MESSAGES:
+                abstractBaseFragment = new KoinMessagesFragment();
                 needPushAnimation = true;
                 break;
         }

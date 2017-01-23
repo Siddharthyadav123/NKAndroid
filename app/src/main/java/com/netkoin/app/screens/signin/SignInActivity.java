@@ -54,7 +54,7 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
         loginButtonLinLayout = (LinearLayout) view.findViewById(R.id.loginButtonLinLayout);
 
         checkKeyHash();
-
+        checkPermissions(REQUEST_MARSHMELLO_PERMISSIONS, mustPermissions, null);
         return view;
     }
 
@@ -149,6 +149,11 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
 
     @Override
     public void onActionBarTitleClick() {
+
+    }
+
+    @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
 
     }
 

@@ -9,8 +9,8 @@ import android.widget.RelativeLayout;
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.controller.ActivityController;
-import com.netkoin.app.controller.AppController;
 import com.netkoin.app.pref.SharedPref;
+import com.netkoin.app.servicemodels.LoginFlowServiceModel;
 
 public class SplashActivity extends AbstractBaseActivity {
 
@@ -37,13 +37,13 @@ public class SplashActivity extends AbstractBaseActivity {
         String previousRequestParamJsonbody = sharedPref.getString(SharedPref.KEY_SILENT_LOGIN_REQUEST_PARAM);
 
         if (authToken != null && previousRequestParamJsonbody != null) {
-            // int previousSilentLoginRequestId = sharedPref.getInt(SharedPref.KEY_SILENT_LOGIN_TYPE);
-            // LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
-            // loginFlowModel.performSilentLogin(previousSilentLoginRequestId, previousRequestParamJsonbody);
+            int previousSilentLoginRequestId = sharedPref.getInt(SharedPref.KEY_SILENT_LOGIN_TYPE);
+            LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
+            loginFlowModel.performSilentLogin(previousSilentLoginRequestId, previousRequestParamJsonbody);
 
-            finish();
-            AppController.getInstance().getModelFacade().getLocalModel().setToken(authToken);
-            ActivityController.getInstance().handleEvent(this, ActivityController.ACTIVITY_HOME_SCREEN);
+//            finish();
+//            AppController.getInstance().getModelFacade().getLocalModel().setToken(authToken);
+//            ActivityController.getInstance().handleEvent(this, ActivityController.ACTIVITY_HOME_SCREEN);
 
         } else {
             new Handler().postDelayed(new Runnable() {
@@ -63,6 +63,11 @@ public class SplashActivity extends AbstractBaseActivity {
 
     @Override
     public void onActionBarTitleClick() {
+
+    }
+
+    @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
 
     }
 

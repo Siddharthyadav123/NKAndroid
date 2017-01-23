@@ -37,9 +37,8 @@ public class HomeScreenActivity extends AbstractBaseActivity implements TabCallb
         View view = getLayoutInflater().inflate(R.layout.activity_main, null);
         tabView = (RelativeLayout) view.findViewById(R.id.tabs);
         tabController = new TabController(this, this, tabView);
-
         Utils.getInstance().enableGPS(this);
-
+        checkPermissions(REQUEST_MARSHMELLO_PERMISSIONS, mustPermissions, null);
         return view;
     }
 
@@ -68,6 +67,11 @@ public class HomeScreenActivity extends AbstractBaseActivity implements TabCallb
 
     @Override
     public void onActionBarTitleClick() {
+
+    }
+
+    @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
 
     }
 

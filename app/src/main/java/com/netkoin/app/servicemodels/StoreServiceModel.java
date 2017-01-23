@@ -295,6 +295,7 @@ public class StoreServiceModel extends BaseServiceModel {
                             Utils.getInstance().showSnackBar(MyApplication.getInstance().getHomeActivity(), "Hey you are near to " + nearByStore.getName() + " store. Lets visit and earn !!");
                         } else {
                             Utils.getInstance().showLocalNotification("NetKoin", "Hey you are near to " + nearByStore.getName() + " store. Lets visit and earn !!");
+
                         }
                     }
                 }
@@ -308,13 +309,13 @@ public class StoreServiceModel extends BaseServiceModel {
         //finding today's date
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
 
         String todaysDate = day + "-" + month + "-" + year;
 
         HashMap<String, String> storeIdDictionary = (HashMap<String, String>) sharedPref.getMap(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE);
-        if (storeIdDictionary != null) {
+        if (storeIdDictionary != null && storeIdDictionary.size() > 0) {
             String dateTime = storeIdDictionary.get(nearByStore.getId() + "");
 
             if (dateTime != null) {
@@ -326,7 +327,7 @@ public class StoreServiceModel extends BaseServiceModel {
             }
         }
         storeIdDictionary.put(nearByStore.getId() + "", todaysDate);
-        sharedPref.put(SharedPref.KEY_DICTIONARY_NEAR_BY_STORE, storeIdDictionary);
+        sharedPref.putMap(storeIdDictionary, SharedPref.KEY_DICTIONARY_NEAR_BY_STORE);
         return false;
 
     }

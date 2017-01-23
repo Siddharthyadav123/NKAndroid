@@ -5,6 +5,7 @@ import android.os.Build;
 
 import com.android.volley.Request;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.AppController;
@@ -70,7 +71,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     //api for to hit from splash to refresh the token n all
     public void performSilentLogin(int requestId, String requestBody) {
-        this.requestBody = requestBody;
+        this.requestBody = refreshPushToken(requestBody);
         String url = "";
         switch (requestId) {
             case RequestConstants.REQUEST_ID_POST_SIGNIN:
@@ -85,7 +86,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             default:
                 break;
         }
-
         APIHandler apiHandler = new APIHandler(context, this, requestId, Request.Method.POST, url, false, null, requestBody);
         apiHandler.setNeedTokenHeader(true);
         apiHandler.setAllowRetryOnFailure(true);
@@ -126,7 +126,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject data = jsonObject.getJSONObject("data");
-
             int message_code = data.getInt("message_code");
 
             if (message_code == 1011) {
@@ -175,7 +174,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN,
                         true, result, "Login Successful !");
             }
-
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN,
@@ -248,7 +246,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_SIGNIN,
                         true, result, "Login Successful !");
             }
-
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_SIGNIN,
@@ -359,7 +356,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         try {
             jsonObject.put("username", email);
             jsonObject.put("password", pwd);
-            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("push_token", getPushToken());
             jsonObject.put("device_name", getDeviceName());
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
@@ -373,7 +370,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
     public JSONObject formLogoutJsonBody() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("push_token", getPushToken());
             jsonObject.put("device_name", getDeviceName());
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
@@ -392,7 +389,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             jsonObject.put("first_name", acct.getDisplayName());
             jsonObject.put("last_name", acct.getFamilyName());
             jsonObject.put("email", acct.getEmail());
-            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("push_token", getPushToken());
             jsonObject.put("device_name", getDeviceName());
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
@@ -403,6 +400,17 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         return jsonObject;
     }
 
+    public String refreshPushToken(String oldJsonBody) {
+        try {
+            JSONObject jsonObject = new JSONObject(oldJsonBody);
+            jsonObject.put("push_token", getPushToken());
+            return jsonObject.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public JSONObject formFBLoginJsonBody(FbUserDo fbUserDo) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -411,7 +419,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             jsonObject.put("facebook_id", fbUserDo.getFbid());
             jsonObject.put("token", fbUserDo.getToken());
             jsonObject.put("email", fbUserDo.getEmail());
-            jsonObject.put("push_token", "HARDCODED12345678");
+            jsonObject.put("push_token", getPushToken());
             jsonObject.put("device_name", getDeviceName());
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
@@ -420,5 +428,11 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    private String getPushToken() {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        System.out.println(">>FCM token found >>" + token);
+        return token;
     }
 }

@@ -26,6 +26,7 @@ import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.screens.splash.SplashActivity;
 
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by siddharth on 1/5/2017.
@@ -139,6 +140,7 @@ public class Utils {
         snack.show();
     }
 
+
     public void showLocalNotification(String title, String description) {
         Intent intent = new Intent(MyApplication.getInstance(), SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -165,6 +167,14 @@ public class Utils {
 
 
         NotificationManager notificationManager = (NotificationManager) MyApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, b.build());
+        notificationManager.notify(generateRandomNum(), b.build());
     }
+
+    public int generateRandomNum() {
+        int min = 1;
+        int max = 100;
+        Random r = new Random();
+        return r.nextInt(max - min + 1) + min;
+    }
+
 }

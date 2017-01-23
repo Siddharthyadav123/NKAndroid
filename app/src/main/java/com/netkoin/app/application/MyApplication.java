@@ -23,7 +23,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.netkoin.app.controller.AppController;
 import com.netkoin.app.location.LocationCallback;
 import com.netkoin.app.location.LocationModel;
@@ -54,9 +53,6 @@ public class MyApplication extends Application implements LocationCallback {
         AppEventsLogger.activateApp(this);
 
         initLocation();
-
-        String token = FirebaseInstanceId.getInstance().getToken();
-        System.out.println(">>FCM token found >>" + token);
     }
 
     private void initLocation() {

@@ -194,6 +194,11 @@ public class SearchLocationActivity extends AbstractBaseActivity {
     }
 
     @Override
+    public void onPermissionResult(int requestCode, boolean isGranted, Object extras) {
+
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
