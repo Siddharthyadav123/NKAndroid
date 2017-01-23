@@ -92,6 +92,14 @@ public class SharedPref {
         return pref.getInt(key, 0);
     }
 
+    public boolean getSettingBool(String key) {
+        return pref.getBoolean(key, true);
+    }
+
+    public int getIntWithMinusOneAsDefault(String key) {
+        return pref.getInt(key, -1);
+    }
+
     public float getFloat(String key) {
         return pref.getFloat(key, 0.0f);
     }

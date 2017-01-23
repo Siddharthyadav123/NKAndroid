@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.netkoin.app.R;
 import com.netkoin.app.custom_views.switchbtn.SwitchButton;
 import com.netkoin.app.pref.SharedPref;
+import com.netkoin.app.servicemodels.SettingsServiceModel;
 
 /**
  * Created by siddharthyadav on 07/01/17.
@@ -77,6 +78,8 @@ public class NotificationSettingListAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 sharedPref.put(itemsKeys[i], new Boolean(b));
+                SettingsServiceModel settingsServiceModel = new SettingsServiceModel(context, null);
+                settingsServiceModel.requestPostSettings();
             }
         });
 
