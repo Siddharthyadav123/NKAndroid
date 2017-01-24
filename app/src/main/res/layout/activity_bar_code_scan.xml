@@ -3,41 +3,60 @@
     android:id="@+id/cameraContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/cameraPreview"
+    <com.netkoin.app.screens.barcodescan.CameraSourcePreview
+        android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_above="@+id/bottomLayout">
+
+        <com.netkoin.app.screens.barcodescan.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.netkoin.app.screens.barcodescan.CameraSourcePreview>
+
 
     <LinearLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/rescanBtnTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="?android:selectableItemBackground"
-            android:padding="25dp"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="Re-scan"
             android:textColor="@color/blue"
             android:textSize="20dp" />
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/blue" />
+
         <TextView
             android:id="@+id/cancelBtnTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="?android:selectableItemBackground"
-            android:padding="25dp"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="Cancel"
             android:textColor="@color/blue"
             android:textSize="20dp" />

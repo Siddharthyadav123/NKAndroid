@@ -24,6 +24,8 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandlerCallback;
 
+import java.util.ArrayList;
+
 /**
  * Created by siddharth on 1/4/2017.
  */
@@ -32,6 +34,8 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     protected TextView titleTextView;
     protected ProgressBar progressBar;
     protected SharedPref sharedPref;
+
+    protected boolean haveAllPermissions = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +101,38 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
                         dialog.cancel();
                         if (dailogCallback != null)
                             dailogCallback.onDailogYesClick();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+    protected void permissionDailog(Context context,
+                                    final MyApplication.DailogCallback dailogCallback,
+                                    String title, String bodyText, String yesBtnText, String noBtnText) {
+        Utils.getInstance().hideKeyboard(this);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setMessage(bodyText);
+        builder1.setTitle(title);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton(
+                yesBtnText,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        if (dailogCallback != null)
+                            dailogCallback.onDailogYesClick();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                noBtnText,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        if (dailogCallback != null)
+                            dailogCallback.onDailogNoClick();
                     }
                 });
 
@@ -191,20 +227,25 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
     public boolean checkPermissions(int requestCode, String[] permission, Object extras) {
         this.permissionRequestCode = requestCode;
         this.extras = extras;
-        String[] permissionsStr = new String[permission.length];
+        ArrayList<String> permissionsStr = new ArrayList<>();
 
         for (int i = 0; i < permission.length; i++) {
             if (!havePermission(permission[i])) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission[i])) {
                     Toast.makeText(this, "Please provide this permission.", Toast.LENGTH_LONG).show();
                 }
-                permissionsStr[i] = permission[i];
-            } else {
-                return true;
+                permissionsStr.add(permission[i]);
             }
         }
-        ActivityCompat.requestPermissions(this, permissionsStr, requestCode);
-        return false;
+
+
+        if (permissionsStr.size() > 0) {
+            String[] needTopermissionArray = permissionsStr.toArray(new String[permissionsStr.size()]);
+            ActivityCompat.requestPermissions(this, needTopermissionArray, requestCode);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -218,15 +259,17 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
                     System.out.println(">>>>>>>>>>>>>>>> grantResults " + grantResults[i]);
                     // Check if the only required permission has been granted
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS GRANTED.", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS GRANTED.", Toast.LENGTH_SHORT).show();
                     } else {
                         anyDenied = true;
-                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS DENIED.", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS DENIED.", Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (anyDenied) {
+                    haveAllPermissions = false;
                     onPermissionResult(requestCode, false, extras);
                 } else {
+                    haveAllPermissions = true;
                     onPermissionResult(requestCode, true, extras);
                 }
             }

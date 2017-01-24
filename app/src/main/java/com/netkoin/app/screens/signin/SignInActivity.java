@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.netkoin.app.R;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.constants.Constants;
 import com.netkoin.app.controller.ActivityController;
@@ -54,7 +55,8 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
         loginButtonLinLayout = (LinearLayout) view.findViewById(R.id.loginButtonLinLayout);
 
         checkKeyHash();
-        checkPermissions(REQUEST_MARSHMELLO_PERMISSIONS, mustPermissions, null);
+
+        haveAllPermissions = checkPermissions(REQUEST_MARSHMELLO_PERMISSIONS, mustPermissions, null);
         return view;
     }
 
@@ -115,12 +117,28 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
 
 
     private void onLoginBtnClick() {
-        if (isValiedField()) {
-            LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
-            loginFlowModel.performSignIn(emailMaterialEditText.getEditText().getText().toString().trim(),
-                    pwdMaterialEditText.getEditText().getText().toString().trim());
+        if (haveAllPermissions) {
+            if (isValiedField()) {
+                LoginFlowServiceModel loginFlowModel = new LoginFlowServiceModel(this, this);
+                loginFlowModel.performSignIn(emailMaterialEditText.getEditText().getText().toString().trim(),
+                        pwdMaterialEditText.getEditText().getText().toString().trim());
+            }
+        } else {
+            permissionDailog(this, permissionDailogCallback, "Permission Required", "You have not provided few mandatory permission please provide those.", "Provide Permission", "Cancel");
         }
     }
+
+    MyApplication.DailogCallback permissionDailogCallback = new MyApplication.DailogCallback() {
+        @Override
+        public void onDailogYesClick() {
+            checkPermissions(REQUEST_MARSHMELLO_PERMISSIONS, mustPermissions, null);
+        }
+
+        @Override
+        public void onDailogNoClick() {
+
+        }
+    };
 
     private boolean isValiedField() {
         if (emailMaterialEditText.getEditText().getText().toString().trim().length() == 0) {
