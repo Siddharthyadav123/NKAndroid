@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -87,6 +86,12 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
         mPreview = (CameraSourcePreview) mainView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) mainView.findViewById(R.id.graphicOverlay);
 
+        initBarcodeViews();
+
+        return mainView;
+    }
+
+    private void initBarcodeViews() {
         // read parameters from the intent used to launch the activity.
 
         // Check for the camera permission before accessing the camera.  If the
@@ -100,7 +105,6 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        return mainView;
     }
 
     @Override
@@ -108,9 +112,12 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
         rescanBtnTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (barcodeFactory != null) {
-                    barcodeFactory.setBarCodeCallback(BarCodeScanActivity.this);
+                if (mPreview != null) {
+                    mPreview.stop();
                 }
+                barcodeFactory.setBarCodeCallback(BarCodeScanActivity.this);
+                startCameraSource();
+
             }
         });
         cancelBtnTextView.setOnClickListener(new View.OnClickListener() {
@@ -278,22 +285,11 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
             boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
             createCameraSource(autoFocus, useFlash);
             return;
+        } else {
+            Toast.makeText(this, "Barcode can't be scan without camera access permission.", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        };
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Multitracker sample")
-//                .setMessage(R.string.no_camera_permission)
-//                .setPositiveButton(R.string.ok, listener)
-//                .show();
     }
 
     /**

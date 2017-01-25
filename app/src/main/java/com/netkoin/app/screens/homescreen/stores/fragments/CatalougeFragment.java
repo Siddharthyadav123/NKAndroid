@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -18,6 +19,8 @@ import com.netkoin.app.entities.Catalogue;
 import com.netkoin.app.entities.Store;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonListAdapter;
 import com.netkoin.app.servicemodels.CataloguesServiceModel;
+import com.netkoin.app.servicemodels.UserServiceModel;
+import com.netkoin.app.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -97,6 +100,16 @@ public class CatalougeFragment extends AbstractBaseFragment {
                 cataloguesServiceModel.loadCatalougesByStore(store.getId());
             }
         });
+
+        catalougeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                UserServiceModel userServiceModel = new UserServiceModel(getActivity(), CatalougeFragment.this);
+                userServiceModel.redeemKoin(store.getId(), catalouges.get(position).getId());
+            }
+        });
+
+
     }
 
 
@@ -197,7 +210,7 @@ public class CatalougeFragment extends AbstractBaseFragment {
 
 
     private void onRedeemKoinResponse(boolean isSuccess, Object result, String errorString) {
-
+        Utils.getInstance().showSnackBar(getActivity(), errorString);
     }
 
 

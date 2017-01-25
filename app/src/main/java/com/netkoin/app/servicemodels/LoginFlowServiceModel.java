@@ -2,10 +2,12 @@ package com.netkoin.app.servicemodels;
 
 import android.content.Context;
 import android.os.Build;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.AppController;
@@ -71,7 +73,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     //api for to hit from splash to refresh the token n all
     public void performSilentLogin(int requestId, String requestBody) {
-        this.requestBody = refreshPushToken(requestBody);
+        this.requestBody = refreshPushTokenAndLatLong(requestBody);
         String url = "";
         switch (requestId) {
             case RequestConstants.REQUEST_ID_POST_SIGNIN:
@@ -195,7 +197,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
                 JSONObject userSettingsJson = data.getJSONObject("user_setting");
                 addSettings(userSettingsJson);
             }
-
             AppController.getInstance().getModelFacade().getLocalModel().setToken(token);
 
             //storing details for silent login
@@ -210,7 +211,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN,
                         true, result, "Login Successful !");
             }
-
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN,
@@ -361,6 +361,11 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
             jsonObject.put("os_version", getDeviceAPIVersion());
+
+            double[] latlong = getLatLong();
+            jsonObject.put("latitude", latlong[0]);
+            jsonObject.put("longitude", latlong[1]);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -394,16 +399,25 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
             jsonObject.put("os_version", getDeviceAPIVersion());
+
+            double[] latlong = getLatLong();
+            jsonObject.put("latitude", latlong[0]);
+            jsonObject.put("longitude", latlong[1]);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonObject;
     }
 
-    public String refreshPushToken(String oldJsonBody) {
+    public String refreshPushTokenAndLatLong(String oldJsonBody) {
         try {
             JSONObject jsonObject = new JSONObject(oldJsonBody);
             jsonObject.put("push_token", getPushToken());
+
+            double[] latlong = getLatLong();
+            jsonObject.put("latitude", latlong[0]);
+            jsonObject.put("longitude", latlong[1]);
+
             return jsonObject.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -413,6 +427,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     public JSONObject formFBLoginJsonBody(FbUserDo fbUserDo) {
         JSONObject jsonObject = new JSONObject();
+
         try {
             jsonObject.put("first_name", fbUserDo.getName());
             jsonObject.put("last_name", fbUserDo.getName());
@@ -424,6 +439,11 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             jsonObject.put("device_model", getDeviceModel());
             jsonObject.put("os_name", "android");
             jsonObject.put("os_version", getDeviceAPIVersion());
+
+            double[] latlong = getLatLong();
+            jsonObject.put("latitude", latlong[0]);
+            jsonObject.put("longitude", latlong[1]);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -432,7 +452,26 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     private String getPushToken() {
         String token = FirebaseInstanceId.getInstance().getToken();
-        System.out.println(">>FCM token found >>" + token);
+        System.out.println(">>FCM token >>" + token);
+        if (token == null) {
+            Toast.makeText(context, "FCM token not found.", Toast.LENGTH_SHORT).show();
+            token = "Hardcoding_because_token_not_found";
+        }
         return token;
+    }
+
+    private double[] getLatLong() {
+        double latitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LAT);
+        double longitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LONG);
+
+        if (latitude == 0.0f) {
+            //take from local class
+            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
+            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
+        }
+        double[] latlong = new double[2];
+        latlong[0] = latitude;
+        latlong[1] = longitude;
+        return latlong;
     }
 }

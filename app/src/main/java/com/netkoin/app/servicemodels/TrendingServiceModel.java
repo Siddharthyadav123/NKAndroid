@@ -1,6 +1,7 @@
 package com.netkoin.app.servicemodels;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
@@ -48,8 +49,9 @@ public class TrendingServiceModel extends BaseServiceModel {
 
             //if still not found then hardcoding to nagpur
             if (latitude == 0.0f) {
-                latitude = 21.1458;
-                longitude = 79.0882;
+//                latitude = 21.1458;
+//                longitude = 79.0882;
+                Toast.makeText(context, "Lat long not found.", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -66,33 +68,37 @@ public class TrendingServiceModel extends BaseServiceModel {
 
     public void loadNationWideTrending() {
         //take selected user location if any selected
-        double latitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LAT);
-        double longitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LONG);
-        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_TRENDING_ADS);
+//        double latitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LAT);
+//        double longitude = sharedPref.getFloat(SharedPref.KEY_SELECTED_LOC_LONG);
+//        int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_TRENDING_ADS);
+//
+//        if (latitude == 0.0f) {
+//            //take from local class
+//            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
+//            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
+//
+//            //take previously saved location
+//            if (latitude == 0.0f) {
+//                latitude = sharedPref.getFloat(SharedPref.KEY_SELF_LOC_LAT);
+//                longitude = sharedPref.getFloat(SharedPref.KEY_SELF_LOC_LONG);
+//            }
+//
+//
+//            //if still not found then hardcoding to nagpur
+//            if (latitude == 0.0f) {
+////                latitude = 21.1458;
+////                longitude = 79.0882;
+//                Toast.makeText(context, "Lat long not found.", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
 
-        if (latitude == 0.0f) {
-            //take from local class
-            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
-            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
+        String url = URLConstants.URL_ADS + "?limit=" + this.limit
+                + "&page=" + this.page + "&sort=trending_koins&direction=desc";
 
-            //take previously saved location
-            if (latitude == 0.0f) {
-                latitude = sharedPref.getFloat(SharedPref.KEY_SELF_LOC_LAT);
-                longitude = sharedPref.getFloat(SharedPref.KEY_SELF_LOC_LONG);
-            }
-
-
-            //if still not found then hardcoding to nagpur
-            if (latitude == 0.0f) {
-                latitude = 21.1458;
-                longitude = 79.0882;
-            }
-
-        }
-
-        String url = URLConstants.URL_TREANDING_ADS + "?limit=" + this.limit
-                + "&page=" + this.page + "&latitude=" + latitude + "&longitude="
-                + longitude + "&distance=" + distance;
+//        String url = URLConstants.URL_TREANDING_ADS + "?limit=" + this.limit
+//                + "&page=" + this.page + "&latitude=" + latitude + "&longitude="
+//                + longitude + "&distance=" + distance;
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_GET_TRENDING_ADS,
                 Request.Method.GET, url, false, null, null);

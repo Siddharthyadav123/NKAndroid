@@ -1,6 +1,7 @@
 package com.netkoin.app.servicemodels;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
@@ -69,8 +70,9 @@ public class StoreServiceModel extends BaseServiceModel {
 
             //if still not found then hardcoding to nagpur
             if (latitude == 0.0f) {
-                latitude = 21.1458;
-                longitude = 79.0882;
+//                latitude = 21.1458;
+//                longitude = 79.0882;
+                Toast.makeText(context, "Lat long not found.", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -114,8 +116,9 @@ public class StoreServiceModel extends BaseServiceModel {
 
             //if still not found then hardcoding to nagpur
             if (latitude == 0.0f) {
-                latitude = 21.1458;
-                longitude = 79.0882;
+//                latitude = 21.1458;
+//                longitude = 79.0882;
+                Toast.makeText(context, "Lat long not found.", Toast.LENGTH_SHORT).show();
             }
 
         }

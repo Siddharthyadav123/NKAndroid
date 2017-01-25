@@ -260,6 +260,13 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
                     // Check if the only required permission has been granted
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
 //                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS GRANTED.", Toast.LENGTH_SHORT).show();
+
+                        // need to refresh location on permission
+                        if (permissions[i].equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                                permissions[i].equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                            MyApplication.getInstance().getLocationModel().initialize();
+                        }
+
                     } else {
                         anyDenied = true;
 //                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS DENIED.", Toast.LENGTH_SHORT).show();

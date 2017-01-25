@@ -137,6 +137,7 @@ public class CameraSource {
     private int mRequestedPreviewHeight = 768;
 
 
+
     private String mFocusMode = null;
     private String mFlashMode = null;
 

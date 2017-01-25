@@ -249,6 +249,8 @@ public class StoreProfileFragment extends AbstractBaseFragment {
         TextView storeNameTextView = (TextView) storeProfileHeaderRelativeLayout.findViewById(R.id.storeNameTextView);
         TextView storeDesTextView = (TextView) storeProfileHeaderRelativeLayout.findViewById(R.id.storeDesTextView);
 
+        RelativeLayout storeLocationRelativeLayout = (RelativeLayout) storeProfileHeaderRelativeLayout.findViewById(R.id.storeLocationRelativeLayout);
+
 
         if (store.getBanner() != null) {
             String bannerURL = URLConstants.URL_IMAGE + store.getBanner().getName();
@@ -263,6 +265,16 @@ public class StoreProfileFragment extends AbstractBaseFragment {
         //setting store details
         storeNameTextView.setText(store.getName());
         storeDesTextView.setText(store.getShort_desc());
+
+        storeLocationRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double destinationLat = store.getLatitude();
+                double destinationLong = store.getLongitude();
+                Utils.getInstance().openMap(getActivity(), destinationLat, destinationLong, store.getName());
+
+            }
+        });
 
     }
 
