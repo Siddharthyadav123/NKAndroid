@@ -68,8 +68,11 @@ public class KoinHomeFragment extends AbstractBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (koinManagementServiceModel != null)
+        if (koinManagementServiceModel != null) {
             koinManagementServiceModel.loadActivityLogsUnreadCount();
+            koinManagementServiceModel.loadTotalKoins();
+        }
+
     }
 
     private void updateAdapter() {

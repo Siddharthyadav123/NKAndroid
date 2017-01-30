@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
+import com.netkoin.app.constants.URLConstants;
 
 /**
  * Created by siddharthyadav on 08/01/17.
@@ -40,7 +41,7 @@ public class KoinAppTutorialFragment extends AbstractBaseFragment {
 
     private void loadWebView() {
         faqWebView.getSettings().setJavaScriptEnabled(true);
-        faqWebView.loadUrl("http://www.netkoin.com");
+        faqWebView.loadUrl(URLConstants.URL_TUTORIALS);
     }
 
     private void registerEvents() {

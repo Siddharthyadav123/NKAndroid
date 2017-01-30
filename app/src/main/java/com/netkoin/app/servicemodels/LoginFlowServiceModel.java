@@ -43,7 +43,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQUEST_ID_POST_SIGNIN, Request.Method.POST, URLConstants.URL_SIGNIN, true, "Signing in..", requestBody);
         apiHandler.setNeedTokenHeader(false);
         apiHandler.requestAPI();
-
     }
 
     public void performFacebookSignIn(FbUserDo fbUserDo) {
@@ -67,7 +66,6 @@ public class LoginFlowServiceModel extends BaseServiceModel {
                 Request.Method.POST, URLConstants.URL_POST_LOGOUT, true, "Logging out..", requestBody);
         apiHandler.setNeedTokenHeader(true);
         apiHandler.requestAPI();
-
     }
 
 

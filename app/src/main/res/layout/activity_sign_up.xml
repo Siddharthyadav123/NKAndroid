@@ -183,7 +183,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="50dp"
                 android:gravity="center"
-                android:text="By clicking Sign Up you are agreeing to the"
+                android:text="By Signing up, I accept and agree to Netkoin"
                 android:textColor="@color/black"
                 android:textSize="14dp" />
 

@@ -1,12 +1,16 @@
 package com.netkoin.app.constants;
 
+import com.netkoin.app.BuildConfig;
+
 /**
  * Created by sid on 07/08/2016.
  */
 public interface URLConstants {
     //String BASE_URL="http://192.168.1.157/storeads";
-    String BASE_URL = "https://test2.netkoin.com";
+//    String BASE_URL = "https://test2.netkoin.com";
     //String BASE_URL="https://biz.netkoin.com";
+
+    String BASE_URL = BuildConfig.BASE_URL;
 
     String URL_IMAGE = BASE_URL + "/uploads/files/";
 
@@ -54,7 +58,15 @@ public interface URLConstants {
 
     //save settings
     String URL_POST_SETTINGS = BASE_URL + "/api/user_settings";
-
     String URL_POST_LOGOUT = BASE_URL + "/api/users/logout.json";
+
+    String URL_TUTORIALS = "http://www.netkoin.com/tutorials";
+    String URL_FAQ = "http://www.netkoin.com/faq";
+    String URL_TERMS = "http://www.netkoin.com/terms";
+    String URL_POLICY = "http://www.netkoin.com/privacy";
+
+    String URL_FACEBOOK_NETKOIN = "https://www.facebook.com/Netkoin/";
+    String URL_TWITTER_NETKOIN = "https://twitter.com/netkoin";
+    String URL_INSTAGRAM_NETKOIN = "https://www.instagram.com/netkoin/";
 
 }

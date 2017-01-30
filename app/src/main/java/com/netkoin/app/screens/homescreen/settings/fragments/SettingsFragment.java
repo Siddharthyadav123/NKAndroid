@@ -86,13 +86,10 @@ public class SettingsFragment extends AbstractBaseFragment {
                 navigationController.push(FragmentNavigationViewController.FRAGMENT_DISTANCE_SETTINGS, null);
                 break;
             case 4:
-                //follow us
-                Utils.getInstance().openBrowser(getActivity(), "http://www.netkoin.com");
+                navigationController.push(FragmentNavigationViewController.FRAGMENT_FOLLOW_US, null);
                 break;
             case 5:
-                //logout
                 showLogoutDialog(dailogCallback);
-
                 break;
         }
     }

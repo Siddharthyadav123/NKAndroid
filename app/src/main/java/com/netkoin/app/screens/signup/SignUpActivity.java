@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
+import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.custom_views.material_edittext.MaterialEditText;
 import com.netkoin.app.custom_views.switchbtn.SwitchButton;
 import com.netkoin.app.servicemodels.LoginFlowServiceModel;
@@ -54,10 +55,10 @@ public class SignUpActivity extends AbstractBaseActivity {
                 onSignupCtnClick();
                 break;
             case R.id.termToUseTextView:
-                Utils.getInstance().openBrowser(this, "http://www.netkoin.com");
+                Utils.getInstance().openBrowser(this, URLConstants.URL_TERMS);
                 break;
             case R.id.privacyPolicyTextView:
-                Utils.getInstance().openBrowser(this, "http://www.netkoin.com");
+                Utils.getInstance().openBrowser(this, URLConstants.URL_POLICY);
                 break;
         }
     }

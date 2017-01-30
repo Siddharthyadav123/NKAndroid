@@ -8,7 +8,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,6 +32,39 @@ android {
             shrinkResources false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        production {
+            applicationId "com.netkoin.app"
+            buildConfigField 'String', 'BASE_URL', '"https://biz.netkoin.com"'
+        }
+
+        staging {
+            applicationId "com.netkoin.app"
+            buildConfigField 'String', 'BASE_URL', '"https://test2.netkoin.com"'
+        }
+
+        development {
+            applicationId "com.netkoin.app"
+            buildConfigField 'String', 'BASE_URL', '"https://test2.netkoin.com"'
+        }
+    }
+
+    // Removing "Release" build type from staging and development and "Debug" from production
+    android.variantFilter { variant ->
+        if (variant.buildType.name.equals('release')
+                && variant.getFlavors().get(0).name.equals('development')) {
+            variant.setIgnore(true);
+        }
+        if (variant.buildType.name.equals('release')
+                && variant.getFlavors().get(0).name.equals('staging')) {
+            variant.setIgnore(true);
+        }
+        if (variant.buildType.name.equals('debug')
+                && variant.getFlavors().get(0).name.equals('production')) {
+            variant.setIgnore(true);
         }
     }
 

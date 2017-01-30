@@ -99,6 +99,8 @@ public class StoreServiceModel extends BaseServiceModel {
             return;
         }
 
+        //Utils.getInstance().showLocalNotification("Test", "Going to check Nearby store>> " + latitude + " >>Long>> " + longitude);
+
         nearByRequestInProgress = true;
         //setting distance to find out for 1KM stores
         int distance = 3;

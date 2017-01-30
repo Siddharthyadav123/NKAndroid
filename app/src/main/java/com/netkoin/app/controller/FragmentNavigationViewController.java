@@ -12,6 +12,7 @@ import com.netkoin.app.screens.homescreen.categories.fragments.CategoriesDetailF
 import com.netkoin.app.screens.homescreen.categories.fragments.CategoriesFragment;
 import com.netkoin.app.screens.homescreen.settings.fragments.DistanceSettingFragment;
 import com.netkoin.app.screens.homescreen.settings.fragments.FAQFragment;
+import com.netkoin.app.screens.homescreen.settings.fragments.FollowUsFragment;
 import com.netkoin.app.screens.homescreen.settings.fragments.NotificationSettingFragment;
 import com.netkoin.app.screens.homescreen.settings.fragments.SettingsFragment;
 import com.netkoin.app.screens.homescreen.stores.fragments.CatalougeFragment;
@@ -62,6 +63,7 @@ public class FragmentNavigationViewController {
     public static final byte FRAGMENT_KOIN_APP_TUTORIAL = 16;
     public static final byte FRAGMENT_KOIN_MESSAGES = 17;
 
+    public static final byte FRAGMENT_FOLLOW_US = 18;
 
     private ArrayList<Fragment> fragmentsStack = new ArrayList<>();
     private FragmentManager fragmentManager;
@@ -165,6 +167,10 @@ public class FragmentNavigationViewController {
                 break;
             case FRAGMENT_KOIN_MESSAGES:
                 abstractBaseFragment = new KoinMessagesFragment();
+                needPushAnimation = true;
+                break;
+            case FRAGMENT_FOLLOW_US:
+                abstractBaseFragment = new FollowUsFragment();
                 needPushAnimation = true;
                 break;
         }

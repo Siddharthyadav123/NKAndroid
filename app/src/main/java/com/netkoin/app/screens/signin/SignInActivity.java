@@ -18,6 +18,7 @@ import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.constants.Constants;
+import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.custom_views.material_edittext.MaterialEditText;
 import com.netkoin.app.servicemodels.LoginFlowServiceModel;
@@ -96,10 +97,10 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
                 onFBBtnClick();
                 break;
             case R.id.termToUseTextView:
-                Utils.getInstance().openBrowser(this, "http://www.netkoin.com");
+                Utils.getInstance().openBrowser(this, URLConstants.URL_TERMS);
                 break;
             case R.id.privacyPolicyTextView:
-                Utils.getInstance().openBrowser(this, "http://www.netkoin.com");
+                Utils.getInstance().openBrowser(this, URLConstants.URL_POLICY);
                 break;
             case R.id.loginButtonLinLayout:
                 onLoginBtnClick();

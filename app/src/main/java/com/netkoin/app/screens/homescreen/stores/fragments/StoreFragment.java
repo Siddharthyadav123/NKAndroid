@@ -98,8 +98,6 @@ public class StoreFragment extends AbstractBaseFragment {
 
 
     private void requestWebAPIs() {
-        //loading total koin
-        storeServiceModel.loadTotalKoins();
 
         //requestBanner
         storeServiceModel.loadStoreFeaturedBanner();
@@ -223,6 +221,9 @@ public class StoreFragment extends AbstractBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        //loading total koin
+        storeServiceModel.loadTotalKoins();
 
         String currentLocation = sharedPref.getString(SharedPref.KEY_SELECTED_LOC);
         int distance = sharedPref.getSettingDistanceByKey(SharedPref.KEY_SETTING_DIS_NEAR_BY_STORES);
