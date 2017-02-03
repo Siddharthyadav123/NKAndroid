@@ -34,7 +34,7 @@ public class KoinHomeFragment extends AbstractBaseFragment {
     private SegmentedGroup segmentGroup;
     private TextView koinCountTextView;
 
-    private String[] items = {"ACTIVITY", "MESSAGES", "TRANSFER KOINS", "APP TUTORIAL"};
+    private String[] items = {"ACTIVITY", "MESSAGES", "TRANSFER KOINS", "APP PROMOTIONAL VIDEO"};
 
     private KoinManagementServiceModel koinManagementServiceModel;
 

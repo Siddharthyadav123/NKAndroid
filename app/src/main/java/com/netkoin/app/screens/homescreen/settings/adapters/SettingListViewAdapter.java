@@ -77,7 +77,7 @@ public class SettingListViewAdapter extends BaseAdapter {
         }
 
         if (i == 4) {
-            leftImageView.setVisibility(View.VISIBLE);
+            leftImageView.setVisibility(View.INVISIBLE);
         } else {
             leftImageView.setVisibility(View.INVISIBLE);
         }

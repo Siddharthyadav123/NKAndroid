@@ -330,14 +330,14 @@ public class StoreFragment extends AbstractBaseFragment {
             }
 
             if (stores == null || stores.size() == 0) {
-                showStoreNotFoundBtn("No stores found nearby. Please change your location or turn the same also increase distance from Settings",
+                showStoreNotFoundBtn("No stores found nearby you. Please change your location or increase the distance from settings.",
                         true);
             }
 
         } else {
 
             if (stores == null || stores.size() == 0) {
-                showStoreNotFoundBtn("No stores found nearby. Please change your location or turn the same also increase distance from Settings",
+                showStoreNotFoundBtn("No stores found nearby you. Please change your location or increase the distance from settings.",
                         true);
             }
         }

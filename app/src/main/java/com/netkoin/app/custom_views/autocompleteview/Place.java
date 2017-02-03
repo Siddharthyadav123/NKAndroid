@@ -1,13 +1,14 @@
 package com.netkoin.app.custom_views.autocompleteview;
 
 import com.netkoin.app.R;
+import com.netkoin.app.constants.Constants;
 import com.netkoin.app.custom_views.autocompleteview.annotations.ViewId;
 
 /**
  * Created by siddharth on 1/16/2017.
  */
 public class Place {
-    private static final String PLACE_IMAGE_URL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=%s&sensor=false&key=AIzaSyDhFGUWlyd0KsjPQ59ATr-yL0bQKujHmeg";
+    private static final String PLACE_IMAGE_URL = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=%s&sensor=false&key="+ Constants.GOOGLE_API_KEY;//"AIzaSyDhFGUWlyd0KsjPQ59ATr-yL0bQKujHmeg";
     private String name;
     private String photoReference;
     private String place_id;

@@ -60,7 +60,7 @@ public interface URLConstants {
     String URL_POST_SETTINGS = BASE_URL + "/api/user_settings";
     String URL_POST_LOGOUT = BASE_URL + "/api/users/logout.json";
 
-    String URL_TUTORIALS = "http://www.netkoin.com/tutorials";
+    String URL_TUTORIALS = "https://youtu.be/Z7O2mI79FC8";
     String URL_FAQ = "http://www.netkoin.com/faq";
     String URL_TERMS = "http://www.netkoin.com/terms";
     String URL_POLICY = "http://www.netkoin.com/privacy";

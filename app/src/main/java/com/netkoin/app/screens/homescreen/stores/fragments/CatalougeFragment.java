@@ -119,7 +119,7 @@ public class CatalougeFragment extends AbstractBaseFragment {
         refreshLayout = (CustomSwipeToRefresh) view.findViewById(R.id.refreshLayout);
         progressBarCenter = (ProgressBar) view.findViewById(R.id.progressBarCenter);
         progressBarListLoading = (ProgressBar) view.findViewById(R.id.progressBarListLoading);
-        initActionBarView(R.drawable.back, "Catalouge");
+        initActionBarView(R.drawable.back, "Catalogue");
     }
 
     @Override

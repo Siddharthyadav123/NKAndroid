@@ -73,7 +73,7 @@
                 android:layout_below="@+id/trendingImageView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="1dp"
-                android:text="Trendings"
+                android:text="Trending"
                 android:textSize="12dp" />
 
         </RelativeLayout>

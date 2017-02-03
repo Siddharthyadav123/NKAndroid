@@ -66,7 +66,7 @@ public class TrendingFragment extends AbstractBaseFragment {
 
     private void makeView() {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_trending_layout, null, false);
-        initActionBarView(R.drawable.koin_mgmnt, "Trendings");
+        initActionBarView(R.drawable.koin_mgmnt, "Trending");
         initViews();
         registerEvents();
 
@@ -294,7 +294,7 @@ public class TrendingFragment extends AbstractBaseFragment {
 
             //showing info window
             if (trendingAds == null || trendingAds.size() == 0) {
-                showRetryView("No items in trending nearby. Please change your location or increase distance from Settings", false);
+                showRetryView("No items found. Please change your location or increase the distance from settings.", false);
             }
 
         } else {

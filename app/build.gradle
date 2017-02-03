@@ -8,7 +8,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0.3"
+        versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -58,10 +58,10 @@ android {
                 && variant.getFlavors().get(0).name.equals('development')) {
             variant.setIgnore(true);
         }
-        if (variant.buildType.name.equals('release')
-                && variant.getFlavors().get(0).name.equals('staging')) {
-            variant.setIgnore(true);
-        }
+       // if (variant.buildType.name.equals('release')
+         //       && variant.getFlavors().get(0).name.equals('staging')) {
+         //   variant.setIgnore(true);
+        //}
         if (variant.buildType.name.equals('debug')
                 && variant.getFlavors().get(0).name.equals('production')) {
             variant.setIgnore(true);

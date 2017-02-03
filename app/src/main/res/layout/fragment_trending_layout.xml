@@ -40,7 +40,7 @@
             style="@style/RadioButton"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:text="NationWide" />
+            android:text="Nationwide" />
     </info.hoang8f.android.segmented.SegmentedGroup>
 
     <RelativeLayout

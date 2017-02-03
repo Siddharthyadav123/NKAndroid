@@ -297,9 +297,9 @@ public class StoreServiceModel extends BaseServiceModel {
                 if (distanceInMeter <= Constants.NEAR_BY_STORE_DISTANCE_IN_METER) {
                     if (!checkIfNotificationAlreadyGeneratedForNearbyStore(nearByStore)) {
                         if (MyApplication.getInstance().getHomeActivity() != null) {
-                            Utils.getInstance().showSnackBar(MyApplication.getInstance().getHomeActivity(), "Hey you are near to " + nearByStore.getName() + " store. Lets visit and earn !!");
+                            Utils.getInstance().showSnackBar(MyApplication.getInstance().getHomeActivity(), "Hey! You are near" + nearByStore.getName() + ". Step-in to collect koins!");
                         } else {
-                            Utils.getInstance().showLocalNotification("NetKoin", "Hey you are near to " + nearByStore.getName() + " store. Lets visit and earn !!");
+                            Utils.getInstance().showLocalNotification("NetKoin", "Hey! You are near " + nearByStore.getName() + ". Step-in to collect koins!");
 
                         }
                     }

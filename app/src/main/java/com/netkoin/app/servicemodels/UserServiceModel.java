@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
+import com.netkoin.app.controller.AppController;
 import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
@@ -32,6 +33,10 @@ public class UserServiceModel extends BaseServiceModel {
 
 
     public void updateUserLocation(double latitude, double longitude) {
+        if (AppController.getInstance().getModelFacade().getLocalModel().getToken() == null) {
+            return;
+        }
+
         String requestBody = formJsonForUserLocation(latitude, longitude).toString();
         String url = URLConstants.URL_UPDATE_USER_LOCATION;
 

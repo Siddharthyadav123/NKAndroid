@@ -68,7 +68,7 @@ public class KoinAppTutorialFragment extends AbstractBaseFragment {
     private void makeView() {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_faq_layout, null, false);
         faqWebView = (WebView) view.findViewById(R.id.faqWebView);
-        initActionBarView(R.drawable.back, "App Tutorial");
+        initActionBarView(R.drawable.back, "App Promotional Video");
         progressBar.setVisibility(View.VISIBLE);
     }
 

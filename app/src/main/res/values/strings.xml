@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Netkoins</string>
-    <string name="fb_app_id">169219133544859</string>
-
+    <string name="app_name">NetKoin</string>
+    <!--<string name="fb_app_id">169219133544859</string>-->
+    <string name="fb_app_id">101485473673071</string>
     <string name="enableGPSText">Enable GPS</string>
     <string name="enableGPSBody">The app needs GPS to be enabled do you want to enable it in the settings?</string>
     <string name="settingsGPSText">Settings</string>

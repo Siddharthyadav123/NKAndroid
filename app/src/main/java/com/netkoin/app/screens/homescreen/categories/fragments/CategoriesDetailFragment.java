@@ -221,7 +221,7 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
             }
             //showing info window
             if (adsList == null || adsList.size() == 0) {
-                showRetryView("No item found for this category.", true);
+                showRetryView("No items found for this category.", true);
             }
         } else {
             if (adsList == null || adsList.size() == 0) {

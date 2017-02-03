@@ -62,7 +62,7 @@ public class CataloguesServiceModel extends BaseServiceModel {
             if (catalouges.size() == 0) {
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATALOUGES,
-                            false, result, "No item found in catalouge.");
+                            false, result, "No items found in catalogue.");
                 }
             } else {
                 if (apiCallback != null) {

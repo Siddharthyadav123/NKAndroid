@@ -94,7 +94,7 @@ public class SignUpActivity extends AbstractBaseActivity {
             showAleartPosBtnOnly(null, "Alert", "Please enter valid email address");
             return false;
         } else if (!pwdMaterialEditText.getEditText().getText().toString().trim().equals(confPwdMaterialEditText.getEditText().getText().toString())) {
-            showAleartPosBtnOnly(null, "Alert", "Please check your confirm password");
+            showAleartPosBtnOnly(null, "Alert", "The passwords you have entered do not match, please try again.");
             return false;
         }
         return true;

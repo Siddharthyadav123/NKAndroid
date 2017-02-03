@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.servicemodels.StoreServiceModel;
+import com.netkoin.app.servicemodels.UserServiceModel;
 
 
 /**
@@ -37,7 +38,7 @@ public class LocationModel implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 2; // 2 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 10; // 10 sec
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 20; // 20 sec
 
     // Declaring a Location Manager
     private LocationManager locationManager;
@@ -46,12 +47,14 @@ public class LocationModel implements LocationListener {
     private SharedPref sharedPref;
 
     private StoreServiceModel storeServiceModel;
+    private UserServiceModel userServiceModel;
 
     public LocationModel(Context context, LocationCallback locationCallback) {
         this.mContext = context;
         this.locationCallback = locationCallback;
         sharedPref = new SharedPref(context);
         storeServiceModel = new StoreServiceModel(mContext, null);
+        userServiceModel = new UserServiceModel(mContext,null);
     }
 
     public void initialize() {
@@ -139,6 +142,7 @@ public class LocationModel implements LocationListener {
         if (locationCallback != null && latitude != 0.0f) {
             locationCallback.onLocationFound(latitude, longitude);
             saveLatLong();
+            userServiceModel.updateUserLocation(latitude, longitude);
             storeServiceModel.checkNearByStore(latitude, longitude);
         }
 //        Toast.makeText(mContext, "Location found Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
@@ -182,13 +186,14 @@ public class LocationModel implements LocationListener {
             latitude = (float) location.getLatitude();
             longitude = (float) location.getLongitude();
 
-//            Toast.makeText(mContext, "Location change Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "Location change Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
 
             //callback for lat long
             if (locationCallback != null && latitude != 0.0f) {
                 locationCallback.onLocationChanged(latitude, longitude);
                 saveLatLong();
                 storeServiceModel.checkNearByStore(latitude, longitude);
+                userServiceModel.updateUserLocation(latitude,longitude);
             }
         }
     }
