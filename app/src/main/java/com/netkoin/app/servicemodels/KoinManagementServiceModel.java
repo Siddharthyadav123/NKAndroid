@@ -11,6 +11,7 @@ import com.netkoin.app.entities.Message;
 import com.netkoin.app.screens.koin_managment.fragments.KoinMessagesFragment;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,25 +96,25 @@ public class KoinManagementServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
 
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS:
-                    onActivityLogResponse(isSuccess, result, errorString);
+                    onActivityLogResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_POST_TRANSFER_KOINS:
-                    onTransferKoinsResponse(isSuccess, result, errorString);
+                    onTransferKoinsResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_UREAD_COUNT:
-                    onActivityLogsUnreadCountResponse(isSuccess, result, errorString);
+                    onActivityLogsUnreadCountResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_SET_READ_ALL:
-                    onActivitLogsSetReadAllResponse(isSuccess, result, errorString);
+                    onActivitLogsSetReadAllResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_MESSAGES:
-                    onMessagesResponse(isSuccess, result, errorString);
+                    onMessagesResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -124,7 +125,7 @@ public class KoinManagementServiceModel extends BaseServiceModel {
         }
     }
 
-    private void onMessagesResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onMessagesResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONArray response = jsonObject.getJSONArray("data");
@@ -134,26 +135,27 @@ public class KoinManagementServiceModel extends BaseServiceModel {
 
             if (messages.size() == 0) {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No Messages found");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_MESSAGES,
-                            false, result, "No Messages found");
+                            false, result, errorResponse);
                 }
             } else {
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_MESSAGES,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
             }
 
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_MESSAGES,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
 
         }
     }
 
-    private void onActivitLogsSetReadAllResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onActivitLogsSetReadAllResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject response = jsonObject.getJSONObject("data");
@@ -161,20 +163,21 @@ public class KoinManagementServiceModel extends BaseServiceModel {
             String message = response.getString("message");
 
             if (apiCallback != null) {
+                errorResponse.setErrorString(message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_SET_READ_ALL,
-                        true, result, message);
+                        true, result, errorResponse);
             }
         } else {
 
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_SET_READ_ALL,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
 
     }
 
-    private void onActivityLogsUnreadCountResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onActivityLogsUnreadCountResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject response = jsonObject.getJSONObject("data");
@@ -182,18 +185,18 @@ public class KoinManagementServiceModel extends BaseServiceModel {
             unreadActivityLogscount = response.getInt("count");
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_UREAD_COUNT,
-                        true, result, "");
+                        true, result, errorResponse);
             }
         } else {
             unreadActivityLogscount = 0;
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS_UREAD_COUNT,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
 
-    private void onTransferKoinsResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onTransferKoinsResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (result != null) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject response = jsonObject.getJSONObject("data");
@@ -202,28 +205,30 @@ public class KoinManagementServiceModel extends BaseServiceModel {
                 // message
                 String message = response.getString("message");
                 if (apiCallback != null) {
+                    errorResponse.setErrorString(message);
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_TRANSFER_KOINS,
-                            false, message, message);
+                            true, message, errorResponse);
                 }
 
             } else {
                 // error message
                 String error_message = response.getString("error_message");
+                errorResponse.setErrorString(error_message);
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_TRANSFER_KOINS,
-                            false, result, error_message);
+                            false, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_TRANSFER_KOINS,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
 
         }
     }
 
-    private void onActivityLogResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onActivityLogResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONArray response = jsonObject.getJSONArray("data");
@@ -234,20 +239,21 @@ public class KoinManagementServiceModel extends BaseServiceModel {
 
             if (activityLogs.size() == 0) {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No Activity logs found");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS,
-                            false, result, "No Activity logs found");
+                            false, result, errorResponse);
                 }
             } else {
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
             }
 
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
 
         }

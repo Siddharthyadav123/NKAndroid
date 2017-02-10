@@ -18,6 +18,7 @@ import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.entities.Message;
 import com.netkoin.app.screens.koin_managment.adapters.KoinMessagesListAdapter;
 import com.netkoin.app.servicemodels.KoinManagementServiceModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -187,17 +188,17 @@ public class KoinMessagesFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_MESSAGES:
-                onMessagesResponse(isSuccess, errorString);
+                onMessagesResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onMessagesResponse(boolean isSuccess, String errorString) {
+    private void onMessagesResponse(boolean isSuccess, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -236,8 +237,11 @@ public class KoinMessagesFragment extends AbstractBaseFragment {
             }
 
         } else {
-            if (messages == null || messages.size() == 0) {
-                showRetryView(errorString, true);
+
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (messages == null || messages.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
 
         }

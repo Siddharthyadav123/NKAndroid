@@ -13,6 +13,7 @@ import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.servicemodels.KoinManagementServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 /**
  * Created by siddharthyadav on 08/01/17.
@@ -118,20 +119,20 @@ public class KoinTransferFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_POST_TRANSFER_KOINS:
-                onTransferKoinResponse(isSuccess, result, errorString);
+                onTransferKoinResponse(isSuccess, result, errorResponse);
             default:
                 break;
         }
     }
 
-    private void onTransferKoinResponse(boolean isSuccess, Object result, String errorString) {
+    private void onTransferKoinResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) {
         if (isSuccess) {
-            Utils.getInstance().showSnackBar(getActivity(), (String) result);
+            Utils.getInstance().showSnackBar(isSuccess,getActivity(), (String) result);
         } else {
-            Utils.getInstance().showSnackBar(getActivity(), errorString);
+            Utils.getInstance().showSnackBar(isSuccess,getActivity(), errorResponse.getErrorString());
         }
     }
 }

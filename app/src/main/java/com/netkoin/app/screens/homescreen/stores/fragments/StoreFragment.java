@@ -29,6 +29,7 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreBannerViewPagerAdapter;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreListViewAdapter;
 import com.netkoin.app.servicemodels.StoreServiceModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -102,7 +103,6 @@ public class StoreFragment extends AbstractBaseFragment {
         //requestBanner
         storeServiceModel.loadStoreFeaturedBanner();
 
-        stores = null;
         storeServiceModel.setStores(null);
 
         //setting page to 1
@@ -237,11 +237,10 @@ public class StoreFragment extends AbstractBaseFragment {
             }
             previousLocation = currentLocation;
             previousStoreDistance = distance;
-            System.out.println(">>request 222");
+            //System.out.println(">>request 222");
             //hit API on location change from user
             progressBarFooter.setVisibility(View.VISIBLE);
             storeServiceModel.resetPage();
-            stores = null;
             storeServiceModel.setStores(null);
             storeServiceModel.loadStores();
         }
@@ -273,10 +272,10 @@ public class StoreFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_STORES:
-                onStoreResponse(isSuccess, result, errorString);
+                onStoreResponse(isSuccess, result, errorResponse);
                 break;
             case RequestConstants.REQUEST_ID_GET_HOME_BANNER:
                 onFeaturedBannerResponse(isSuccess);
@@ -297,7 +296,7 @@ public class StoreFragment extends AbstractBaseFragment {
     }
 
 
-    public void onStoreResponse(boolean isSuccess, Object responseObject, String errorString) {
+    public void onStoreResponse(boolean isSuccess, Object responseObject, ErrorResponse errorResponse) {
         currentLocationLinLayout.setVisibility(View.GONE);
         progressBarFooter.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
@@ -336,7 +335,9 @@ public class StoreFragment extends AbstractBaseFragment {
 
         } else {
 
-            if (stores == null || stores.size() == 0) {
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (stores == null || stores.size() == 0) {
                 showStoreNotFoundBtn("No stores found nearby you. Please change your location or increase the distance from settings.",
                         true);
             }

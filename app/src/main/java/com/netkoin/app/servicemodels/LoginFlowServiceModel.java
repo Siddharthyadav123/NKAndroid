@@ -15,6 +15,7 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.social.FbUserDo;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,29 +90,33 @@ public class LoginFlowServiceModel extends BaseServiceModel {
         APIHandler apiHandler = new APIHandler(context, this, requestId, Request.Method.POST, url, false, null, requestBody);
         apiHandler.setNeedTokenHeader(true);
         apiHandler.setAllowRetryOnFailure(true);
+        apiHandler.setNeedToExitAppOnRetryPopupCancel(true);
         apiHandler.requestAPI();
     }
 
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_POST_SIGNIN:
-                    onSignInResponse(isSuccess, result, errorString);
+                    onSignInResponse(isSuccess, result, errorResponse);
+                    MyApplication.getInstance().getLocationModel().setLastServerHit(0);
                     break;
                 case RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN:
-                    onFacebookSignInResponse(isSuccess, result, errorString);
+                    onFacebookSignInResponse(isSuccess, result, errorResponse);
+                    MyApplication.getInstance().getLocationModel().setLastServerHit(0);
                     break;
                 case RequestConstants.REQUEST_ID_POST_SIGNUP:
-                    onSignUpResponse(isSuccess, result, errorString);
+                    onSignUpResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN:
-                    onGPlusSignInResponse(isSuccess, result, errorString);
+                    onGPlusSignInResponse(isSuccess, result, errorResponse);
+                    MyApplication.getInstance().getLocationModel().setLastServerHit(0);
                     break;
                 case RequestConstants.REQUEST_ID_POST_LOGOUT:
-                    onLogoutResponse(isSuccess, result, errorString);
+                    onLogoutResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -122,7 +127,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     }
 
-    private void onLogoutResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onLogoutResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject data = jsonObject.getJSONObject("data");
@@ -130,24 +135,26 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
             if (message_code == 1011) {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("Logout Successfully !!");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_LOGOUT,
-                            true, result, "Logout Successfully !!");
+                            true, result, errorResponse);
                 }
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("Logout failed.");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_LOGOUT,
-                            false, result, "Logout failed.");
+                            false, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_LOGOUT,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
 
-    private void onGPlusSignInResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onGPlusSignInResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject data = jsonObject.getJSONObject("data");
@@ -171,19 +178,20 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             sharedPref.put(SharedPref.KEY_USER_ID, id);
 
             if (apiCallback != null) {
+                errorResponse.setErrorString("Login Successful !");
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN,
-                        true, result, "Login Successful !");
+                        true, result, errorResponse);
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
 
 
-    private void onFacebookSignInResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onFacebookSignInResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject data = jsonObject.getJSONObject("data");
@@ -206,18 +214,19 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             sharedPref.put(SharedPref.KEY_USER_ID, id);
 
             if (apiCallback != null) {
+                errorResponse.setErrorString("Login Successful !");
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN,
-                        true, result, "Login Successful !");
+                        true, result, errorResponse);
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
 
-    private void onSignInResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onSignInResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject data = jsonObject.getJSONObject("data");
@@ -241,13 +250,14 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             sharedPref.put(SharedPref.KEY_USER_ID, id);
 
             if (apiCallback != null) {
+                errorResponse.setErrorString("Login Successful !");
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_SIGNIN,
-                        true, result, "Login Successful !");
+                        true, result, errorResponse);
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_SIGNIN,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
@@ -278,7 +288,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     }
 
-    private void onSignUpResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onSignUpResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject data = jsonObject.getJSONObject("data");
@@ -287,14 +297,15 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             String token = data.getString("token");
 
             if (apiCallback != null) {
+                errorResponse.setErrorString("Sign-up Successful, Please sign in.");
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_SIGNUP,
-                        true, result, "Sign-up Successful, Please sign in.");
+                        true, result, errorResponse);
             }
         } else {
 
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_POST_SIGNUP,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
@@ -450,7 +461,7 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
     private String getPushToken() {
         String token = FirebaseInstanceId.getInstance().getToken();
-        System.out.println(">>FCM token >>" + token);
+        //System.out.println(">>FCM token >>" + token);
         if (token == null) {
             Toast.makeText(context, "FCM token not found.", Toast.LENGTH_SHORT).show();
             token = "Hardcoding_because_token_not_found";

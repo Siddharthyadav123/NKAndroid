@@ -4,12 +4,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.netkoin.app.R;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.custom_views.material_edittext.MaterialEditText;
 import com.netkoin.app.custom_views.switchbtn.SwitchButton;
 import com.netkoin.app.servicemodels.LoginFlowServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
+
+import org.json.JSONObject;
 
 public class SignUpActivity extends AbstractBaseActivity {
     private MaterialEditText nameMaterialEditText;
@@ -122,8 +126,36 @@ public class SignUpActivity extends AbstractBaseActivity {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        showAleartPosBtnOnly(null, "Message", errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+
+        try {
+            if (result != null && result instanceof JSONObject) {
+                JSONObject data = ((JSONObject) result).getJSONObject("data");
+                int error_code = data.getInt("error_code");
+
+                if (error_code == -1014) {
+                    showAleartPosBtnOnly(new MyApplication.DailogCallback() {
+                        @Override
+
+                        public void onDailogYesClick() {
+                            finish();
+                        }
+
+                        @Override
+                        public void onDailogNoClick() {
+
+                        }
+                    }, "Message", errorResponse.getErrorString());
+                    return;
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        showAleartPosBtnOnly(null, "Message", errorResponse.getErrorString());
+
     }
 
 

@@ -26,6 +26,7 @@ import com.netkoin.app.social.FacebookModel;
 import com.netkoin.app.social.FbUserDo;
 import com.netkoin.app.social.SocialLoginInterface;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.Arrays;
 
@@ -177,11 +178,11 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         if (isSuccess) {
             ActivityController.getInstance().handleEvent(this, ActivityController.ACTIVITY_HOME_SCREEN);
         } else {
-            showAleartPosBtnOnly(null, "Message", errorString);
+            showAleartPosBtnOnly(null, "Message", errorResponse.getErrorString());
         }
     }
 
@@ -258,12 +259,12 @@ public class SignInActivity extends AbstractBaseActivity implements SocialLoginI
 
     @Override
     public void onSocialLoginFailure(String error, String socialType) {
-        System.out.println(">>" + error);
+        //System.out.println(">>" + error);
     }
 
     @Override
     public void onSocialLoginCancel(String socialType) {
-        System.out.println(">>" + socialType);
+        //System.out.println(">>" + socialType);
     }
 
     @Override

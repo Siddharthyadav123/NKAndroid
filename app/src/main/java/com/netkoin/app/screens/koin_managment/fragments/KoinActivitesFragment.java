@@ -17,6 +17,7 @@ import com.netkoin.app.custom_views.pull_to_refresh.CustomSwipeToRefresh;
 import com.netkoin.app.entities.ActivityLog;
 import com.netkoin.app.screens.koin_managment.adapters.KoinActivitiesListAdapter;
 import com.netkoin.app.servicemodels.KoinManagementServiceModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -105,7 +106,7 @@ public class KoinActivitesFragment extends AbstractBaseFragment {
         refreshLayout = (CustomSwipeToRefresh) view.findViewById(R.id.refreshLayout);
         progressBarCenter = (ProgressBar) view.findViewById(R.id.progressBarCenter);
         progressBarListLoading = (ProgressBar) view.findViewById(R.id.progressBarListLoading);
-        initActionBarView(R.drawable.back, "Activities");
+        initActionBarView(R.drawable.back, "Activity");
     }
 
     @Override
@@ -142,17 +143,17 @@ public class KoinActivitesFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_ACTIVITY_LOGS:
-                onActivityLogResponse(isSuccess, errorString);
+                onActivityLogResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onActivityLogResponse(boolean isSuccess, String errorString) {
+    private void onActivityLogResponse(boolean isSuccess, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -187,8 +188,11 @@ public class KoinActivitesFragment extends AbstractBaseFragment {
             }
 
         } else {
-            if (activityLogs == null || activityLogs.size() == 0) {
-                showRetryView(errorString, true);
+
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (activityLogs == null || activityLogs.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
 
         }

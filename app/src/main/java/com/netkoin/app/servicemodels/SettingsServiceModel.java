@@ -8,6 +8,7 @@ import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,12 +66,12 @@ public class SettingsServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQIEST_ID_POST_SETTINGS:
-                    onPostSettingResponse(isSuccess, result, errorString);
+                    onPostSettingResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -82,7 +83,7 @@ public class SettingsServiceModel extends BaseServiceModel {
     }
 
 
-    private void onPostSettingResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onPostSettingResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             int settingId = sharedPref.getIntWithMinusOneAsDefault(SharedPref.KEY_SETTING_ID);
             if (settingId == -1) {

@@ -122,6 +122,9 @@
         </service>
         <!-- [END firebase_iid_service] -->
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="633f8b7cbd40bfa7352b60b4f692b3df2c6d5b63" />
     </application>
 
 </manifest>

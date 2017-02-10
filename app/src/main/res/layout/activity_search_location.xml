@@ -123,7 +123,7 @@
                     android:singleLine="true"
                     android:textColor="@android:color/black"
                     android:textSize="18dp"
-                    app:autocompleteUrl="https://maps.googleapis.com/maps/api/place/autocomplete/json?sensor=false&amp;key=AIzaSyBMz_h6tRiaTNQ-UiR8zgso_5E4ikMD3ck&amp;input="
+                    app:autocompleteUrl="https://maps.googleapis.com/maps/api/place/autocomplete/json?sensor=false&amp;key=AIzaSyBrK9PPykYsa9xdEfezFdLdvBKAyY-aqt4&amp;input="
                     app:modelClass="com.netkoin.app.custom_views.autocompleteview.Place"
                     app:rowLayout="@layout/row_place" />
 
@@ -175,7 +175,7 @@
         android:text="Save"
         android:textColor="@color/white"
         android:textSize="20dp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 
 </RelativeLayout>

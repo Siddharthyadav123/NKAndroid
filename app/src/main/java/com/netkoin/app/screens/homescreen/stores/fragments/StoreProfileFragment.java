@@ -24,6 +24,7 @@ import com.netkoin.app.screens.homescreen.stores.adapters.StoreBannerViewPagerAd
 import com.netkoin.app.servicemodels.StoreServiceModel;
 import com.netkoin.app.servicemodels.UserServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -209,20 +210,20 @@ public class StoreProfileFragment extends AbstractBaseFragment {
 
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_STORE_FEATURED_BANNERS:
-                onFeaturedBannerResponse(isSuccess, errorString);
+                onFeaturedBannerResponse(isSuccess, errorResponse);
                 break;
             case RequestConstants.REQIEST_ID_CHECKIN_WALKIN:
-                onCheckInWalkinResponse(isSuccess, errorString);
+                onCheckInWalkinResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    public void onFeaturedBannerResponse(boolean isSuccess, String errorString) {
+    public void onFeaturedBannerResponse(boolean isSuccess, ErrorResponse errorResponse) {
         progressBarCenter.setVisibility(View.GONE);
         if (isSuccess) {
             if (storeServiceModel.getStoresProfileFeaturedBanner() != null && storeServiceModel.getStoresProfileFeaturedBanner().size() > 0) {
@@ -278,7 +279,7 @@ public class StoreProfileFragment extends AbstractBaseFragment {
 
     }
 
-    public void onCheckInWalkinResponse(boolean isSuccess, String errorString) {
-        Utils.getInstance().showSnackBar(getActivity(), errorString);
+    public void onCheckInWalkinResponse(boolean isSuccess, ErrorResponse errorResponse) {
+        Utils.getInstance().showSnackBar(isSuccess,getActivity(), errorResponse.getErrorString());
     }
 }

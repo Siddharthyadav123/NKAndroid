@@ -21,6 +21,7 @@ import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonList
 import com.netkoin.app.servicemodels.CataloguesServiceModel;
 import com.netkoin.app.servicemodels.UserServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -154,20 +155,20 @@ public class CatalougeFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_CATALOUGES:
-                onCatelogListResponse(isSuccess, result, errorString);
+                onCatelogListResponse(isSuccess, result, errorResponse);
                 break;
             case RequestConstants.REQIEST_ID_REDEEM_KOIN:
-                onRedeemKoinResponse(isSuccess, result, errorString);
+                onRedeemKoinResponse(isSuccess, result, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onCatelogListResponse(boolean isSuccess, Object result, String errorString) {
+    private void onCatelogListResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -198,19 +199,21 @@ public class CatalougeFragment extends AbstractBaseFragment {
 
             //showing info window
             if (catalouges == null || catalouges.size() == 0) {
-                showRetryView("No item found to purchase.", true);
+                showRetryView("No items found to purchase.", true);
             }
         } else {
-            if (catalouges == null || catalouges.size() == 0) {
-                showRetryView(errorString, true);
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (catalouges == null || catalouges.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
         }
         progressBarCenter.setVisibility(View.GONE);
     }
 
 
-    private void onRedeemKoinResponse(boolean isSuccess, Object result, String errorString) {
-        Utils.getInstance().showSnackBar(getActivity(), errorString);
+    private void onRedeemKoinResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        Utils.getInstance().showSnackBar(isSuccess,getActivity(), errorResponse.getErrorString());
     }
 
 

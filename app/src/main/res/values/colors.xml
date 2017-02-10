@@ -21,6 +21,7 @@
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
     <color name="black">#000000</color>
+    <color name="error">#e1bc37</color>
 
     <color name="lightGreen">#00FF00</color>
 

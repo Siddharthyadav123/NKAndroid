@@ -20,6 +20,7 @@ import com.netkoin.app.entities.Store;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.AdsServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -161,17 +162,17 @@ public class FeaturedFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_ADS_BY_STORE_ID:
-                onIndividualCatResponse(isSuccess, errorString);
+                onIndividualCatResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onIndividualCatResponse(boolean isSuccess, String errorString) {
+    private void onIndividualCatResponse(boolean isSuccess, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -202,12 +203,14 @@ public class FeaturedFragment extends AbstractBaseFragment {
 
             //showing info window
             if (adsList == null || adsList.size() == 0) {
-                showRetryView("No item found for this category.", true);
+                showRetryView("No items found for this category.", true);
             }
 
         } else {
-            if (adsList == null || adsList.size() == 0) {
-                showRetryView(errorString, true);
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (adsList == null || adsList.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
         }
 

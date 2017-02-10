@@ -11,6 +11,7 @@ import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.servicemodels.LoginFlowServiceModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 public class SplashActivity extends AbstractBaseActivity {
 
@@ -110,12 +111,12 @@ public class SplashActivity extends AbstractBaseActivity {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         if (isSuccess) {
             finish();
             ActivityController.getInstance().handleEvent(this, ActivityController.ACTIVITY_HOME_SCREEN);
         } else {
-            showAleartPosBtnOnly(null, "Message", errorString);
+            showAleartPosBtnOnly(null, "Message", errorResponse.getErrorString());
         }
     }
 

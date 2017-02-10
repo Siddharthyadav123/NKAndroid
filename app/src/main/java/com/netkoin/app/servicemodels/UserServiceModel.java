@@ -9,6 +9,7 @@ import com.netkoin.app.controller.AppController;
 import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,6 @@ public class UserServiceModel extends BaseServiceModel {
         if (AppController.getInstance().getModelFacade().getLocalModel().getToken() == null) {
             return;
         }
-
         String requestBody = formJsonForUserLocation(latitude, longitude).toString();
         String url = URLConstants.URL_UPDATE_USER_LOCATION;
 
@@ -66,7 +66,7 @@ public class UserServiceModel extends BaseServiceModel {
 
     public void checkInPurchases(BarCodeScanParcelDo barCodeScanParcelDo) {
         String url = URLConstants.URL_CHECK_IN_PURCHASES + "?store_id=" + barCodeScanParcelDo.getStoreId() +
-                "&product_barcode_id=" + barCodeScanParcelDo.getProductBarId() + "&barcode_value=" + barCodeScanParcelDo.getBarCodeValue();
+                "&purchase_barcode_id=" + barCodeScanParcelDo.getProductBarId() + "&barcode_value=" + barCodeScanParcelDo.getBarCodeValue();
 
         APIHandler apiHandler = new APIHandler(context, this, RequestConstants.REQIEST_ID_CHECKIN_PURCHASES,
                 Request.Method.GET, url, true, "Verifying barcode...", null);
@@ -75,24 +75,24 @@ public class UserServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
 
         try {
             switch (requestId) {
                 case RequestConstants.REQIEST_ID_UPDATE_USER_LOCATION:
                     break;
                 case RequestConstants.REQIEST_ID_CHECKIN_WALKIN:
-                    onCheckinWalkinResponse(isSuccess, result, errorString);
+                    onCheckinWalkinResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQIEST_ID_CHECKIN_PRODUCTS:
-                    onCheckinProductsResponse(isSuccess, result, errorString);
+                    onCheckinProductsResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQIEST_ID_CHECKIN_PURCHASES:
-                    onCheckinPurchaseResponse(isSuccess, result, errorString);
+                    onCheckinPurchaseResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQIEST_ID_REDEEM_KOIN:
-                    onRedeemKoinResponse(isSuccess, result, errorString);
+                    onRedeemKoinResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -102,85 +102,95 @@ public class UserServiceModel extends BaseServiceModel {
         }
     }
 
-    private void onRedeemKoinResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onRedeemKoinResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         JSONObject jsonObject = (JSONObject) result;
         JSONObject data = jsonObject.getJSONObject("data");
 
         if (isSuccess) {
             String message = data.getString("message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_REDEEM_KOIN,
-                        true, result, message);
+                        true, result, errorResponse);
             }
 
         } else {
             String error_message = data.getString("error_message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(error_message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_REDEEM_KOIN,
-                        false, result, error_message);
+                        false, result, errorResponse);
             }
         }
     }
 
-    private void onCheckinPurchaseResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onCheckinPurchaseResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         JSONObject jsonObject = (JSONObject) result;
         JSONObject data = jsonObject.getJSONObject("data");
         if (isSuccess) {
             String message = data.getString("message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_CHECKIN_PURCHASES,
-                        true, result, message);
+                        true, result, errorResponse);
             }
 
         } else {
             String error_message = data.getString("error_message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(error_message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_CHECKIN_PURCHASES,
-                        false, result, error_message);
+                        false, result, errorResponse);
             }
 
         }
 
     }
 
-    private void onCheckinProductsResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onCheckinProductsResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         JSONObject jsonObject = (JSONObject) result;
         JSONObject data = jsonObject.getJSONObject("data");
 
         if (isSuccess) {
             String message = data.getString("message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_CHECKIN_PRODUCTS,
-                        true, result, message);
+                        true, result, errorResponse);
             }
 
         } else {
             String error_message = data.getString("error_message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(error_message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_CHECKIN_PRODUCTS,
-                        false, result, error_message);
+                        false, result, errorResponse);
             }
 
         }
     }
 
-    private void onCheckinWalkinResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onCheckinWalkinResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
+
+
         JSONObject jsonObject = (JSONObject) result;
         JSONObject data = jsonObject.getJSONObject("data");
 
         if (isSuccess) {
             String message = data.getString("message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_CHECKIN_WALKIN,
-                        true, result, message);
+                        true, result, errorResponse);
             }
 
         } else {
 
             String error_message = data.getString("error_message");
             if (apiCallback != null) {
+                errorResponse.setErrorString(error_message);
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQIEST_ID_CHECKIN_WALKIN,
-                        false, result, error_message);
+                        false, result, errorResponse);
             }
 
         }

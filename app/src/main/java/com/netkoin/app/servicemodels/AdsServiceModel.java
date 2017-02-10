@@ -12,6 +12,7 @@ import com.netkoin.app.entities.MainCategory;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,16 +74,16 @@ public class AdsServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
 
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_ADS_BY_STORE_ID:
-                    onAdsByStoreIdResponse(isSuccess, result, errorString);
+                    onAdsByStoreIdResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_INDIVIDAUL_CATEGORY_DETAILS_BY_CAT_ID:
-                    onAdsByCategoryIdResponse(isSuccess, result, errorString);
+                    onAdsByCategoryIdResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -93,7 +94,7 @@ public class AdsServiceModel extends BaseServiceModel {
 
     }
 
-    private void onAdsByStoreIdResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onAdsByStoreIdResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             if (result != null && jsonObject.length() > 0) {
@@ -105,13 +106,14 @@ public class AdsServiceModel extends BaseServiceModel {
 
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ADS_BY_STORE_ID,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
 
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No featured item found.");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ADS_BY_STORE_ID,
-                            false, result, "No featured item found.");
+                            false, result, errorResponse);
                 }
             }
 
@@ -119,14 +121,14 @@ public class AdsServiceModel extends BaseServiceModel {
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_ADS_BY_STORE_ID,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
 
         }
     }
 
 
-    private void onAdsByCategoryIdResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onAdsByCategoryIdResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             if (result != null && jsonObject.length() > 0) {
@@ -137,13 +139,14 @@ public class AdsServiceModel extends BaseServiceModel {
 
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_INDIVIDAUL_CATEGORY_DETAILS_BY_CAT_ID,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
 
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No items found for this category.");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_INDIVIDAUL_CATEGORY_DETAILS_BY_CAT_ID,
-                            false, result, "No item found for this category.");
+                            false, result, errorResponse);
                 }
             }
 
@@ -151,7 +154,7 @@ public class AdsServiceModel extends BaseServiceModel {
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_INDIVIDAUL_CATEGORY_DETAILS_BY_CAT_ID,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }

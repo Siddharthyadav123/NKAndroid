@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.screens.homescreen.settings.adapters.NotificationSettingListAdapter;
+import com.netkoin.app.volly.ErrorResponse;
 
 /**
  * Created by siddharthyadav on 07/01/17.
@@ -86,7 +87,7 @@ public class NotificationSettingFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
 
     }
 }

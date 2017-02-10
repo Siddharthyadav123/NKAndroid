@@ -41,6 +41,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     private boolean needTokenHeader = true;
     private boolean allowRetryOnFailure = false;
     private boolean responseFromOurServer = true;
+    private boolean needToExitAppOnRetryPopupCancel = false;
 
     public APIHandler(Context context, APIHandlerCallback apiHandlerCallback, int requestId, int methodType, String url,
                       boolean showLoading, String loadingText, String requestBody) {
@@ -98,14 +99,16 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
                     showRetryErrorAlert("Alert", "No Internet Connection Found.");
                 } else {
                     showToast(noInternetConnection);
-                    onAPIFailure(null, noInternetConnection);
+                    ErrorResponse errorResponse = new ErrorResponse(ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND,
+                            noInternetConnection);
+                    onAPIFailure(null, errorResponse);
                 }
             }
             return;
         }
 
-        System.out.println("[API] request url = " + url);
-        System.out.println("[API] request body = " + requestBody);
+        //System.out.println("[API] request url = " + url);
+        //System.out.println("[API] request body = " + requestBody);
         if (showLoading) {
             showLoading();
         }
@@ -137,7 +140,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     @Override
     public void onResponse(Object response) {
         hideLoading();
-        System.out.println("[API] response body volly = " + response.toString());
+        //System.out.println("[API] response body volly = " + response.toString());
         if (responseFromOurServer) {
             if (response != null) {
                 JSONObject jsonObject = null;
@@ -151,10 +154,14 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
                         //if not success from server
                         JSONObject data = jsonObject.getJSONObject("data");
                         String error_message = data.getString("error_message");
+                        int error_code = data.getInt("error_code");
                         if (data != null && data.length() > 0 && error_message != null) {
-                            onAPIFailure(jsonObject, error_message);
+                            ErrorResponse errorResponse = new ErrorResponse(error_code, error_message);
+                            onAPIFailure(jsonObject, errorResponse);
                         } else {
-                            onAPIFailure(jsonObject, "Failed with no message data");
+                            ErrorResponse errorResponse = new ErrorResponse(ErrorResponse.EROOR_CODE_FAILED_WITH_NO_MSG,
+                                    "Failed with no message data");
+                            onAPIFailure(jsonObject, errorResponse);
                         }
                     }
                 } catch (JSONException e) {
@@ -162,8 +169,9 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
                 }
 
             } else {
-                onAPIFailure(null, "Unable to fetch data");
-                System.out.println("[API] response fail volly = " + "Error in response");
+                ErrorResponse errorResponse = new ErrorResponse(ErrorResponse.EROOR_CODE_UNABLE_TO_FETCH_DATA, "Unable to fetch data");
+                onAPIFailure(null, errorResponse);
+                //System.out.println("[API] response fail volly = " + "Error in response");
             }
         } else {
             onAPISuccess(response);
@@ -175,7 +183,8 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        onAPIFailure(null, "Error from Server");
+        ErrorResponse errorResponse = new ErrorResponse(ErrorResponse.EROOR_CODE_ERROR_FROM_SERVER, "Error from Server");
+        onAPIFailure(null, errorResponse);
         hideLoading();
     }
 
@@ -185,31 +194,31 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
                 @Override
                 public void run() {
                     if (apiHandlerCallback != null) {
-                        apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, null);
+                        apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, new ErrorResponse());
                     }
                 }
             });
         } else {
             if (apiHandlerCallback != null) {
-                apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, null);
+                apiHandlerCallback.onAPIHandlerResponse(requestId, true, result, new ErrorResponse());
             }
         }
 
     }
 
-    private void onAPIFailure(final Object result, final String errorString) {
+    private void onAPIFailure(final Object result, final ErrorResponse errorResponse) {
         if (context instanceof Activity) {
             ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (apiHandlerCallback != null) {
-                        apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorString);
+                        apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorResponse);
                     }
                 }
             });
         } else {
             if (apiHandlerCallback != null) {
-                apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorString);
+                apiHandlerCallback.onAPIHandlerResponse(requestId, false, result, errorResponse);
             }
         }
     }
@@ -240,7 +249,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage(bodyText);
         builder1.setTitle(title);
-        builder1.setCancelable(true);
+        builder1.setCancelable(false);
         builder1.setPositiveButton(
                 "Retry",
                 new DialogInterface.OnClickListener() {
@@ -255,10 +264,23 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        if (needToExitAppOnRetryPopupCancel) {
+                            if (context instanceof Activity) {
+                                ((Activity) context).finishAffinity();
+                            }
+                        }
                     }
                 });
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    public boolean isNeedToExitAppOnRetryPopupCancel() {
+        return needToExitAppOnRetryPopupCancel;
+    }
+
+    public void setNeedToExitAppOnRetryPopupCancel(boolean needToExitAppOnRetryPopupCancel) {
+        this.needToExitAppOnRetryPopupCancel = needToExitAppOnRetryPopupCancel;
     }
 }

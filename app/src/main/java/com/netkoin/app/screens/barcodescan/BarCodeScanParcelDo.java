@@ -9,13 +9,13 @@ import android.os.Parcelable;
 public class BarCodeScanParcelDo implements Parcelable {
     private int scanMode;
     private int storeId;
-    private long barCodeValue;
+    private String barCodeValue;
     private int productBarId;
 
     protected BarCodeScanParcelDo(Parcel in) {
         scanMode = in.readInt();
         storeId = in.readInt();
-        barCodeValue = in.readLong();
+        barCodeValue = in.readString();
         productBarId = in.readInt();
     }
 
@@ -51,11 +51,11 @@ public class BarCodeScanParcelDo implements Parcelable {
         this.storeId = storeId;
     }
 
-    public long getBarCodeValue() {
+    public String getBarCodeValue() {
         return barCodeValue;
     }
 
-    public void setBarCodeValue(long barCodeValue) {
+    public void setBarCodeValue(String barCodeValue) {
         this.barCodeValue = barCodeValue;
     }
 
@@ -76,7 +76,7 @@ public class BarCodeScanParcelDo implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(scanMode);
         parcel.writeInt(storeId);
-        parcel.writeLong(barCodeValue);
+        parcel.writeString(barCodeValue);
         parcel.writeInt(productBarId);
     }
 }

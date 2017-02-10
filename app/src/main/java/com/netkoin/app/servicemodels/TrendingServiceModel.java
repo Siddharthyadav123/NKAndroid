@@ -12,6 +12,7 @@ import com.netkoin.app.entities.Ads;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,12 +108,12 @@ public class TrendingServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_TRENDING_ADS:
-                    onGetTreandingResponse(isSuccess, result, errorString);
+                    onGetTreandingResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -123,7 +124,7 @@ public class TrendingServiceModel extends BaseServiceModel {
 
     }
 
-    public void onGetTreandingResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    public void onGetTreandingResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             if (result != null && jsonObject.length() > 0) {
@@ -134,18 +135,19 @@ public class TrendingServiceModel extends BaseServiceModel {
 
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_TRENDING_ADS,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No items are in trending.");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_TRENDING_ADS,
-                            false, result, "No items are in trending.");
+                            false, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_TRENDING_ADS,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }

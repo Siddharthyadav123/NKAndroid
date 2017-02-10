@@ -31,7 +31,7 @@ public abstract class ParallaxedView {
 
     @SuppressLint("NewApi")
     public void setOffset(float offset) {
-        System.out.println(">>>>Parallex setOffset offset " + offset);
+       // System.out.println(">>>>Parallex setOffset offset " + offset);
         View view = this.view.get();
         if (view != null)
             if (isAPI11) {

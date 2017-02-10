@@ -9,6 +9,7 @@ import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.entities.MainCategory;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,12 +38,12 @@ public class CateogoriesServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_CATEOGRIES_LIST:
-                    onCategoriesResponse(isSuccess, result, errorString);
+                    onCategoriesResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -52,7 +53,7 @@ public class CateogoriesServiceModel extends BaseServiceModel {
         }
     }
 
-    private void onCategoriesResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onCategoriesResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
 
@@ -65,25 +66,27 @@ public class CateogoriesServiceModel extends BaseServiceModel {
 
                 if (categories.size() == 0) {
                     if (apiCallback != null) {
+                        errorResponse.setErrorString("Categories not found");
                         this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATEOGRIES_LIST,
-                                false, result, "Cateogries not found");
+                                false, result, errorResponse);
                     }
                 } else {
                     if (apiCallback != null) {
                         this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATEOGRIES_LIST,
-                                true, result, "");
+                                true, result, errorResponse);
                     }
                 }
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("Categories not found");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATEOGRIES_LIST,
-                            false, result, "Cateogries not found");
+                            false, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATEOGRIES_LIST,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }

@@ -15,6 +15,7 @@ import com.netkoin.app.screens.homescreen.home.fragments.TrendingHomeScreenFragm
 import com.netkoin.app.screens.homescreen.home.tabview.TabCallback;
 import com.netkoin.app.screens.homescreen.home.tabview.TabController;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 public class HomeScreenActivity extends AbstractBaseActivity implements TabCallback {
     //views
@@ -126,7 +127,7 @@ public class HomeScreenActivity extends AbstractBaseActivity implements TabCallb
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
 
     }
 

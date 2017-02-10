@@ -22,6 +22,7 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.AdsServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -178,17 +179,17 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_INDIVIDAUL_CATEGORY_DETAILS_BY_CAT_ID:
-                onIndividualCatResponse(isSuccess, errorString);
+                onIndividualCatResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onIndividualCatResponse(boolean isSuccess, String errorString) {
+    private void onIndividualCatResponse(boolean isSuccess, ErrorResponse errorResponse) {
         refreshLayout.setRefreshing(false);
         progressBarListLoading.setVisibility(View.GONE);
 
@@ -224,8 +225,10 @@ public class CategoriesDetailFragment extends AbstractBaseFragment {
                 showRetryView("No items found for this category.", true);
             }
         } else {
-            if (adsList == null || adsList.size() == 0) {
-                showRetryView(errorString, true);
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+                //do nothing if internet not found
+            } else if (adsList == null || adsList.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
 
         }

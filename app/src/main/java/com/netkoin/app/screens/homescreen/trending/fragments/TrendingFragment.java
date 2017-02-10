@@ -22,6 +22,7 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.trending.adapters.TrendingListviewAdapter;
 import com.netkoin.app.servicemodels.TrendingServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -190,9 +191,8 @@ public class TrendingFragment extends AbstractBaseFragment {
             //hit API on location change from user
             previousLocation = currentLocation;
             previousTrendingDistance = distance;
-            System.out.println(">>request 333");
+            //System.out.println(">>request 333");
             progressBarCenter.setVisibility(View.VISIBLE);
-            trendingAds = null;
             trendingServiceModel.setTrendingAds(null);
             trendingServiceModel.resetPage();
             trendingServiceModel.loadTreandingAds();
@@ -253,17 +253,17 @@ public class TrendingFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_TRENDING_ADS:
-                onTreandingAdsResponse(isSuccess, errorString);
+                onTreandingAdsResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onTreandingAdsResponse(boolean isSuccess, String errorString) {
+    private void onTreandingAdsResponse(boolean isSuccess, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -298,8 +298,11 @@ public class TrendingFragment extends AbstractBaseFragment {
             }
 
         } else {
-            if (trendingAds == null || trendingAds.size() == 0) {
-                showRetryView(errorString, true);
+
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (trendingAds == null || trendingAds.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
         }
 

@@ -250,13 +250,13 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        System.out.println(">>>>>>>>>>>>>>>>> onRequestPermissionsResult " + requestCode + " grantResults " + grantResults.length);
+        //System.out.println(">>>>>>>>>>>>>>>>> onRequestPermissionsResult " + requestCode + " grantResults " + grantResults.length);
         if (requestCode == permissionRequestCode) {
 
             if (grantResults.length >= 1) {
                 boolean anyDenied = false;
                 for (int i = 0; i < grantResults.length; i++) {
-                    System.out.println(">>>>>>>>>>>>>>>> grantResults " + grantResults[i]);
+                    //System.out.println(">>>>>>>>>>>>>>>> grantResults " + grantResults[i]);
                     // Check if the only required permission has been granted
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
 //                        Toast.makeText(this, "PERMISSION OF " + permissions[i] + " IS GRANTED.", Toast.LENGTH_SHORT).show();

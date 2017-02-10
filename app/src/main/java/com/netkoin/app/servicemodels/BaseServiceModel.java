@@ -11,6 +11,7 @@ import com.netkoin.app.entities.TotalKoin;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class BaseServiceModel implements APIHandlerCallback {
     }
 
 
-    private void onTotalKoinResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onTotalKoinResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONObject response = jsonObject.getJSONObject("data");
@@ -61,22 +62,22 @@ public class BaseServiceModel implements APIHandlerCallback {
 
             if (apiCallback != null) {
                 apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_TOTAL_KOIN,
-                        true, result, "");
+                        true, result, errorResponse);
             }
         } else {
             if (apiCallback != null) {
                 apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_TOTAL_KOIN,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_TOTAL_KOIN:
-                    onTotalKoinResponse(isSuccess, result, errorString);
+                    onTotalKoinResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;

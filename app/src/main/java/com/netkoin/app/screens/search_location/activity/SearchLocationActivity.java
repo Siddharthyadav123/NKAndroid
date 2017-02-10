@@ -20,6 +20,7 @@ import com.netkoin.app.custom_views.autocompleteview.AutoCompleteView;
 import com.netkoin.app.custom_views.autocompleteview.Place;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -119,10 +120,12 @@ public class SearchLocationActivity extends AbstractBaseActivity {
                 }
 
                 selectedCurrentLocTextView.setText(Constants.CURRENT_LOCATION_TEXT);
-                saveBtnTextView.setVisibility(View.VISIBLE);
                 selectedLong = 0.0;
                 selectedLong = 0.0;
                 selectedPlaceName = null;
+
+                saveBtnTextView.setAlpha(1f);
+                saveBtnTextView.setEnabled(true);
             }
         });
 
@@ -160,6 +163,7 @@ public class SearchLocationActivity extends AbstractBaseActivity {
                         noSearchResultTextView.setVisibility(View.VISIBLE);
                     } else {
                         noSearchResultTextView.setVisibility(View.GONE);
+
                     }
                 } else {
                     noSearchResultTextView.setVisibility(View.GONE);
@@ -180,6 +184,9 @@ public class SearchLocationActivity extends AbstractBaseActivity {
         } else {
             selectedCurrentLocTextView.setText(currentLocation);
         }
+
+        saveBtnTextView.setAlpha(0.4f);
+        saveBtnTextView.setEnabled(false);
 
     }
 
@@ -204,7 +211,7 @@ public class SearchLocationActivity extends AbstractBaseActivity {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_LOCATION_GEOPOINTS_BY_PLACE_ID:
                 onLocationPlaceIdResponse(result);
@@ -225,7 +232,9 @@ public class SearchLocationActivity extends AbstractBaseActivity {
                     selectedLat = location.getDouble("lat");
                     selectedLong = location.getDouble("lng");
 
-                    saveBtnTextView.setVisibility(View.VISIBLE);
+                    saveBtnTextView.setAlpha(1f);
+                    saveBtnTextView.setEnabled(true);
+
                     selectedCurrentLocTextView.setText(selectedPlaceName);
 
                     locationSearchAutocomplete.setText("");

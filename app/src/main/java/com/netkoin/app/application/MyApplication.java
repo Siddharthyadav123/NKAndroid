@@ -21,12 +21,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.netkoin.app.controller.AppController;
 import com.netkoin.app.location.LocationCallback;
 import com.netkoin.app.location.LocationModel;
 import com.netkoin.app.volly.LruBitmapCache;
+import io.fabric.sdk.android.Fabric;
 
 
 public class MyApplication extends Application implements LocationCallback {
@@ -47,6 +49,11 @@ public class MyApplication extends Application implements LocationCallback {
     @Override
     public void onCreate() {
         super.onCreate();
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(true)
+                .build();
+        Fabric.with(fabric);
         myApplication = this;
         MultiDex.install(this);
         FacebookSdk.sdkInitialize(getApplicationContext());

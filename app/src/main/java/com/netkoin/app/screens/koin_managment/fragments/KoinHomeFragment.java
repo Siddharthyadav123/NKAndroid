@@ -18,6 +18,7 @@ import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.entities.TotalKoin;
 import com.netkoin.app.screens.koin_managment.adapters.KoinHomeListAdapter;
 import com.netkoin.app.servicemodels.KoinManagementServiceModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
@@ -170,7 +171,7 @@ public class KoinHomeFragment extends AbstractBaseFragment {
 
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_TOTAL_KOIN:
                 refreshKoinCount(segmentGroup.getCheckedRadioButtonId());

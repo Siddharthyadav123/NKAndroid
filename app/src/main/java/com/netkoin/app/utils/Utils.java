@@ -15,10 +15,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netkoin.app.R;
@@ -43,7 +45,7 @@ public class Utils {
 
     //this will return meters if distance is less than 1 KM
     public String refineDistanceText(String distance) {
-        System.out.println(">>dis>>" + distance);
+        //System.out.println(">>dis>>" + distance);
         double distanceVal = Double.parseDouble(distance);
 
         if (distanceVal < 1) {
@@ -132,8 +134,48 @@ public class Utils {
 
 
     public void showSnackBar(Activity activity, String textToShow) {
-        Snackbar snack = Snackbar.make(activity.findViewById(android.R.id.content), textToShow, Snackbar.LENGTH_LONG);
+        final Snackbar snack = Snackbar.make(activity.findViewById(android.R.id.content), textToShow, Snackbar.LENGTH_LONG);
+        snack.setDuration(6000);
+        snack.setAction("Dismiss", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snack.dismiss();
+            }
+        });
+        snack.setActionTextColor(ContextCompat.getColor(activity, R.color.white));
         View view = snack.getView();
+        view.setBackgroundColor(ContextCompat.getColor(activity, R.color.green));
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        view.setLayoutParams(params);
+        snack.show();
+    }
+
+    public void showSnackBar(boolean success , Activity activity, String textToShow) {
+        final Snackbar snack = Snackbar.make(activity.findViewById(android.R.id.content), textToShow, Snackbar.LENGTH_LONG);
+        snack.setDuration(6000);
+        snack.setAction("Dismiss", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snack.dismiss();
+            }
+        });
+        snack.setActionTextColor(ContextCompat.getColor(activity, R.color.white));
+        View view = snack.getView();
+        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+
+
+
+        tv.setMaxLines(6);
+        if(!success)
+        {
+            view.setBackgroundColor(ContextCompat.getColor(activity, R.color.error));
+        }else
+        {
+            view.setBackgroundColor(ContextCompat.getColor(activity, R.color.green));
+        }
+
+
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.gravity = Gravity.TOP;
         view.setLayoutParams(params);
@@ -156,7 +198,7 @@ public class Utils {
         b.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.app_logo)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setLargeIcon(largeIcon)
                 .setTicker(title + ": " + description)
                 .setContentTitle(title)

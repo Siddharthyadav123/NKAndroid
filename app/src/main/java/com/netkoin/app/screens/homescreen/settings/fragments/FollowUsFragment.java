@@ -13,6 +13,7 @@ import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.screens.homescreen.settings.adapters.FollowUsListViewAdapter;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 /**
  * Created by siddharthyadav on 28/01/17.
@@ -108,7 +109,7 @@ public class FollowUsFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
 
     }
 }

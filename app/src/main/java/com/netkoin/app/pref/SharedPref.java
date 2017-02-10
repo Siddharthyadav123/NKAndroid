@@ -74,9 +74,9 @@ public class SharedPref {
         boolean saved = editor.commit();
 
         if (saved) {
-            System.out.println(">>saved >>" + key);
+            //System.out.println(">>saved >>" + key);
         } else {
-            System.out.println(">>unable to save >>" + key);
+            //System.out.println(">>unable to save >>" + key);
         }
     }
 

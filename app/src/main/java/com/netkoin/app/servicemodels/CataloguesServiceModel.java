@@ -9,6 +9,7 @@ import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.entities.Catalogue;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,12 +37,12 @@ public class CataloguesServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_CATALOUGES:
-                    onCatalougesResponse(isSuccess, result, errorString);
+                    onCatalougesResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -51,7 +52,7 @@ public class CataloguesServiceModel extends BaseServiceModel {
         }
     }
 
-    private void onCatalougesResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onCatalougesResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONArray response = jsonObject.getJSONArray("data");
@@ -61,19 +62,20 @@ public class CataloguesServiceModel extends BaseServiceModel {
 
             if (catalouges.size() == 0) {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No items found in catalogue.");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATALOUGES,
-                            false, result, "No items found in catalogue.");
+                            false, result, errorResponse);
                 }
             } else {
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATALOUGES,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_CATALOUGES,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }

@@ -18,6 +18,7 @@ import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.screens.homescreen.settings.adapters.SettingListViewAdapter;
 import com.netkoin.app.servicemodels.LoginFlowServiceModel;
 import com.netkoin.app.utils.Utils;
+import com.netkoin.app.volly.ErrorResponse;
 
 /**
  * Created by siddharth on 1/6/2017.
@@ -137,7 +138,7 @@ public class SettingsFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_POST_LOGOUT:
                 if (isSuccess) {

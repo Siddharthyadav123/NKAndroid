@@ -22,6 +22,7 @@ import com.netkoin.app.screens.barcodescan.BarCodeScanActivity;
 import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonListAdapter;
 import com.netkoin.app.servicemodels.ProductBarcodesModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -159,17 +160,17 @@ public class ProductFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_PRODUCT_BARCODES:
-                onProductListResponse(isSuccess, result, errorString);
+                onProductListResponse(isSuccess, result, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onProductListResponse(boolean isSuccess, Object result, String errorString) {
+    private void onProductListResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -203,8 +204,11 @@ public class ProductFragment extends AbstractBaseFragment {
                 showRetryView("No products found.", true);
             }
         } else {
-            if (productBarcodes == null || productBarcodes.size() == 0) {
-                showRetryView(errorString, true);
+
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (productBarcodes == null || productBarcodes.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
 
         }

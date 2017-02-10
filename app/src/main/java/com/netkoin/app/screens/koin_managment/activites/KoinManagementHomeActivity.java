@@ -6,6 +6,7 @@ import android.view.View;
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseActivity;
 import com.netkoin.app.screens.koin_managment.fragments.KoinHomeParentFragment;
+import com.netkoin.app.volly.ErrorResponse;
 
 public class KoinManagementHomeActivity extends AbstractBaseActivity {
 
@@ -52,7 +53,7 @@ public class KoinManagementHomeActivity extends AbstractBaseActivity {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
 
     }
 

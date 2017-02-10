@@ -31,6 +31,7 @@ import com.netkoin.app.controller.ActivityController;
 import com.netkoin.app.servicemodels.UserServiceModel;
 import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.io.IOException;
 
@@ -115,6 +116,8 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
                 if (mPreview != null) {
                     mPreview.stop();
                 }
+                mGraphicOverlay.clear();
+                initBarcodeViews();
                 barcodeFactory.setBarCodeCallback(BarCodeScanActivity.this);
                 startCameraSource();
 
@@ -363,7 +366,7 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
 
     @Override
     public void OnBarCodeScan(String rawValue, String barcodeValue) {
-        System.out.println(">>raw value>> " + rawValue + " >>barcodeValue>>" + barcodeValue);
+        //System.out.println(">>raw value>> " + rawValue + " >>barcodeValue>>" + barcodeValue);
         onBarcodeScanResultFound(barcodeValue);
     }
 
@@ -451,7 +454,7 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
 
     private void onBarcodeScanResultFound(String scanResult) {
         try {
-            barCodeScanParcelDo.setBarCodeValue(Long.parseLong(scanResult));
+            barCodeScanParcelDo.setBarCodeValue(scanResult);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(BarCodeScanActivity.this, "Barcode id not found.", Toast.LENGTH_SHORT).show();
@@ -471,8 +474,8 @@ public class BarCodeScanActivity extends AbstractBaseActivity implements APIHand
 
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        Utils.getInstance().showSnackBar(this, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        Utils.getInstance().showSnackBar(isSuccess,this, errorResponse.getErrorString());
     }
 
 

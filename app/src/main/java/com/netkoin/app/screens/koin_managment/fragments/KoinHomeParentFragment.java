@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.netkoin.app.R;
 import com.netkoin.app.base_classes.AbstractBaseFragment;
 import com.netkoin.app.controller.FragmentNavigationViewController;
+import com.netkoin.app.volly.ErrorResponse;
 
 /**
  * Created by siddharthyadav on 08/01/17.
@@ -85,7 +86,7 @@ public class KoinHomeParentFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
 
     }
 }

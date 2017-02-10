@@ -22,6 +22,7 @@ import com.netkoin.app.screens.barcodescan.BarCodeScanActivity;
 import com.netkoin.app.screens.barcodescan.BarCodeScanParcelDo;
 import com.netkoin.app.screens.homescreen.stores.adapters.StoreProfileCommonListAdapter;
 import com.netkoin.app.servicemodels.PurchaseBarcodesModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 import java.util.ArrayList;
 
@@ -160,17 +161,17 @@ public class PurchaseFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_PURCHASE_BARCODES:
-                onPurchaseListResponse(isSuccess, result, errorString);
+                onPurchaseListResponse(isSuccess, result, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    private void onPurchaseListResponse(boolean isSuccess, Object result, String errorString) {
+    private void onPurchaseListResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) {
         progressBarListLoading.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
 
@@ -201,12 +202,14 @@ public class PurchaseFragment extends AbstractBaseFragment {
 
             //showing info window
             if (purchaseBarcodes == null || purchaseBarcodes.size() == 0) {
-                showRetryView("No item found to purchase.", true);
+                showRetryView("No items found to purchase.", true);
             }
 
         } else {
-            if (purchaseBarcodes == null || purchaseBarcodes.size() == 0) {
-                showRetryView(errorString, true);
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+
+            } else if (purchaseBarcodes == null || purchaseBarcodes.size() == 0) {
+                showRetryView(errorResponse.getErrorString(), true);
             }
 
         }

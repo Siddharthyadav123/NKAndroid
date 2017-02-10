@@ -9,6 +9,7 @@ import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.entities.PurchaseBarcode;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,12 +36,12 @@ public class PurchaseBarcodesModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_PURCHASE_BARCODES:
-                    onPurchaseBarcodeResponse(isSuccess, result, errorString);
+                    onPurchaseBarcodeResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -50,7 +51,7 @@ public class PurchaseBarcodesModel extends BaseServiceModel {
         }
     }
 
-    private void onPurchaseBarcodeResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onPurchaseBarcodeResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             JSONArray response = jsonObject.getJSONArray("data");
@@ -60,19 +61,20 @@ public class PurchaseBarcodesModel extends BaseServiceModel {
 
             if (purchaseBarcodes.size() == 0) {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("No purchase barcode item found.");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_PURCHASE_BARCODES,
-                            false, result, "No purchase barcode item found.");
+                            false, result, errorResponse);
                 }
             } else {
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_PURCHASE_BARCODES,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_PURCHASE_BARCODES,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
 

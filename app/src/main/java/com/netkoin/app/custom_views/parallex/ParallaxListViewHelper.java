@@ -75,7 +75,7 @@ public class ParallaxListViewHelper implements OnScrollListener {
         if (parallaxedView != null) {
             if (listView.getChildCount() > 0) {
                 int top = -listView.getChildAt(0).getTop();
-                System.out.println(">>first item y= " + parallaxedView.getView().getY());
+               // System.out.println(">>first item y= " + parallaxedView.getView().getY());
 
 
                 if (toolbarBackgroudView != null)
@@ -129,7 +129,7 @@ public class ParallaxListViewHelper implements OnScrollListener {
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        System.out.println(">>onScroll firstVisibleItem " + firstVisibleItem + " visibleItemCount" + visibleItemCount + " totalItemCount " + totalItemCount);
+       //System.out.println(">>onScroll firstVisibleItem " + firstVisibleItem + " visibleItemCount" + visibleItemCount + " totalItemCount " + totalItemCount);
         parallaxScroll();
         if (this.listener != null)
             this.listener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
@@ -137,7 +137,7 @@ public class ParallaxListViewHelper implements OnScrollListener {
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        System.out.println(">>onScroll scrollState " + scrollState);
+       // System.out.println(">>onScroll scrollState " + scrollState);
         if (this.listener != null)
             this.listener.onScrollStateChanged(view, scrollState);
     }

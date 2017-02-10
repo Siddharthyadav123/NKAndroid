@@ -17,6 +17,7 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
+import com.netkoin.app.volly.ErrorResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -144,21 +145,21 @@ public class StoreServiceModel extends BaseServiceModel {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
-        super.onAPIHandlerResponse(requestId, isSuccess, result, errorString);
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
+        super.onAPIHandlerResponse(requestId, isSuccess, result, errorResponse);
         try {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_GET_HOME_BANNER:
-                    onStoreHomeFeaturedBannerResponse(isSuccess, result, errorString);
+                    onStoreHomeFeaturedBannerResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_STORES:
-                    onloadStoreResponse(isSuccess, result, errorString);
+                    onloadStoreResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_STORE_FEATURED_BANNERS:
-                    onStoreFeaturedBannerResponse(isSuccess, result, errorString);
+                    onStoreFeaturedBannerResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_GET_NEARBY_STORE:
-                    onNearByStoreResponse(isSuccess, result, errorString);
+                    onNearByStoreResponse(isSuccess, result, errorResponse);
                     break;
                 default:
                     break;
@@ -169,7 +170,7 @@ public class StoreServiceModel extends BaseServiceModel {
 
     }
 
-    public void onStoreHomeFeaturedBannerResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    public void onStoreHomeFeaturedBannerResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             if (result != null && jsonObject.length() > 0) {
@@ -181,31 +182,33 @@ public class StoreServiceModel extends BaseServiceModel {
 
                 if (storesFeaturedBanner.size() == 0) {
                     if (apiCallback != null) {
+                        errorResponse.setErrorString("Featured banner not found");
                         this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_HOME_BANNER,
-                                false, result, "Featured banner not found");
+                                false, result, errorResponse);
                     }
                 } else {
                     if (apiCallback != null) {
                         this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_HOME_BANNER,
-                                true, result, "");
+                                true, result, errorResponse);
                     }
                 }
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("Featured banner not found");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_HOME_BANNER,
-                            false, result, "Featured banner not found");
+                            false, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_HOME_BANNER,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
 
     }
 
-    private void onloadStoreResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onloadStoreResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             if (result != null && jsonObject.length() > 0) {
@@ -218,27 +221,28 @@ public class StoreServiceModel extends BaseServiceModel {
 
                 if (apiCallback != null) {
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORES,
-                            true, result, "");
+                            true, result, errorResponse);
                 }
 
             } else {
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("Stores not found");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORES,
-                            false, result, "Stores not found");
+                            false, result, errorResponse);
                 }
             }
 
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORES,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
 
         }
 
     }
 
-    private void onStoreFeaturedBannerResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onStoreFeaturedBannerResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
             if (result != null && jsonObject.length() > 0) {
@@ -251,31 +255,33 @@ public class StoreServiceModel extends BaseServiceModel {
 
                 if (storesProfileFeaturedBanner.size() == 0) {
                     if (apiCallback != null) {
+                        errorResponse.setErrorString("Featured banner not found");
                         this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORE_FEATURED_BANNERS,
-                                false, result, "Featured banner not found");
+                                false, result, errorResponse);
                     }
                 } else {
                     if (apiCallback != null) {
                         this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORE_FEATURED_BANNERS,
-                                true, result, "");
+                                true, result, errorResponse);
                     }
                 }
             } else {
 
                 if (apiCallback != null) {
+                    errorResponse.setErrorString("Featured banner not found");
                     this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORE_FEATURED_BANNERS,
-                            false, result, "Featured banner not found");
+                            false, result, errorResponse);
                 }
             }
         } else {
             if (apiCallback != null) {
                 this.apiCallback.onAPIHandlerResponse(RequestConstants.REQUEST_ID_GET_STORE_FEATURED_BANNERS,
-                        false, result, errorString);
+                        false, result, errorResponse);
             }
         }
     }
 
-    private void onNearByStoreResponse(boolean isSuccess, Object result, String errorString) throws JSONException {
+    private void onNearByStoreResponse(boolean isSuccess, Object result, ErrorResponse errorResponse) throws JSONException {
         if (isSuccess) {
             JSONObject jsonObject = (JSONObject) result;
 
@@ -297,7 +303,7 @@ public class StoreServiceModel extends BaseServiceModel {
                 if (distanceInMeter <= Constants.NEAR_BY_STORE_DISTANCE_IN_METER) {
                     if (!checkIfNotificationAlreadyGeneratedForNearbyStore(nearByStore)) {
                         if (MyApplication.getInstance().getHomeActivity() != null) {
-                            Utils.getInstance().showSnackBar(MyApplication.getInstance().getHomeActivity(), "Hey! You are near" + nearByStore.getName() + ". Step-in to collect koins!");
+                            Utils.getInstance().showSnackBar(true,MyApplication.getInstance().getHomeActivity(), "Hey! You are near " + nearByStore.getName() + ". Step-in to collect koins!");
                         } else {
                             Utils.getInstance().showLocalNotification("NetKoin", "Hey! You are near " + nearByStore.getName() + ". Step-in to collect koins!");
 
@@ -326,7 +332,7 @@ public class StoreServiceModel extends BaseServiceModel {
             if (dateTime != null) {
                 if (dateTime.equals(todaysDate)) {
                     //do nothing if store id found with the same date
-                    System.out.println("This store already notfied today");
+                    //System.out.println("This store already notfied today");
                     return true;
                 }
             }

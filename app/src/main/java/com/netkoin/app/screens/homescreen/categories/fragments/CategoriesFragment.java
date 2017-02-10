@@ -19,6 +19,7 @@ import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.screens.homescreen.categories.adapters.CategoriesGridViewAdapter;
 import com.netkoin.app.servicemodels.CateogoriesServiceModel;
+import com.netkoin.app.volly.ErrorResponse;
 
 public class CategoriesFragment extends AbstractBaseFragment {
 
@@ -112,7 +113,7 @@ public class CategoriesFragment extends AbstractBaseFragment {
             }
             previousLocation = currentLocation;
             previousCatDistance = distance;
-            System.out.println(">>request 111");
+            //System.out.println(">>request 111");
             //hit API on location change from user
             cateogoriesServiceModel.loadCateogries();
         }
@@ -151,17 +152,17 @@ public class CategoriesFragment extends AbstractBaseFragment {
     }
 
     @Override
-    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, String errorString) {
+    public void onAPIHandlerResponse(int requestId, boolean isSuccess, Object result, ErrorResponse errorResponse) {
         switch (requestId) {
             case RequestConstants.REQUEST_ID_GET_CATEOGRIES_LIST:
-                onCategoriesResponse(isSuccess, errorString);
+                onCategoriesResponse(isSuccess, errorResponse);
                 break;
             default:
                 break;
         }
     }
 
-    public void onCategoriesResponse(boolean isSuccess, String errorString) {
+    public void onCategoriesResponse(boolean isSuccess, ErrorResponse errorResponse) {
         progressBarCenter.setVisibility(View.GONE);
         if (retryView != null) {
             retryView.setVisibility(View.GONE);
@@ -173,8 +174,13 @@ public class CategoriesFragment extends AbstractBaseFragment {
                 showRetryView("No category found.", true);
             }
         } else {
+
+            if (errorResponse.getErrorCode() == ErrorResponse.EROOR_CODE_INTERENT_NOT_FOUND) {
+                return;
+            }
+
             if (cateogoriesServiceModel.getCategories() == null || cateogoriesServiceModel.getCategories().size() == 0) {
-                showRetryView(errorString, true);
+                showRetryView(errorResponse.getErrorString(), true);
             }
         }
 

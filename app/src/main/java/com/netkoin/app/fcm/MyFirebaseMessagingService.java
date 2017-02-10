@@ -30,16 +30,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // [END_EXCLUDE]
 
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        System.out.println("From: " + remoteMessage.getFrom());
+        //System.out.println("From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            System.out.println("Message data payload: " + remoteMessage.getData());
+            //System.out.println("Message data payload: " + remoteMessage.getData());
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            System.out.println("Message Notification Body: " + remoteMessage.getNotification().getBody());
+            //System.out.println("Message Notification Body: " + remoteMessage.getNotification().getBody());
             Utils.getInstance().showLocalNotification("NetKoin", remoteMessage.getNotification().getBody());
         }
 
