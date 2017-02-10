@@ -63,7 +63,7 @@ android {
 
         development {
             applicationId "com.netkoin.app"
-            buildConfigField 'String', 'BASE_URL', '"https://biz.netkoin.com"'
+            buildConfigField 'String', 'BASE_URL', '"https://test2.netkoin.com"'
         }
     }
 

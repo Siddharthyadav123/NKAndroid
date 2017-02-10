@@ -140,7 +140,7 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     @Override
     public void onResponse(Object response) {
         hideLoading();
-        //System.out.println("[API] response body volly = " + response.toString());
+        System.out.println("[API] response body volly = " + response.toString());
         if (responseFromOurServer) {
             if (response != null) {
                 JSONObject jsonObject = null;
@@ -245,7 +245,9 @@ public class APIHandler implements Response.Listener<Object>, Response.ErrorList
     }
 
     protected void showRetryErrorAlert(String title, String bodyText) {
-        Utils.getInstance().hideKeyboard((Activity) context);
+        if (context instanceof Activity)
+            Utils.getInstance().hideKeyboard((Activity) context);
+
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setMessage(bodyText);
         builder1.setTitle(title);

@@ -7,7 +7,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.controller.AppController;
@@ -102,18 +101,18 @@ public class LoginFlowServiceModel extends BaseServiceModel {
             switch (requestId) {
                 case RequestConstants.REQUEST_ID_POST_SIGNIN:
                     onSignInResponse(isSuccess, result, errorResponse);
-                    MyApplication.getInstance().getLocationModel().setLastServerHit(0);
+                    AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().setLastServerHit(0);
                     break;
                 case RequestConstants.REQUEST_ID_POST_FACEBOOK_SIGNIN:
                     onFacebookSignInResponse(isSuccess, result, errorResponse);
-                    MyApplication.getInstance().getLocationModel().setLastServerHit(0);
+                    AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().setLastServerHit(0);
                     break;
                 case RequestConstants.REQUEST_ID_POST_SIGNUP:
                     onSignUpResponse(isSuccess, result, errorResponse);
                     break;
                 case RequestConstants.REQUEST_ID_POST_GPLUS_SIGNIN:
                     onGPlusSignInResponse(isSuccess, result, errorResponse);
-                    MyApplication.getInstance().getLocationModel().setLastServerHit(0);
+                    AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().setLastServerHit(0);
                     break;
                 case RequestConstants.REQUEST_ID_POST_LOGOUT:
                     onLogoutResponse(isSuccess, result, errorResponse);
@@ -475,8 +474,8 @@ public class LoginFlowServiceModel extends BaseServiceModel {
 
         if (latitude == 0.0f) {
             //take from local class
-            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
-            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
+            latitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
+            longitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLongitude();
         }
         double[] latlong = new double[2];
         latlong[0] = latitude;
