@@ -21,7 +21,7 @@ import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.ErrorResponse;
 
 /**
- * Created by siddharth on 1/6/2017.
+ * Created by ashishkumarpatel on 1/6/2017.
  */
 public class SettingsFragment extends AbstractBaseFragment {
     private ListView settingsListView;

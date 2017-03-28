@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import info.hoang8f.android.segmented.SegmentedGroup;
 
 /**
- * Created by siddharthyadav on 05/01/17.
+ * Created by ashishkumarpatel on 05/01/17.
  */
 
 public class TrendingFragment extends AbstractBaseFragment {

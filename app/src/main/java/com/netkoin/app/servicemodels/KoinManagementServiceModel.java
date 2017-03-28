@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by siddharthyadav on 13/01/17.
+ * Created by ashishkumarpatel on 13/01/17.
  */
 
 public class KoinManagementServiceModel extends BaseServiceModel {

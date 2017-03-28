@@ -13,7 +13,7 @@ import com.netkoin.app.screens.homescreen.settings.adapters.NotificationSettingL
 import com.netkoin.app.volly.ErrorResponse;
 
 /**
- * Created by siddharthyadav on 07/01/17.
+ * Created by ashishkumarpatel on 07/01/17.
  */
 
 public class NotificationSettingFragment extends AbstractBaseFragment {

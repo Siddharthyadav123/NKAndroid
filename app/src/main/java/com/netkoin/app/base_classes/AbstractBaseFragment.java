@@ -23,9 +23,7 @@ import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandlerCallback;
 
-/**
- * Created by siddharthyadav on 31/12/16.
- */
+
 
 public abstract class AbstractBaseFragment extends Fragment implements View.OnClickListener, APIHandlerCallback {
 

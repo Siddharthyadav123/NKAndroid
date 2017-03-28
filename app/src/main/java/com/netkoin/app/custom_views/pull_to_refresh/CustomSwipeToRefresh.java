@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
 /**
- * Created by siddharth on 1/6/2017.
+ * Created by ashishkumarpatel on 1/6/2017.
  */
 public class CustomSwipeToRefresh extends SwipeRefreshLayout {
 

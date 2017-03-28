@@ -31,7 +31,7 @@ import com.netkoin.app.screens.koin_managment.fragments.KoinTransferFragment;
 import java.util.ArrayList;
 
 /**
- * Created by siddharthyadav on 31/12/16.
+ * Created by ashishkumarpatel on 31/12/16.
  */
 
 public class FragmentNavigationViewController {

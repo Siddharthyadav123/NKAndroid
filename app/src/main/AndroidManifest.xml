@@ -24,7 +24,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <action android:name="android.location.PROVIDERS_CHANGED" />
 
@@ -126,20 +125,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="633f8b7cbd40bfa7352b60b4f692b3df2c6d5b63" />
-
-
-        <service
-            android:name=".location.NKForeverLocationService"
-            android:enabled="true" />
-
-        <receiver
-            android:name=".location.BootServiceRestartBroadcast"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

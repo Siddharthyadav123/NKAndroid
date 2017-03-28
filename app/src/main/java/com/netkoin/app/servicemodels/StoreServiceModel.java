@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
- * Created by siddharth on 1/9/2017.
+ * Created by ashishkumarpatel on 1/9/2017.
  */
 public class StoreServiceModel extends BaseServiceModel {
 
@@ -60,8 +60,8 @@ public class StoreServiceModel extends BaseServiceModel {
 
         if (latitude == 0.0f) {
             //take from local class
-            latitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
-            longitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLongitude();
+            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
+            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
 
             //take previously saved location
             if (latitude == 0.0f) {
@@ -108,8 +108,8 @@ public class StoreServiceModel extends BaseServiceModel {
 
         if (latitude == 0.0f) {
             //take from local class
-            latitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
-            longitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLongitude();
+            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
+            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
 
             //take previously saved location
             if (latitude == 0.0f) {
@@ -303,7 +303,7 @@ public class StoreServiceModel extends BaseServiceModel {
                 if (distanceInMeter <= Constants.NEAR_BY_STORE_DISTANCE_IN_METER) {
                     if (!checkIfNotificationAlreadyGeneratedForNearbyStore(nearByStore)) {
                         if (MyApplication.getInstance().getHomeActivity() != null) {
-                            Utils.getInstance().showSnackBar(true, MyApplication.getInstance().getHomeActivity(), "Hey! You are near " + nearByStore.getName() + ". Step-in to collect koins!");
+                            Utils.getInstance().showSnackBar(true,MyApplication.getInstance().getHomeActivity(), "Hey! You are near " + nearByStore.getName() + ". Step-in to collect koins!");
                         } else {
                             Utils.getInstance().showLocalNotification("NetKoin", "Hey! You are near " + nearByStore.getName() + ". Step-in to collect koins!");
 

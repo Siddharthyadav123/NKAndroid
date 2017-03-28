@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -17,7 +16,6 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,20 +24,21 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.netkoin.app.location.NKForeverLocationService;
-import com.netkoin.app.utils.Utils;
+import com.netkoin.app.controller.AppController;
+import com.netkoin.app.location.LocationCallback;
+import com.netkoin.app.location.LocationModel;
 import com.netkoin.app.volly.LruBitmapCache;
-
 import io.fabric.sdk.android.Fabric;
 
 
-public class MyApplication extends Application {
+public class MyApplication extends Application implements LocationCallback {
     public static MyApplication myApplication = null;
 
     public static final String TAG = MyApplication.class
             .getSimpleName();
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
+    private LocationModel locationModel;
 
     private Activity homeActivity;
 
@@ -60,18 +59,13 @@ public class MyApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
-        startLocationService(this);
+        initLocation();
     }
 
-
-    private void startLocationService(Context context) {
-        if (!Utils.getInstance().isServiceRunning(NKForeverLocationService.class, context)) {
-            Log.d(TAG, "Service>> Service started from MyApplication");
-            Intent intent = new Intent(context, NKForeverLocationService.class);
-            context.startService(intent);
-        } else {
-            Log.d(TAG, "Service>> Service already running in MyApplication ");
-        }
+    private void initLocation() {
+        locationModel = new LocationModel(this, this);
+        locationModel.initialize();
+        AppController.getInstance().getModelFacade().getLocalModel().setLocationModel(locationModel);
     }
 
 
@@ -208,6 +202,16 @@ public class MyApplication extends Application {
         }
     }
 
+    @Override
+    public void onLocationFound(float latitude, float longitude) {
+
+    }
+
+    @Override
+    public void onLocationChanged(float latitude, float longitude) {
+
+    }
+
 
     public interface DailogCallback {
         public void onDailogYesClick();
@@ -231,6 +235,9 @@ public class MyApplication extends Application {
         alert11.show();
     }
 
+    public LocationModel getLocationModel() {
+        return locationModel;
+    }
 
     public Activity getHomeActivity() {
         return homeActivity;

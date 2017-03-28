@@ -21,7 +21,7 @@ import com.netkoin.app.utils.Utils;
 import java.util.ArrayList;
 
 /**
- * Created by siddharth on 1/5/2017.
+ * Created by ashishkumarpatel on 1/5/2017.
  */
 public class StoreListViewAdapter extends BaseAdapter {
 

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import org.json.JSONObject;
 
 /**
- * Created by siddharth on 1/19/2017.
+ * Created by ashishkumarpatel on 1/19/2017.
  */
 public class FbUserDo implements Parcelable {
     private String id;

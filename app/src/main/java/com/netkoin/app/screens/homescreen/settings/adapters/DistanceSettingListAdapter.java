@@ -15,7 +15,7 @@ import com.netkoin.app.R;
 import com.netkoin.app.pref.SharedPref;
 
 /**
- * Created by siddharthyadav on 07/01/17.
+ * Created by ashishkumarpatel on 07/01/17.
  */
 
 public class DistanceSettingListAdapter extends BaseAdapter {

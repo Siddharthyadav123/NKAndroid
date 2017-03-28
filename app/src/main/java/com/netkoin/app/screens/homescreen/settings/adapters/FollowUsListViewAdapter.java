@@ -13,7 +13,7 @@ import com.netkoin.app.custom_views.switchbtn.SwitchButton;
 import com.netkoin.app.pref.SharedPref;
 
 /**
- * Created by siddharthyadav on 28/01/17.
+ * Created by ashishkumarpatel on 28/01/17.
  */
 
 public class FollowUsListViewAdapter extends BaseAdapter {

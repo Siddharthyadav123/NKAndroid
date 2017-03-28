@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by siddharth on 1/23/2017.
+ * Created by ashishkumarpatel on 1/23/2017.
  */
 public class Message implements Parcelable {
     private int koins;

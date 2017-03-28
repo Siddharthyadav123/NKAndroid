@@ -20,7 +20,7 @@ import com.netkoin.app.utils.Utils;
 import java.util.ArrayList;
 
 /**
- * Created by siddharthyadav on 05/01/17.
+ * Created by ashishkumarpatel on 05/01/17.
  */
 
 public class TrendingListviewAdapter extends BaseAdapter {

@@ -20,16 +20,13 @@ import android.widget.Toast;
 
 import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
-import com.netkoin.app.location.NKForeverLocationService;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.APIHandlerCallback;
 
 import java.util.ArrayList;
 
-/**
- * Created by siddharth on 1/4/2017.
- */
+
 public abstract class AbstractBaseActivity extends AppCompatActivity implements APIHandlerCallback, View.OnClickListener {
     protected ImageView leftBtnImageView;
     protected TextView titleTextView;
@@ -193,8 +190,7 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
                     Manifest.permission.ACCESS_NETWORK_STATE,
                     Manifest.permission.CAMERA,
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.RECEIVE_BOOT_COMPLETED
+                    Manifest.permission.ACCESS_COARSE_LOCATION
 
             };
 
@@ -266,7 +262,7 @@ public abstract class AbstractBaseActivity extends AppCompatActivity implements 
                         // need to refresh location on permission
                         if (permissions[i].equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION) ||
                                 permissions[i].equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                            NKForeverLocationService.getInstance().getLocationModel().initialize();
+                            MyApplication.getInstance().getLocationModel().initialize();
                         }
 
                     } else {

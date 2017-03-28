@@ -1,7 +1,7 @@
 package com.netkoin.app.location;
 
 /**
- * Created by siddharth on 12/23/2016.
+ * Created by ashishkumarpatel on 12/23/2016.
  */
 public interface LocationCallback {
 

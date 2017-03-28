@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by siddharthyadav on 15/01/17.
+ * Created by ashishkumarpatel on 15/01/17.
  */
 
 public class UserServiceModel extends BaseServiceModel {

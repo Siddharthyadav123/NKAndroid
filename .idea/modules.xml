@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NKAndroid.iml" filepath="$PROJECT_DIR$/NKAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Netkoins.iml" filepath="$PROJECT_DIR$/Netkoins.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

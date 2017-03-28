@@ -12,7 +12,7 @@ import com.netkoin.app.R;
 import com.netkoin.app.custom_views.switchbtn.SwitchButton;
 
 /**
- * Created by siddharthyadav on 08/01/17.
+ * Created by ashishkumarpatel on 08/01/17.
  */
 
 public class KoinHomeListAdapter extends BaseAdapter {

@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by siddharth on 1/11/2017.
+ * Created by ashishkumarpatel on 1/11/2017.
  */
 public class CateogoriesServiceModel extends BaseServiceModel {
 

@@ -14,7 +14,7 @@ import com.netkoin.app.constants.Constants;
 import org.json.JSONObject;
 
 /**
- * Created by siddharth on 1/19/2017.
+ * Created by ashishkumarpatel on 1/19/2017.
  */
 public class FacebookModel implements FacebookCallback<LoginResult> {
     private Context context;
@@ -53,7 +53,7 @@ public class FacebookModel implements FacebookCallback<LoginResult> {
     private void onLoginSuccess(LoginResult loginResult) {
         fbUserDo.setFbid(loginResult.getAccessToken().getUserId());
         fbUserDo.setToken(loginResult.getAccessToken().getToken());
-        Toast.makeText(context, "Login sid " + loginResult.getAccessToken().getUserId(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Login sid " + loginResult.getAccessToken().getUserId(), Toast.LENGTH_SHORT).show();
 
 
         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
@@ -67,7 +67,7 @@ public class FacebookModel implements FacebookCallback<LoginResult> {
 
 
                         } catch (Exception e) {
-                            Toast.makeText(context, "Login failed 11 " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Login failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                             if (socialLoginInterface != null)
                                 socialLoginInterface.onSocialLoginFailure(e.getMessage(), Constants.LOGIN_TYPE_FB);

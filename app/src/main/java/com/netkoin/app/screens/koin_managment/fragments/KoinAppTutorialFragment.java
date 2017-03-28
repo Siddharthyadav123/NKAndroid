@@ -15,7 +15,7 @@ import com.netkoin.app.constants.URLConstants;
 import com.netkoin.app.volly.ErrorResponse;
 
 /**
- * Created by siddharthyadav on 08/01/17.
+ * Created by ashishkumarpatel on 08/01/17.
  */
 
 public class KoinAppTutorialFragment extends AbstractBaseFragment {

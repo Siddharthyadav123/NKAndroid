@@ -5,7 +5,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.netkoin.app.utils.Utils;
 
 /**
- * Created by siddharth on 1/20/2017.
+ * Created by ashishkumarpatel on 1/20/2017.
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 

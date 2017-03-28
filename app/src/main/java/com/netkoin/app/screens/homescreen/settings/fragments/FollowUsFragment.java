@@ -16,7 +16,7 @@ import com.netkoin.app.utils.Utils;
 import com.netkoin.app.volly.ErrorResponse;
 
 /**
- * Created by siddharthyadav on 28/01/17.
+ * Created by ashishkumarpatel on 28/01/17.
  */
 
 public class FollowUsFragment extends AbstractBaseFragment {

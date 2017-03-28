@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by siddharthyadav on 02/01/17.
+ * Created by ashishkumarpatel on 02/01/17.
  */
 
 public class Store implements Parcelable {

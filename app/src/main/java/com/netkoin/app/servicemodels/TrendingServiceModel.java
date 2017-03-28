@@ -5,9 +5,9 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
-import com.netkoin.app.controller.AppController;
 import com.netkoin.app.entities.Ads;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by siddharth on 1/11/2017.
+ * Created by ashishkumarpatel on 1/11/2017.
  */
 public class TrendingServiceModel extends BaseServiceModel {
 
@@ -39,8 +39,8 @@ public class TrendingServiceModel extends BaseServiceModel {
 
         if (latitude == 0.0f) {
             //take from local class
-            latitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
-            longitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLongitude();
+            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
+            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
 
             //take previously saved location
             if (latitude == 0.0f) {

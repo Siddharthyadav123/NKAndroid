@@ -6,7 +6,7 @@ import com.netkoin.app.models.ModelFacade;
 import com.netkoin.app.pref.SharedPref;
 
 /**
- * Created by siddharthyadav on 02/01/17.
+ * Created by ashishkumarpatel on 02/01/17.
  */
 
 public class AppController {

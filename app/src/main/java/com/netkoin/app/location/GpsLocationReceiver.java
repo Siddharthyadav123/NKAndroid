@@ -12,7 +12,7 @@ import com.netkoin.app.controller.AppController;
  * GPS broadcast receiver to get the callback if location selected...
  * Adding Recursion because it GPS take little time to start providing lat long once started
  * <p>
- * Created by Siddharth
+ * Created by ashishkumarpatel
  */
 public class GpsLocationReceiver extends BroadcastReceiver {
     @Override

@@ -26,7 +26,7 @@ import com.netkoin.app.R;
 import com.nineoldandroids.view.animation.AnimatorProxy;
 
 /**
- * Created by siddharthyadav on 05/01/17.
+ * Created by ashishkumarpatel on 05/01/17.
  */
 
 public class MaterialEditText extends FrameLayout {

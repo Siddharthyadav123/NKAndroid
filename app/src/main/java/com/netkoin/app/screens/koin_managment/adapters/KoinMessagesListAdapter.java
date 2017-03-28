@@ -15,7 +15,7 @@ import com.netkoin.app.utils.DateTimeUtils;
 import java.util.ArrayList;
 
 /**
- * Created by siddharth on 1/23/2017.
+ * Created by ashishkumarpatel on 1/23/2017.
  */
 public class KoinMessagesListAdapter extends BaseAdapter {
 

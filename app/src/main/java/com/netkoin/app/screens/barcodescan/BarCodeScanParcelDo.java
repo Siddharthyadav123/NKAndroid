@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by siddharth on 1/19/2017.
+ * Created by ashishkumarpatel on 1/19/2017.
  */
 public class BarCodeScanParcelDo implements Parcelable {
     private int scanMode;

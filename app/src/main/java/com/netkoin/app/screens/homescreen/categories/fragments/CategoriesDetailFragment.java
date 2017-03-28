@@ -27,7 +27,7 @@ import com.netkoin.app.volly.ErrorResponse;
 import java.util.ArrayList;
 
 /**
- * Created by siddharthyadav on 07/01/17.
+ * Created by ashishkumarpatel on 07/01/17.
  */
 
 public class CategoriesDetailFragment extends AbstractBaseFragment {

@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.servicemodels.StoreServiceModel;
 import com.netkoin.app.servicemodels.UserServiceModel;
@@ -151,13 +152,11 @@ public class LocationModel implements LocationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(">>gps lat>>" + latitude + "  >>long >> " + longitude);
+        //System.out.println(">>gps lat>>" + latitude + "  >>long >> " + longitude);
 
         //callback for lat long
-        if (latitude != 0.0f) {
-            if (locationCallback != null)
-                locationCallback.onLocationFound(latitude, longitude);
-
+        if (locationCallback != null && latitude != 0.0f) {
+            locationCallback.onLocationFound(latitude, longitude);
             saveLatLong();
             if (hitToServer()) {
                 userServiceModel.updateUserLocation(latitude, longitude);
@@ -226,19 +225,18 @@ public class LocationModel implements LocationListener {
             latitude = (float) location.getLatitude();
             longitude = (float) location.getLongitude();
 
+
+
             //callback for lat long
-            if (latitude != 0.0f) {
+            if (locationCallback != null && latitude != 0.0f) {
                 //System.out.println("location>>onLocationChanged >> " + MyApplication.getInstance().getLocationModel());
                 //System.out.println("location>>onLocationChanged this >> " + this);
-                System.out.println("location>>loadStores >> getLatitude" + latitude);
-                System.out.println("location>>loadStores >> getLongitude" + longitude);
-
-                if (locationCallback != null) {
-                    locationCallback.onLocationChanged(latitude, longitude);
-                }
+                //System.out.println("location>>loadStores >> getLatitude" + latitude);
+                //System.out.println("location>>loadStores >> getLongitude" + longitude);
+                locationCallback.onLocationChanged(latitude, longitude);
                 saveLatLong();
                 if (hitToServer()) {
-                    Toast.makeText(mContext, "Location change Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mContext, "Location change Lat>> " + latitude + " >>Long>> " + longitude, Toast.LENGTH_SHORT).show();
                     userServiceModel.updateUserLocation(latitude, longitude);
                     storeServiceModel.checkNearByStore(latitude, longitude);
                 }

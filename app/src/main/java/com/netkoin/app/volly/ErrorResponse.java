@@ -1,7 +1,7 @@
 package com.netkoin.app.volly;
 
 /**
- * Created by siddharthyadav on 05/02/17.
+ * Created by ashishkumarpatel on 05/02/17.
  */
 
 public class ErrorResponse {

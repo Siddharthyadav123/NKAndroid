@@ -1,7 +1,6 @@
 package com.netkoin.app.utils;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -26,15 +25,13 @@ import android.widget.Toast;
 
 import com.netkoin.app.R;
 import com.netkoin.app.application.MyApplication;
-import com.netkoin.app.controller.AppController;
-import com.netkoin.app.location.NKForeverLocationService;
 import com.netkoin.app.screens.splash.SplashActivity;
 
 import java.util.Locale;
 import java.util.Random;
 
 /**
- * Created by siddharth on 1/5/2017.
+ * Created by ashishkumarpatel on 1/5/2017.
  */
 public class Utils {
     public static Utils instance;
@@ -76,8 +73,8 @@ public class Utils {
     }
 
     public void openMap(Context context, double destinationLatitude, double destinationLongitude, String title) {
-        double sourceLatitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
-        double sourceLongitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
+        double sourceLatitude = MyApplication.getInstance().getLocationModel().getLatitude();
+        double sourceLongitude = MyApplication.getInstance().getLocationModel().getLatitude();
 
 
         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?&daddr=%f,%f (%s)", destinationLatitude, destinationLongitude, title);
@@ -92,7 +89,7 @@ public class Utils {
                 context.startActivity(intent);
 
             } catch (ActivityNotFoundException innerEx) {
-                Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Please install google map application", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -110,8 +107,8 @@ public class Utils {
      * Method responsible to Enable the GPS location
      */
     public void enableGPS(final Context context) {
-        float sourceLat = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
-        float sourceLong = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLongitude();
+        float sourceLat = MyApplication.getInstance().getLocationModel().getLatitude();
+        float sourceLong = MyApplication.getInstance().getLocationModel().getLongitude();
         if (sourceLat == 0.0 && sourceLong == 0.0) {
             LocationManager manager = (LocationManager) MyApplication.getInstance().getSystemService(Context.LOCATION_SERVICE);
             if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -154,7 +151,7 @@ public class Utils {
         snack.show();
     }
 
-    public void showSnackBar(boolean success, Activity activity, String textToShow) {
+    public void showSnackBar(boolean success , Activity activity, String textToShow) {
         final Snackbar snack = Snackbar.make(activity.findViewById(android.R.id.content), textToShow, Snackbar.LENGTH_LONG);
         snack.setDuration(6000);
         snack.setAction("Dismiss", new View.OnClickListener() {
@@ -168,10 +165,13 @@ public class Utils {
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
 
 
+
         tv.setMaxLines(6);
-        if (!success) {
+        if(!success)
+        {
             view.setBackgroundColor(ContextCompat.getColor(activity, R.color.error));
-        } else {
+        }else
+        {
             view.setBackgroundColor(ContextCompat.getColor(activity, R.color.green));
         }
 
@@ -219,23 +219,4 @@ public class Utils {
         return r.nextInt(max - min + 1) + min;
     }
 
-    public boolean isServiceRunning(Class<?> serviceClass, Context context) {
-        if (NKForeverLocationService.isServiceRunning == false) {
-            return false;
-        }
-        ActivityManager manager = null;
-        try {
-            manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            if (manager != null) {
-                for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                    if (serviceClass.getName().equals(service.service.getClassName())) {
-                        return true;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

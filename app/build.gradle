@@ -23,7 +23,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0.15"
+        versionName "1.0.16"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -63,7 +63,7 @@ android {
 
         development {
             applicationId "com.netkoin.app"
-            buildConfigField 'String', 'BASE_URL', '"https://test2.netkoin.com"'
+            buildConfigField 'String', 'BASE_URL', '"https://biz.netkoin.com"'
         }
     }
 

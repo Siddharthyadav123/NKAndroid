@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by siddharth on 1/5/2017.
+ * Created by ashishkumarpatel on 1/5/2017.
  */
 public class SharedPref {
     private SharedPreferences pref;

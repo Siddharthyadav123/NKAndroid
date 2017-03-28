@@ -16,7 +16,7 @@ import com.netkoin.app.screens.signup.SignUpActivity;
 
 /**
  * This class will be used to launch the Activity
- * Created by siddharthyadav on 03/01/17.
+ * Created by ashishkumarpatel on 03/01/17.
  */
 
 public class ActivityController {

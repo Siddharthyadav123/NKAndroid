@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by siddharthyadav on 02/01/17.
+ * Created by ashishkumarpatel on 02/01/17.
  */
 
 public class Category implements Parcelable {

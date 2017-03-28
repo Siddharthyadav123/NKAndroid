@@ -18,7 +18,7 @@ import com.netkoin.app.entities.StoreFeaturedBanner;
 import java.util.ArrayList;
 
 /**
- * Created by siddharth on 1/5/2017.
+ * Created by ashishkumarpatel on 1/5/2017.
  */
 public class StoreBannerViewPagerAdapter extends PagerAdapter {
     private Activity activity;

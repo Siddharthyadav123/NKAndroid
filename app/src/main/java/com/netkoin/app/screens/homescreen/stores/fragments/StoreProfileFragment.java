@@ -30,7 +30,7 @@ import me.relex.circleindicator.CircleIndicator;
 
 
 /**
- * Created by siddharthyadav on 31/12/16.
+ * Created by ashishkumarpatel on 31/12/16.
  */
 
 public class StoreProfileFragment extends AbstractBaseFragment {

@@ -4,10 +4,11 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.google.gson.reflect.TypeToken;
+import com.netkoin.app.application.MyApplication;
 import com.netkoin.app.constants.RequestConstants;
 import com.netkoin.app.constants.URLConstants;
-import com.netkoin.app.controller.AppController;
 import com.netkoin.app.entities.Ads;
+import com.netkoin.app.entities.MainCategory;
 import com.netkoin.app.pref.SharedPref;
 import com.netkoin.app.volly.APIHandler;
 import com.netkoin.app.volly.APIHandlerCallback;
@@ -20,7 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by siddharthyadav on 12/01/17.
+ * Created by ashishkumarpatel on 12/01/17.
  */
 
 public class AdsServiceModel extends BaseServiceModel {
@@ -46,8 +47,8 @@ public class AdsServiceModel extends BaseServiceModel {
 
         if (latitude == 0.0f) {
             //take from local class
-            latitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLatitude();
-            longitude = AppController.getInstance().getModelFacade().getLocalModel().getLocationModel().getLongitude();
+            latitude = MyApplication.getInstance().getLocationModel().getLatitude();
+            longitude = MyApplication.getInstance().getLocationModel().getLongitude();
 
             //take previously saved location
             if (latitude == 0.0f) {

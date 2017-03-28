@@ -12,7 +12,7 @@ import com.netkoin.app.controller.FragmentNavigationViewController;
 import com.netkoin.app.volly.ErrorResponse;
 
 /**
- * Created by siddharthyadav on 31/12/16.
+ * Created by ashishkumarpatel on 31/12/16.
  */
 
 public class TrendingHomeScreenFragment extends AbstractBaseFragment {

@@ -23,7 +23,7 @@ import com.netkoin.app.volly.ErrorResponse;
 import info.hoang8f.android.segmented.SegmentedGroup;
 
 /**
- * Created by siddharthyadav on 08/01/17.
+ * Created by ashishkumarpatel on 08/01/17.
  */
 
 public class KoinHomeFragment extends AbstractBaseFragment {

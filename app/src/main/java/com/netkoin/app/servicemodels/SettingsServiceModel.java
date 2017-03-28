@@ -14,7 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by siddharth on 1/23/2017.
+ * Created by ashishkumarpatel on 1/23/2017.
  */
 public class SettingsServiceModel extends BaseServiceModel {
     public SettingsServiceModel(Context context, APIHandlerCallback apiCallback) {
